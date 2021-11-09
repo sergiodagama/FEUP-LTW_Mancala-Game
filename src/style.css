@@ -1,11 +1,24 @@
 /* tags css */
-body {}
+body {
+    /*background-image: linear-gradient(to bottom, #B88B4A, rgba(199, 168, 111, 0));*/
+    background-color: #B88B4A;
+}
 
 header {}
 
-h1 {}
+h1 {
+    background-color: #242331;
+    color: white;
+    text-align: center;
+    font-size: 6em;
+    padding-top: 0.6em;
+    padding-bottom: 0.6em;
+}
 
-h2 {}
+h2 {
+    background-color: #533E2D;
+    color:whitesmoke;
+}
 
 section {}
 
