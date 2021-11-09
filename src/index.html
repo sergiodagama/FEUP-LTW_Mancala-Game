@@ -1,107 +1,182 @@
-
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="en">
   <head>
-    <meta charset=UTF-8>        
-    <link rel="stylesheet" href="style.css">
-    <title>Mancala</title>  
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css" />
+    <title>Mancala</title>
   </head>
+
   <body>
-  <header>
-    <h1>Mancala</h1>
-  </header>
-  <hr>
+    <header>
+      <h1>Mancala</h1>
+    </header>
 
+    <!--Authentication Area-->
+    <section id="section-authentication">
+      <h2>Authentication</h2>
 
-  <!--Authentication Area-->
-  <section id="authentication">
-  <h2>Authentication</h2>
-  <form action=register method=post>
-    <label for="name">Username</label>
-    <input type=text name=Nome placeholder="Name..">
-    <label for="Password">Password</label>
-    <input type=password name=password placeholder="Password..">
-    <input type=reset>
-    <input type=submit value=Register>
-  </form>
-</section>
-  
-<section id="score">
-  <h2>Score</h2>
-  <table border="1">
-    <tr>
-        <th colspan="1"></th>
-        <th colspan="1"> Player 1</th>
-        <th colspan="1"> Player 2</th>
-    </tr>
-    <tr>
-        <th>Points</th>
-    </tr>
-  </table>
-</section>
+      <!--Sign In-->
+      <h3>Sign In</h3>
 
-  <section id="game_window">
-    <div id="storage"></div>
-    <div id="cavities"></div>
-    <div id="cavities"></div>
-    <div id="cavities"></div>
-    <div id="cavities"></div>
-    <div id="cavities"></div>
-    <div id="cavities"></div>
-    <div id="cavities"></div>
-    <div id="cavities"></div>
-    <div id="cavities"></div>
-    <div id="cavities"></div>
-    <div id="cavities"></div>
-    <div id="cavities"></div>
-    <div id="storage"></div>
-  </section>
+      <form action="signin" method="post">
+        <div class="text-input--login">
+          <label>Username</label>
+          <input type="text" placeholder="username" />
+        </div>
+        <div class="text-input--login">
+          <label>Password</label>
+          <input type="password" placeholder="password" /><br />
+        </div>
+        <input type="submit" value="Sign In" /><br />
+        <label> <input type="checkbox" checked="checked" />Remember me </label>
+      </form>
 
-  <section id="configuration">
-    <h2>Configurations</h2>
-    <form action=configurate method=post>
-      Number of cavities <input name=n_cavities><br>
-      Initial seeds per cavity <input name=n_cavities><br>
-      <p>Please select your game mode:</p>
-        <input type="radio" id="local_players" name="Local Players" value="local_players">
-        <label for="html">Local Players</label><br>
-        <input type="radio" id="ai" name="AI" value="ai">
-        <label for="javascript">AI</label>
-      <p>Please select the AI dificulty level:</p>
-        <input type="radio" id="ai_easy_dificulty" name="Easy Dificulty" value="ai_easy_dificulty">
-        <label for="javascript">Easy</label>
-        <input type="radio" id="ai_medium_dificulty" name="Medium Dificulty" value="ai_medium_dificulty">
-        <label for="javascript">Medium</label>
-        <input type="radio" id="ai_dificulty_hard" name="Hard Dificulty" value="ai_hard_dificulty">
-        <label for="javascript">Hard</label><br>
-      <input type=reset>
-      <input type=submit value=Configurate>
-    </form>
-  </section>
+      <!--Recover Passowrd-->
+      <div id="recover-password">
+        <a>Forgot Password?</a>
+      </div>
+    </section>
 
-  <section id="commands">  
-    <h2>Commands</h2>
-    <form action=manage_commands method=post>
-      Rules <input name=rules><br>
-      Start Game <input name=start_game> <br>
-      Quit Game <input name=quit_game><br>
-      Score <input name=game> <br>
-      <input type=reset>
-      <input type=submit value="Change Commands">
-    </form>
-  </section>
+    <!--Score Area-->
+    <section id="section-score">
+      <h2>Score</h2>
 
-  <section id="rules">
-    <h2>Rules</h2>
-    <ul>
-      <li>Each player controls their side's cavities and the storage to their right.</li>
-      <li>Each player takes a turn choosing one of their cavities, that cavity's seeds are then distributed one by one into the following cavities/storages (excluding the opposite player's storage).</li>
-      <li>If the last seed you place lands in your own storage, you can play again, if it lands in an empty cavity in your own side, you take all the seeds on the opposing side's cavity into your cavity.</li>
-      <li>The game ends when one player can't play due to not having anymore seeds in their cavities. If the other player still has seeds, he can transfer them to his storage.</li>
-      <li>At the end of the game, each player counts the number of seeds they have in their storage, the winner is the one with the most seeds.</li>
-    </ul>
-  </section>
+      <table border="1">
+        <tr>
+          <th colspan="1"></th>
+          <th colspan="1">Player 1</th>
+          <th colspan="1">Player 2</th>
+        </tr>
+        <tr>
+          <th>Points</th>
+        </tr>
+      </table>
+    </section>
 
-  <!--<script src="game.js" type="text/javascript"></script>-->
+    <!--Game Area-->
+    <section id="section-game">
+      <h2>Game</h2>
+
+      <div id="storage-player1" class="storage"></div>
+      <div id="cavity-player1--1" class="cavity"></div>
+      <div id="cavity-player1--2" class="cavity"></div>
+      <div id="cavity-player1--3" class="cavity"></div>
+      <div id="cavity-player1--4" class="cavity"></div>
+      <div id="cavity-player1--5" class="cavity"></div>
+      <div id="cavity-player1--6" class="cavity"></div>
+      <div id="cavity-player2--1" class="cavity"></div>
+      <div id="cavity-player2--2" class="cavity"></div>
+      <div id="cavity-player2--3" class="cavity"></div>
+      <div id="cavity-player2--4" class="cavity"></div>
+      <div id="cavity-player2--5" class="cavity"></div>
+      <div id="cavity-player2--6" class="cavity"></div>
+      <div id="storage-player2" class="storage"></div>
+    </section>
+
+    <!--Configurations Area-->
+    <section id="section-configurations">
+      <h2>Configurations</h2>
+
+      <p>
+        To configurate the game, input the parameters values and check the
+        desired options, followed by clicking on configurate button.<br />
+        If you want to reset default configurations, click on the reset button.
+      </p>
+
+      <form action="configurate" method="post">
+        <div class="text-input--settings">
+          <label>Number of cavities</label>
+          <input /><br />
+        </div>
+        <div class="text-input--settings">
+          <label>Initial seeds per cavity</label>
+          <input /><br />
+        </div>
+
+        <p>Please select your game mode:</p>
+        <div>
+          <input type="radio" id="local" value="local" />
+          <label for="local">Local Player</label>
+        </div>
+        <div>
+          <input type="radio" id="ai" value="ai" />
+          <label for="ai">AI</label>
+        </div>
+
+        <p>Please select the AI dificulty level:</p>
+
+        <div>
+          <input type="radio" />
+            <label for="javascript">Easy</label>  
+        </div>
+        <div>
+          <input type="radio" />
+            <label for="javascript">Medium</label>  
+        </div>
+        <div>
+          <input type="radio" />
+            <label for="javascript">Hard</label><br />
+        </div>
+        <input type="reset" value="Reset" class="button-settings"/>
+        <input type="submit" value="Configurate" class="button-settings" />
+      </form>
+    </section>
+
+    <!--Commands Area-->
+    <section id="section-commands">
+      <h2>Commands</h2>
+
+      <form action="manage_commands" method="post">
+        <div class="settings_text_input">
+          <label>Rules</label>
+          <input name="rules" />
+        </div>
+        <div class="text-input--settings">
+          <label>Start Game</label>
+          <input />
+        </div>
+        <div class="text-input--settings">
+          <label>Quit Game</label>
+          <input />
+        </div>
+        <div class="text-input--settings">
+          <label>Score</label>
+          <input />
+        </div>
+        <input type="reset" value="Reset" class="button-settings"/>
+        <input type="submit" value="Change Commands" class="button-settings" />
+      </form>
+    </section>
+
+    <!--Rules Area-->
+    <section id="section-rules">
+      <h2>Rules</h2>
+      <ul>
+        <li>
+          Each player controls their side's cavities and the storage to their
+          right.
+        </li>
+        <li>
+          Each player takes a turn choosing one of their cavities, that cavity's
+          seeds are then distributed one by one into the following
+          cavities/storages (excluding the opposite player's storage).
+        </li>
+        <li>
+          If the last seed you place lands in your own storage, you can play
+          again, if it lands in an empty cavity in your own side, you take all
+          the seeds on the opposing side's cavity into your cavity.
+        </li>
+        <li>
+          The game ends when one player can't play due to not having anymore
+          seeds in their cavities. If the other player still has seeds, he can
+          transfer them to his storage.
+        </li>
+        <li>
+          At the end of the game, each player counts the number of seeds they
+          have in their storage, the winner is the one with the most seeds.
+        </li>
+      </ul>
+    </section>
   </body>
 </html>

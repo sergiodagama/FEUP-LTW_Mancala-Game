@@ -1,71 +1,24 @@
-h1 {
-    font-size: 4em;
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', serif;
-    text-align: center;
-}
+/* tags css */
+body {}
 
-input{
-    
-    padding: 12px 20px;
-    margin: 8px 0;
-    border-radius: 4px;
-    border: none;
-}
+header {}
 
-input[type=text], select {
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-  }
-  
-  input[type=submit] {
-    background-color: #4e3300;
-    color: white;
-    cursor: pointer;
-    display: inline-block;
-  }
+h1 {}
 
-  input[type=submit]:hover {
-    background-color: #7c674e;
-  }
+h2 {}
 
-  input[type=reset] {
-    background-color: #4e3300;
-    color: white;
-    cursor: pointer;
-    display: inline-block;
-  }
-  
-  input[type=reset]:hover {
-    background-color: #7c674e;
-  }
+section {}
 
-  label{
-      display: block;
-  }
+p {}
 
-  
-#authentication {
-    padding: 2em;
-    text-align: center;
-}
+label {}
 
-#score {
-    padding: 2em;
-    text-align: center;
-}
+input[type=text] {}
 
-#game_window{
-    
-}
+input[type=password] {}
 
-#configuration{
+input[type=radio] {}
 
-}
+/* classes css */
 
-#commands{
-
-}
-
-#rules{
-    
-}
+/* ids css */
