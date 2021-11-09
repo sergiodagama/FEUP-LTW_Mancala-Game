@@ -11,7 +11,97 @@
     <h1>Mancala</h1>
   </header>
   <hr>
-  <!--<canvas  id="myCanvas" height="500" width="700"></canvas>-->
-  <script src="game.js" type="text/javascript"></script>
+
+
+  <!--Authentication Area-->
+  <section id="authentication">
+  <h2>Authentication</h2>
+  <form action=register method=post>
+    <label for="name">Username</label>
+    <input type=text name=Nome placeholder="Name..">
+    <label for="Password">Password</label>
+    <input type=password name=password placeholder="Password..">
+    <input type=reset>
+    <input type=submit value=Register>
+  </form>
+</section>
+  
+<section id="score">
+  <h2>Score</h2>
+  <table border="1">
+    <tr>
+        <th colspan="1"></th>
+        <th colspan="1"> Player 1</th>
+        <th colspan="1"> Player 2</th>
+    </tr>
+    <tr>
+        <th>Points</th>
+    </tr>
+  </table>
+</section>
+
+  <section id="game_window">
+    <div id="storage"></div>
+    <div id="cavities"></div>
+    <div id="cavities"></div>
+    <div id="cavities"></div>
+    <div id="cavities"></div>
+    <div id="cavities"></div>
+    <div id="cavities"></div>
+    <div id="cavities"></div>
+    <div id="cavities"></div>
+    <div id="cavities"></div>
+    <div id="cavities"></div>
+    <div id="cavities"></div>
+    <div id="cavities"></div>
+    <div id="storage"></div>
+  </section>
+
+  <section id="configuration">
+    <h2>Configurations</h2>
+    <form action=configurate method=post>
+      Number of cavities <input name=n_cavities><br>
+      Initial seeds per cavity <input name=n_cavities><br>
+      <p>Please select your game mode:</p>
+        <input type="radio" id="local_players" name="Local Players" value="local_players">
+        <label for="html">Local Players</label><br>
+        <input type="radio" id="ai" name="AI" value="ai">
+        <label for="javascript">AI</label>
+      <p>Please select the AI dificulty level:</p>
+        <input type="radio" id="ai_easy_dificulty" name="Easy Dificulty" value="ai_easy_dificulty">
+        <label for="javascript">Easy</label>
+        <input type="radio" id="ai_medium_dificulty" name="Medium Dificulty" value="ai_medium_dificulty">
+        <label for="javascript">Medium</label>
+        <input type="radio" id="ai_dificulty_hard" name="Hard Dificulty" value="ai_hard_dificulty">
+        <label for="javascript">Hard</label><br>
+      <input type=reset>
+      <input type=submit value=Configurate>
+    </form>
+  </section>
+
+  <section id="commands">  
+    <h2>Commands</h2>
+    <form action=manage_commands method=post>
+      Rules <input name=rules><br>
+      Start Game <input name=start_game> <br>
+      Quit Game <input name=quit_game><br>
+      Score <input name=game> <br>
+      <input type=reset>
+      <input type=submit value="Change Commands">
+    </form>
+  </section>
+
+  <section id="rules">
+    <h2>Rules</h2>
+    <ul>
+      <li>Each player controls their side's cavities and the storage to their right.</li>
+      <li>Each player takes a turn choosing one of their cavities, that cavity's seeds are then distributed one by one into the following cavities/storages (excluding the opposite player's storage).</li>
+      <li>If the last seed you place lands in your own storage, you can play again, if it lands in an empty cavity in your own side, you take all the seeds on the opposing side's cavity into your cavity.</li>
+      <li>The game ends when one player can't play due to not having anymore seeds in their cavities. If the other player still has seeds, he can transfer them to his storage.</li>
+      <li>At the end of the game, each player counts the number of seeds they have in their storage, the winner is the one with the most seeds.</li>
+    </ul>
+  </section>
+
+  <!--<script src="game.js" type="text/javascript"></script>-->
   </body>
 </html>

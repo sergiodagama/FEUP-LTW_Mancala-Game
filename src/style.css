@@ -1,0 +1,71 @@
+h1 {
+    font-size: 4em;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', serif;
+    text-align: center;
+}
+
+input{
+    
+    padding: 12px 20px;
+    margin: 8px 0;
+    border-radius: 4px;
+    border: none;
+}
+
+input[type=text], select {
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  
+  input[type=submit] {
+    background-color: #4e3300;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+  }
+
+  input[type=submit]:hover {
+    background-color: #7c674e;
+  }
+
+  input[type=reset] {
+    background-color: #4e3300;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+  }
+  
+  input[type=reset]:hover {
+    background-color: #7c674e;
+  }
+
+  label{
+      display: block;
+  }
+
+  
+#authentication {
+    padding: 2em;
+    text-align: center;
+}
+
+#score {
+    padding: 2em;
+    text-align: center;
+}
+
+#game_window{
+    
+}
+
+#configuration{
+
+}
+
+#commands{
+
+}
+
+#rules{
+    
+}
