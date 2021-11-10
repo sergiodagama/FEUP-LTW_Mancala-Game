@@ -4,60 +4,50 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@900&display=swap" rel="stylesheet">
     <title>Mancala</title>
   </head>
 
   <body>
     <header>
+      <img id="logo" src="../res/logo.png">
       <h1>Mancala</h1>
+
+      <span id="icons">
+      <img class="icon_temp_section" src="../res/chat_icon.png"> 
+      <img class="icon_temp_section" src="../res/rules_icon.png"> 
+      <img class="icon_temp_section" src="../res/score_icon.png"> 
+      </span>
     </header>
 
     <!--Authentication Area-->
     <section id="section-authentication">
       <h2>Authentication</h2>
 
-      <!--Sign In-->
-      <h3>Sign In</h3>
-
-      <form action="signin" method="post">
+      <form id="form-authentication" action="signin" method="post">
+        <h3>Sign In</h3>
         <div class="text-input--login">
-          <label>Username</label>
-          <input type="text" placeholder="username" />
+          <label class="label-login">Username</label>
+          <input class="input-login" type="text" placeholder="username" />
         </div>
         <div class="text-input--login">
-          <label>Password</label>
-          <input type="password" placeholder="password" /><br />
+          <label class="label-login">Password</label>
+          <input type="password" class="input-login" placeholder="password" /><br />
         </div>
-        <input type="submit" value="Sign In" /><br />
-        <label> <input type="checkbox" checked="checked" />Remember me </label>
+        <input type="submit" id="button-login" value="Sign In" /><br />
+        <label> <input type="checkbox" checked="checked" />Remember me </label><br/>
+		 <a id="a-forgot-pass">Forgot Password?</a>
       </form>
-
-      <!--Recover Passowrd-->
-      <div id="recover-password">
-        <a>Forgot Password?</a>
-      </div>
-    </section>
-
-    <!--Score Area-->
-    <section id="section-score">
-      <h2>Score</h2>
-
-      <table border="1">
-        <tr>
-          <th colspan="1"></th>
-          <th colspan="1">Player 1</th>
-          <th colspan="1">Player 2</th>
-        </tr>
-        <tr>
-          <th>Points</th>
-        </tr>
-      </table>
     </section>
 
     <!--Game Area-->
+  
     <section id="section-game">
       <h2>Game</h2>
-
+		
+	<div id="game-area">
       <div id="storage-player1" class="storage"></div>
       <div id="cavity-player1--1" class="cavity"></div>
       <div id="cavity-player1--2" class="cavity"></div>
@@ -72,6 +62,13 @@
       <div id="cavity-player2--5" class="cavity"></div>
       <div id="cavity-player2--6" class="cavity"></div>
       <div id="storage-player2" class="storage"></div>
+		</div>
+    </section>
+
+    <!--Commands-->
+    <section id="section-commands">
+      <input class="button-commands" type="button" value="Start">
+      <input class="button-commands" type="button" value="Quit">
     </section>
 
     <!--Configurations Area-->
@@ -123,30 +120,20 @@
       </form>
     </section>
 
-    <!--Commands Area-->
-    <section id="section-commands">
-      <h2>Commands</h2>
+     <!--Score Area-->
+     <section id="section-score">
+      <h2>Score</h2>
 
-      <form action="manage_commands" method="post">
-        <div class="settings_text_input">
-          <label>Rules</label>
-          <input name="rules" />
-        </div>
-        <div class="text-input--settings">
-          <label>Start Game</label>
-          <input />
-        </div>
-        <div class="text-input--settings">
-          <label>Quit Game</label>
-          <input />
-        </div>
-        <div class="text-input--settings">
-          <label>Score</label>
-          <input />
-        </div>
-        <input type="reset" value="Reset" class="button-settings"/>
-        <input type="submit" value="Change Commands" class="button-settings" />
-      </form>
+      <table border="1">
+        <tr>
+          <th colspan="1"></th>
+          <th colspan="1">Player 1</th>
+          <th colspan="1">Player 2</th>
+        </tr>
+        <tr>
+          <th>Points</th>
+        </tr>
+      </table>
     </section>
 
     <!--Rules Area-->
