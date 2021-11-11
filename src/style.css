@@ -1,51 +1,21 @@
-/* tags css */
+/* General: html tags */
+
 body {
     background-image: linear-gradient(to bottom, #B88B4A, #b8a080);
     margin:0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-#s-banner {
-	display: inline-flex;
-	justify-content: flex-start;
-	align-items: center;	
-}
-
-#img-banner-logo {
-    display: inline-block;
-    vertical-align: middle;
-    width: 4.5em;
-    height: 4.5em;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-}
-
-#s-navbar{
-	display: inline-flex;
-	justify-content: flex-end;
-	align-items: center;
-}
-
-.img-navbar-icon {
-    width: 3em;
-    height: 3em;
-	margin: 3em;
-}
-
-.img-navbar-icon:hover{
-    filter: grayscale(1) invert(1);
-}
-
-#d-main{
-	display: grid;
-	grid-template-columns: 25% 50% 25%;
-}
-
-#a--forgot-pass{
-	float:right;
-	padding-top: 1em;
-	padding-right: 2em;
-	font-size: 0.8em;
+header {
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    padding-left: 4em;
+    padding-right: 4em;
+    margin:0;
+    background-color: #242331;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 form{
@@ -54,33 +24,9 @@ form{
 	padding-bottom: 3em;
 }
 
-header {
-    padding-top: 0.3em;
-    padding-bottom: 0.3em;
-    padding-left: 4.2em;
-    margin:0;
-    background-color: #242331;
-}
-
-h1 {
-    display: inline-block;
-    vertical-align: middle;
-    padding-left: 0.2em;
-    padding-right: 8em;
-    color: white;
-    text-align: left;
-    font-size: 4.2em;
-    font-family: 'Encode Sans', sans-serif;   
-}
-
-#button-login{
-	border-radius: 0.8em;
-	margin-top: 1em;
-	margin-bottom: 0.5em;
-	padding-left: 4.8em;
-	padding-right: 4.8em;
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
+section{
+    margin-left: 1em;
+    margin-right: 1em;
 }
 
 h2 {
@@ -90,18 +36,57 @@ h2 {
     padding-top: 0.4em;
     padding-bottom: 0.4em;
     padding-left:0.5em;
+    font-size: 1.4em;
 }
 
-#section-game {
-  padding-left: 0em;
+h3{
+	font-size: 1.3em;
 }
 
-#game-area{
-	  background-color: powderblue;
-	   height: 100%;
+/*Specific: ids and classes */ 
+/* header */
+#s-banner {
 }
 
-/* Authentication */
+#img-banner-logo {
+    display: inline-block;
+    vertical-align: middle;
+    width: 4em;
+    height: 4em;
+    padding-right: 0.5em;
+}
+
+#img-banner-name {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 0.2em;
+    color: white;
+    text-align: left;
+    font-size: 3em;
+    font-family: 'Encode Sans', sans-serif;   
+}
+
+#s-navbar{
+    display: inline-flex;
+    justify-content: space-around;
+    gap: 4.5em;
+}
+
+.img-navbar-icon {
+    width: 2.5em;
+    height: 2.5em;
+	margin:0;
+}
+
+.img-navbar-icon:hover{
+    filter: grayscale(1) invert(1);
+}
+
+/* main page area */
+#d-main{
+	display: grid;
+	grid-template-columns: 25% 50% 25%;
+}
 
 #form-authentication-login {
     border-radius: 1em;
@@ -124,22 +109,37 @@ h2 {
 	padding: 0.5em;
 }
 
-#form-configuration{
-	    border-radius: 1em;
+#button-login-signin{
+	border-radius: 0.8em;
+	margin-top: 1em;
+	margin-bottom: 0.5em;
+	padding-left: 4.8em;
+	padding-right: 4.8em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+
+#a-login-forgotpass{
+	float:right;
+	padding-top: 1em;
+	padding-right: 2em;
+	font-size: 0.8em;
+}
+
+#section-main-game {
+    padding-left: 0em;
+}
+  
+#d-game-area{
+    background-color: powderblue;
+    height: 100%;
+}
+
+#form-configurations-settings{
+    border-radius: 1em;
     border:solid;
     border-color: white;
     background-color: brown;
-}
-
-h3{
-	font-size: 1.3em;
-}
-
-p {}
-
-section{
-    margin-left: 1em;
-    margin-right: 1em;
 }
 
 .button-commands{
@@ -163,10 +163,4 @@ section{
     background-color: white;
 }
 
-label {}
-
-input[type=text] {}
-
-input[type=password] {}
-
-input[type=radio] {}
+/* footer */

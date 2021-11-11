@@ -26,10 +26,10 @@
 	<div id="d-main"> <!--d-main--> 
     <!--Authentication Area-->
     <section id="section-main-authentication"> <!--section-main-authentication--> 
-      <h2>Authentication</h2> <!--h2-authenticataion-title--> 
+      <h2 id="h2-authenticataion-title">Authentication</h2> <!--h2-authenticataion-title--> 
 
       <form id="form-authentication-login" action="signin" method="post"> <!--form-authentication-login--> 
-        <h3>Sign In</h3>
+        <h3 id="h3-login-title">Sign In</h3>
         <div class="d-login-info"> <!--d-login-info--> 
           <label class="label-login-info">Username</label> <!--label-login-info--> 
           <input class="input-login-info" type="text" placeholder="username" />  <!--input-login-info--> 
@@ -38,76 +38,76 @@
           <label class="label-login-info">Password</label> <!--label-login-info--> 
           <input class="input-login-info" type="password" placeholder="password" /><br />  <!--input-login-info--> 
         </div>
-        <input type="submit" id="button-login" value="Sign In" /><br /> <!--button-login-signin-->
-        <label id="label-rememberme"> <input type="checkbox" checked="checked" />Remember me </label><br/>  <!--label-login-rememberme--> <!--checkbox-login-rememberme--> 
-		 <a id="a--forgot-pass">Forgot Password?</a> <!--a-login-forgotpass--> 
+        <input id="button-login-signin" type="submit" value="Sign In" /><br /> <!--button-login-signin-->
+        <label id="label-login-rememberme"> <input id="checkbox-login-rememberme" type="checkbox" checked="checked" />Remember me </label><br/>  <!--label-login-rememberme--> <!--checkbox-login-rememberme--> 
+		 <a id="a-login-forgotpass">Forgot Password?</a> <!--a-login-forgotpass--> 
       </form>
     </section>
 
     <!--Game Area-->
   
-    <section id="section-game"> <!--section-main-game--> 
-      <h2>Game</h2> <!--h2-game-title--> 
+    <section id="section-main-game"> <!--section-main-game--> 
+      <h2 id="h2-game-title">Game</h2> <!--h2-game-title--> 
 		
-	<div id="game-area"> <!--d-game-area--> 
-      <div id="storage-player1" class="storage"></div> <!--d-area-storage--p1--> <!--d-area-storage--> 
-      <div id="cavity-player1--1" class="cavity"></div> <!--d-area-cavitity--p1-1--> <!--d-area-cavitity-->
-      <div id="cavity-player1--2" class="cavity"></div> <!--d-area-cavitity--p1-2-->
-      <div id="cavity-player1--3" class="cavity"></div> <!--d-area-cavitity--p1-3-->
-      <div id="cavity-player1--4" class="cavity"></div>
-      <div id="cavity-player1--5" class="cavity"></div>
-      <div id="cavity-player1--6" class="cavity"></div>
-      <div id="cavity-player2--1" class="cavity"></div> <!--d-area-cavitity--p2-1-->
-      <div id="cavity-player2--2" class="cavity"></div>
-      <div id="cavity-player2--3" class="cavity"></div>
-      <div id="cavity-player2--4" class="cavity"></div>
-      <div id="cavity-player2--5" class="cavity"></div>
-      <div id="cavity-player2--6" class="cavity"></div> 
-      <div id="storage-player2" class="storage"></div><!--d-area-storage--p2--> <!--d-area-storage-->
+	<div id="d-game-area"> <!--d-game-area--> 
+      <div id="d-area-storage--p1" class="d-area-storage"></div> <!--d-area-storage--p1--> <!--d-area-storage--> 
+      <div id="d-area-cavitity--p1-1" class="d-area-cavitity"></div> <!--d-area-cavitity--p1-1--> <!--d-area-cavitity-->
+      <div id="d-area-cavitity--p1-2" class="d-area-cavitity"></div> <!--d-area-cavitity--p1-2-->
+      <div id="d-area-cavitity--p1-3" class="d-area-cavitity"></div> <!--d-area-cavitity--p1-3-->
+      <div id="d-area-cavitity--p1-4" class="d-area-cavitity"></div>
+      <div id="d-area-cavitity--p1-5" class="d-area-cavitity"></div>
+      <div id="d-area-cavitity--p1-6" class="d-area-cavitity"></div>
+      <div id="d-area-cavitity--p2-1" class="d-area-cavitity"></div> <!--d-area-cavitity--p2-1-->
+      <div id="d-area-cavitity--p2-2" class="d-area-cavitity"></div>
+      <div id="d-area-cavitity--p2-3" class="d-area-cavitity"></div>
+      <div id="d-area-cavitity--p2-4" class="d-area-cavitity"></div>
+      <div id="d-area-cavitity--p2-5" class="d-area-cavitity"></div>
+      <div id="d-area-cavitity--p2-6" class="d-area-cavitity"></div> 
+      <div id="d-area-storage--p2" class="d-area-storage"></div><!--d-area-storage--p2--> <!--d-area-storage-->
 		</div>
     </section>
 	 
 	  
 	  <!--Configurations Area-->
-    <section id="section-configurations"> <!--section-main-configurations-->
-      <h2>Configurations</h2> <!--h2-configurations-title-->
+    <section id="section-main-configurations"> <!--section-main-configurations-->
+      <h2 id="h2-configurations-title">Configurations</h2> <!--h2-configurations-title-->
 
-      <form id="form-configuration" action="configurate" method="post"> <!--form-configurations-settings--> 
-        <div class="text-input--settings"> <!--d-settings-info--quantities--> 
-          <label>Number of cavities</label> <!--label-settings-info--quantities--> 
-          <input /><br /> <!--input-settings-info--quantities--> 
+      <form id="form-configurations-settings" action="configurate" method="post"> <!--form-configurations-settings--> 
+        <div class="d-settings-info--quantities"> <!--d-settings-info--quantities--> 
+          <label class="label-settings-info--quantities">Number of cavities</label> <!--label-settings-info--quantities--> 
+          <input class="input-settings-info--quantities" /><br /> <!--input-settings-info--quantities--> 
         </div>
-        <div class="text-input--settings"> <!--d-settings-info--quantities--> 
-          <label>Initial seeds per cavity</label><!--label-settings-info--quantities--> 
-          <input /><br /> <!--input-settings-info--quantities--> 
-        </div>
-
-        <p>Please select your game mode:</p> <!--p-settings-instructions--> 
-        <div>                                  <!--d-settings-info--mode--> 
-          <input type="radio" id="local" value="local" />  <!--radio-settings-info--mode--> 
-          <label for="local">Local Player</label> <!--label-settings-info--mode--> 
-        </div>
-        <div> <!--d-settings-info--mode--> 
-          <input type="radio" id="ai" value="ai" /> <!--radio-settings-info--mode--> 
-          <label for="ai">AI</label> <!--label-settings-info--mode--> 
+        <div class="d-settings-info--quantities"> <!--d-settings-info--quantities--> 
+          <label class="label-settings-info--quantities">Initial seeds per cavity</label><!--label-settings-info--quantities--> 
+          <input class="input-settings-info--quantities" /><br /> <!--input-settings-info--quantities--> 
         </div>
 
-        <p>Please select the AI dificulty level:</p> <!--p-settings-dificulty--> 
+        <p id="p-settings-instructions">Please select your game mode:</p> <!--p-settings-instructions--> 
+        <div id="d-settings-info--mode">                                  <!--d-settings-info--mode--> 
+          <input class="radio-settings-info--mode" type="radio" " value="local" />  <!--radio-settings-info--mode--> 
+          <label class="label-settings-info--mode">Local Player</label> <!--label-settings-info--mode--> 
+        </div>
+        <div class="d-settings-info--mode"> <!--d-settings-info--mode--> 
+          <input class="radio-settings-info--mode" type="radio" id="ai" value="ai" /> <!--radio-settings-info--mode--> 
+          <label class="label-settings-info--mode">AI</label> <!--label-settings-info--mode--> 
+        </div>
 
-        <div> <!--d-settings-info--dificulty--> 
-          <input type="radio" /> <!--radio-settings-info--dificulty--> 
-            <label for="javascript">Easy</label> <!--label-settings-info--dificulty--> 
+        <p class="p-settings-instructions">Please select the AI dificulty level:</p> <!--p-settings-instructions--> 
+
+        <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
+          <input class="radio-settings-info--dificulty" type="radio" /> <!--radio-settings-info--dificulty--> 
+            <label class="label-settings-info--dificulty">Easy</label> <!--label-settings-info--dificulty--> 
         </div> <!--d-settings-info--dificulty--> 
-        <div> <!--d-settings-info--dificulty--> 
-          <input type="radio" /> <!--radio-settings-info--dificulty--> 
-            <label for="javascript">Medium</label>  <!--label-settings-info--dificulty--> 
+        <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
+          <input class="radio-settings-info--dificulty" type="radio" /> <!--radio-settings-info--dificulty--> 
+            <label class="label-settings-info--dificulty">Medium</label>  <!--label-settings-info--dificulty--> 
         </div> <!--d-settings-info--dificulty--> 
-        <div> <!--d-settings-info--dificulty--> 
-          <input type="radio" />  <!--radio-settings-info--dificulty-->
-            <label for="javascript">Hard</label><br />  <!--label-settings-info--dificulty--> 
+        <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
+          <input class="radio-settings-info--dificulty" type="radio" />  <!--radio-settings-info--dificulty-->
+            <label class="label-settings-info--dificulty">Hard</label><br />  <!--label-settings-info--dificulty--> 
         </div>
-        <input type="reset" value="Reset" class="button-settings"/> <!--button-settings-info--> 
-        <input type="submit" value="Configurate" class="button-settings" /> <!--button-settings-info--> 
+        <input class="button-settings-info" type="reset" value="Reset" /> <!--button-settings-info--> 
+        <input class="button-settings-info" type="submit" value="Configurate" class="button-settings" /> <!--button-settings-info--> 
       </form>
     </section>
 		
