@@ -9,19 +9,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@900&display=swap" rel="stylesheet">
     <title>Mancala</title>
   </head>
-
   <body>
     <header>
-      <img id="logo" src="../res/logo.png">
-      <h1>Mancala</h1>
+		<span id="header-logo">
+		  <img id="logo" src="../res/logo.png">
+		  <h1>Mancala</h1>
+		</span>
 
-      <span id="icons">
-      <img class="icon_temp_section" src="../res/chat_icon.png"> 
-      <img class="icon_temp_section" src="../res/rules_icon.png"> 
-      <img class="icon_temp_section" src="../res/score_icon.png"> 
+      <span id="header-icons">
+		  <img class="img-icon--header" src="../res/chat_icon.png"> 
+		  <img class="img-icon--header" src="../res/rules_icon.png"> 
+		  <img class="img-icon--header" src="../res/score_icon.png"> 
       </span>
     </header>
-
+	  
+	<div id="main-areas">
     <!--Authentication Area-->
     <section id="section-authentication">
       <h2>Authentication</h2>
@@ -37,8 +39,8 @@
           <input type="password" class="input-login" placeholder="password" /><br />
         </div>
         <input type="submit" id="button-login" value="Sign In" /><br />
-        <label> <input type="checkbox" checked="checked" />Remember me </label><br/>
-		 <a id="a-forgot-pass">Forgot Password?</a>
+        <label id="label-rememberme"> <input type="checkbox" checked="checked" />Remember me </label><br/>
+		 <a id="a--forgot-pass">Forgot Password?</a>
       </form>
     </section>
 
@@ -64,24 +66,13 @@
       <div id="storage-player2" class="storage"></div>
 		</div>
     </section>
-
-    <!--Commands-->
-    <section id="section-commands">
-      <input class="button-commands" type="button" value="Start">
-      <input class="button-commands" type="button" value="Quit">
-    </section>
-
-    <!--Configurations Area-->
+	 
+	  
+	  <!--Configurations Area-->
     <section id="section-configurations">
       <h2>Configurations</h2>
 
-      <p>
-        To configurate the game, input the parameters values and check the
-        desired options, followed by clicking on configurate button.<br />
-        If you want to reset default configurations, click on the reset button.
-      </p>
-
-      <form action="configurate" method="post">
+      <form id="form-configuration" action="configurate" method="post">
         <div class="text-input--settings">
           <label>Number of cavities</label>
           <input /><br />
@@ -119,6 +110,20 @@
         <input type="submit" value="Configurate" class="button-settings" />
       </form>
     </section>
+		
+		</div>
+
+    <!--Commands-->
+    <section id="section-commands">
+      <input class="button-commands" type="button" value="Start">
+      <input class="button-commands" type="button" value="Quit">
+    </section>
+	  
+	   <p>
+        To configurate the game, input the parameters values and check the
+        desired options, followed by clicking on configurate button.<br />
+        If you want to reset default configurations, click on the reset button.
+      </p>
 
      <!--Score Area-->
      <section id="section-score">
