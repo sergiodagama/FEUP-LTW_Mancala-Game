@@ -11,32 +11,32 @@
   </head>
   <body>
     <header>
-		<span id="header-logo"> <!--s-banner-->
-		  <img id="logo" src="../res/logo.png"> <!--img-banner-logo-->
-		  <h1>Mancala</h1> <!--img-banner-name-->
+		<span id="s-banner"> <!--s-banner-->
+		  <img id="img-banner-logo" src="../res/logo.png"> <!--img-banner-logo-->
+		  <h1 id="img-banner-name">Mancala</h1> <!--img-banner-name-->
 		</span>
 
-      <span id="header-icons"> <!--s-navbar-->
-		  <img class="icon" src="../res/chat_icon.png"> <!--img-navbar-icon--> 
-		  <img class="icon" src="../res/rules_icon.png">  <!--img-navbar-icon--> 
-		  <img class="icon" src="../res/score_icon.png"> <!--img-navbar-icon--> 
+      <span id="s-navbar"> <!--s-navbar-->
+		  <img class="img-navbar-icon" src="../res/chat_icon.png"> <!--img-navbar-icon--> 
+		  <img class="img-navbar-icon" src="../res/rules_icon.png">  <!--img-navbar-icon--> 
+		  <img class="img-navbar-icon" src="../res/score_icon.png"> <!--img-navbar-icon--> 
       </span>
     </header>
 	  
-	<div id="main-areas"> <!--d-main--> 
+	<div id="d-main"> <!--d-main--> 
     <!--Authentication Area-->
-    <section id="section-authentication"> <!--section-main-authentication--> 
+    <section id="section-main-authentication"> <!--section-main-authentication--> 
       <h2>Authentication</h2> <!--h2-authenticataion-title--> 
 
-      <form id="form-authentication" action="signin" method="post"> <!--form-authentication-login--> 
+      <form id="form-authentication-login" action="signin" method="post"> <!--form-authentication-login--> 
         <h3>Sign In</h3>
-        <div class="text-input--login"> <!--d-login-info--> 
-          <label class="label-login">Username</label> <!--label-login-info--> 
-          <input class="input-login" type="text" placeholder="username" />  <!--input-login-info--> 
+        <div class="d-login-info"> <!--d-login-info--> 
+          <label class="label-login-info">Username</label> <!--label-login-info--> 
+          <input class="input-login-info" type="text" placeholder="username" />  <!--input-login-info--> 
         </div>
-        <div class="text-input--login">
-          <label class="label-login">Password</label> <!--label-login-info--> 
-          <input type="password" class="input-login" placeholder="password" /><br />  <!--input-login-info--> 
+        <div class="d-login-info">
+          <label class="label-login-info">Password</label> <!--label-login-info--> 
+          <input class="input-login-info" type="password" placeholder="password" /><br />  <!--input-login-info--> 
         </div>
         <input type="submit" id="button-login" value="Sign In" /><br /> <!--button-login-signin-->
         <label id="label-rememberme"> <input type="checkbox" checked="checked" />Remember me </label><br/>  <!--label-login-rememberme--> <!--checkbox-login-rememberme--> 
@@ -73,41 +73,41 @@
       <h2>Configurations</h2> <!--h2-configurations-title-->
 
       <form id="form-configuration" action="configurate" method="post"> <!--form-configurations-settings--> 
-        <div class="text-input--settings"> <!--d-settings-info--quanities--> 
-          <label>Number of cavities</label> <!--label-settings-info--> 
-          <input /><br /> <!--input-settings-info--> 
+        <div class="text-input--settings"> <!--d-settings-info--quantities--> 
+          <label>Number of cavities</label> <!--label-settings-info--quantities--> 
+          <input /><br /> <!--input-settings-info--quantities--> 
         </div>
         <div class="text-input--settings"> <!--d-settings-info--quantities--> 
-          <label>Initial seeds per cavity</label> <!--label-settings-info--> 
-          <input /><br /> <!--input-settings-info--> 
+          <label>Initial seeds per cavity</label><!--label-settings-info--quantities--> 
+          <input /><br /> <!--input-settings-info--quantities--> 
         </div>
 
         <p>Please select your game mode:</p> <!--p-settings-instructions--> 
         <div>                                  <!--d-settings-info--mode--> 
-          <input type="radio" id="local" value="local" />
-          <label for="local">Local Player</label>
+          <input type="radio" id="local" value="local" />  <!--radio-settings-info--mode--> 
+          <label for="local">Local Player</label> <!--label-settings-info--mode--> 
         </div>
         <div> <!--d-settings-info--mode--> 
-          <input type="radio" id="ai" value="ai" />
-          <label for="ai">AI</label>
+          <input type="radio" id="ai" value="ai" /> <!--radio-settings-info--mode--> 
+          <label for="ai">AI</label> <!--label-settings-info--mode--> 
         </div>
 
-        <p>Please select the AI dificulty level:</p>
+        <p>Please select the AI dificulty level:</p> <!--p-settings-dificulty--> 
 
         <div> <!--d-settings-info--dificulty--> 
-          <input type="radio" />
-            <label for="javascript">Easy</label>  
-        </div>
+          <input type="radio" /> <!--radio-settings-info--dificulty--> 
+            <label for="javascript">Easy</label> <!--label-settings-info--dificulty--> 
+        </div> <!--d-settings-info--dificulty--> 
         <div> <!--d-settings-info--dificulty--> 
-          <input type="radio" /> 
-            <label for="javascript">Medium</label>  
-        </div>
+          <input type="radio" /> <!--radio-settings-info--dificulty--> 
+            <label for="javascript">Medium</label>  <!--label-settings-info--dificulty--> 
+        </div> <!--d-settings-info--dificulty--> 
         <div> <!--d-settings-info--dificulty--> 
-          <input type="radio" />
-            <label for="javascript">Hard</label><br />
+          <input type="radio" />  <!--radio-settings-info--dificulty-->
+            <label for="javascript">Hard</label><br />  <!--label-settings-info--dificulty--> 
         </div>
-        <input type="reset" value="Reset" class="button-settings"/>
-        <input type="submit" value="Configurate" class="button-settings" />
+        <input type="reset" value="Reset" class="button-settings"/> <!--button-settings-info--> 
+        <input type="submit" value="Configurate" class="button-settings" /> <!--button-settings-info--> 
       </form>
     </section>
 		
@@ -126,8 +126,8 @@
       </p>
 
      <!--Score Area-->
-     <section id="section-score"> <!--section-main-score--> 
-      <h2>Score</h2> <!--h2-rules-title--> 
+     <section id="section-score">
+      <h2>Score</h2>
 
       <table border="1">
         <tr>

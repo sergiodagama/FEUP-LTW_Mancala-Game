@@ -4,6 +4,43 @@ body {
     margin:0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+#s-banner {
+	display: inline-flex;
+	justify-content: flex-start;
+	align-items: center;	
+}
+
+#img-banner-logo {
+    display: inline-block;
+    vertical-align: middle;
+    width: 4.5em;
+    height: 4.5em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+#s-navbar{
+	display: inline-flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.img-navbar-icon {
+    width: 3em;
+    height: 3em;
+	margin: 3em;
+}
+
+.img-navbar-icon:hover{
+    filter: grayscale(1) invert(1);
+}
+
+#d-main{
+	display: grid;
+	grid-template-columns: 25% 50% 25%;
+}
+
 #a--forgot-pass{
 	float:right;
 	padding-top: 1em;
@@ -44,7 +81,6 @@ h1 {
 	padding-right: 4.8em;
 	padding-top: 0.5em;
 	padding-bottom: 0.5em;
-	
 }
 
 h2 {
@@ -60,25 +96,32 @@ h2 {
   padding-left: 0em;
 }
 
-#main-areas{
-	display: grid;
-	grid-template-columns: 25% 50% 25%;
-}
-
 #game-area{
 	  background-color: powderblue;
 	   height: 100%;
 }
 
-#section-authentication{
+/* Authentication */
 
-}
-
-#form-authentication{
+#form-authentication-login {
     border-radius: 1em;
     border:solid;
     border-color: white;
     background-color: brown;
+}
+
+.label-login-info{
+	display: block;
+	font-size: 1.1em;
+	color: white;
+	font-weight: bold;
+	padding-top: 0.3em;
+}
+
+.input-login-info{
+	border-radius: 0.5em;
+	border:inset;
+	padding: 0.5em;
 }
 
 #form-configuration{
@@ -87,22 +130,6 @@ h2 {
     border-color: white;
     background-color: brown;
 }
-
-.label-login{
-	display: block;
-	font-size: 1.1em;
-	color: white;
-	font-weight: bold;
-	padding-top: 0.3em;
-}
-
-
-.input-login{
-	border-radius: 0.5em;
-	border:inset;
-	padding: 0.5em;
-}
-
 
 h3{
 	font-size: 1.3em;
@@ -143,42 +170,3 @@ input[type=text] {}
 input[type=password] {}
 
 input[type=radio] {}
-
-/* classes css */
-
-#header-logo{
-	display: inline-flex;
-	justify-content: flex-start;
-	align-items: center;	
-}
-
-#header-icons{
-	display: inline-flex;
-	justify-content: flex-end;
-	align-items: center;
-}
-
-.icon {
-    width: 3em;
-    height: 3em;
-	margin: 3em;
-}
-
-/* ids css */
-
-#logo {
-    display: inline-block;
-    vertical-align: middle;
-    width: 4.5em;
-    height: 4.5em;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-}
-
-.icon:hover{
-    filter: grayscale(1) invert(1);
-}
-
-
-
-
