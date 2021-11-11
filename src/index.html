@@ -73,14 +73,14 @@
       <h2 id="h2-configurations-title">Configurations</h2> <!--h2-configurations-title-->
 
       <form id="form-configurations-settings" action="configurate" method="post"> <!--form-configurations-settings--> 
-        <div class="d-settings-info--quantities"> <!--d-settings-info--quantities--> 
-          <label class="label-settings-info--quantities">Number of cavities:</label> <!--label-settings-info--quantities--> 
-          <input class="input-settings-info--quantities" /><br /> <!--input-settings-info--quantities--> 
+          <div class="d-settings-info--quantities">
+          <label class="label-settings-info--quantities">Number of cavities:</label><!--label-settings-info--quantities-->
+          <input class="input-settings-info--quantities" /> <!--input-settings-info--quantities--> 
         </div>
-        <div class="d-settings-info--quantities"> <!--d-settings-info--quantities--> 
+        <div class="d-settings-info--quantities">
           <label class="label-settings-info--quantities">Initial seeds per cavity:</label><!--label-settings-info--quantities--> 
-          <input class="input-settings-info--quantities" /><br /> <!--input-settings-info--quantities--> 
-        </div>
+          <input class="input-settings-info--quantities" /> <!--input-settings-info--quantities--> 
+          </div>
 
         <p class="p-settings-instructions">Please select your game mode:</p> <!--p-settings-instructions--> 
         <div id="d-settings-info--mode">                                  <!--d-settings-info--mode--> 
@@ -106,8 +106,10 @@
           <input class="radio-settings-info--dificulty" type="radio" />  <!--radio-settings-info--dificulty-->
             <label class="label-settings-info--dificulty">Hard</label><br />  <!--label-settings-info--dificulty--> 
         </div>
-        <input class="button-settings-info" type="reset" value="Reset" /> <!--button-settings-info--> 
-        <input class="button-settings-info" type="submit" value="Configurate" class="button-settings" /> <!--button-settings-info--> 
+        <div id="d-settings-buttons">
+          <input class="button-settings-info" type="submit" value="Configurate" class="button-settings" /> <!--button-settings-info--> 
+          <input class="button-settings-info" type="reset" value="Reset" /> <!--button-settings-info--> 
+        </div>
       </form>
     </section>
 		
