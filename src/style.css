@@ -1,7 +1,8 @@
 /* General: html tags */
 
 body {
-    background-image: linear-gradient(to bottom, #B88B4A, #b8a080);
+    /*background-image: linear-gradient(to bottom, #B88B4A, #b8a080);*/
+    background-color: #2EC4B6;
     margin:0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -22,6 +23,7 @@ form{
 	color: white;
 	padding-left: 3em;
 	padding-bottom: 3em;
+    background-color: #FF9F1C;
 }
 
 section{
@@ -31,8 +33,9 @@ section{
 
 h2 {
     font-family: 'Encode Sans', sans-serif;
-    background-color: #533E2D;
-    color:whitesmoke;
+    border-radius: 0.5em;
+    background-color: powderblue; 
+    color:#242331;
     padding-top: 0.4em;
     padding-bottom: 0.4em;
     padding-left:0.5em;
@@ -46,20 +49,22 @@ h3{
 /*Specific: ids and classes */ 
 /* header */
 #s-banner {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1em;
 }
 
 #img-banner-logo {
     display: inline-block;
     vertical-align: middle;
-    width: 4em;
-    height: 4em;
-    padding-right: 0.5em;
+    width: 3.8em;
+    height: 3.8em;
 }
 
 #img-banner-name {
     display: inline-block;
     vertical-align: middle;
-    padding-left: 0.2em;
     color: white;
     text-align: left;
     font-size: 3em;
@@ -79,7 +84,7 @@ h3{
 }
 
 .img-navbar-icon:hover{
-    filter: grayscale(1) invert(1);
+    filter: invert(45%) sepia(85%) saturate(700%) hue-rotate(345deg) brightness(107%) contrast(101%);
 }
 
 /* main page area */
@@ -92,7 +97,10 @@ h3{
     border-radius: 1em;
     border:solid;
     border-color: white;
-    background-color: brown;
+}
+
+#h3-login-title{
+    color: #242331;
 }
 
 .label-login-info{
@@ -104,19 +112,28 @@ h3{
 }
 
 .input-login-info{
-	border-radius: 0.5em;
-	border:inset;
+	border-radius: 0.4em;
+	border:none;
 	padding: 0.5em;
 }
 
 #button-login-signin{
-	border-radius: 0.8em;
+	border-radius: 0.6em;
 	margin-top: 1em;
 	margin-bottom: 0.5em;
-	padding-left: 4.8em;
+	padding-left: 4.3em;
 	padding-right: 4.8em;
 	padding-top: 0.5em;
 	padding-bottom: 0.5em;
+    background-color: #2EC4B6;
+    border: none;
+    color: white;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+#button-login-signin:hover{
+    background-color: #242331;
 }
 
 #a-login-forgotpass{
@@ -131,15 +148,16 @@ h3{
 }
   
 #d-game-area{
-    background-color: powderblue;
-    height: 100%;
+    background-color: #CBF3F0;
+    border-radius: 0.5em;
+    height: 83%;
 }
 
 #form-configurations-settings{
     border-radius: 1em;
     border:solid;
     border-color: white;
-    background-color: brown;
+    /*background-color: brown;*/
 }
 
 .button-commands{
