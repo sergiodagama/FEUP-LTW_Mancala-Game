@@ -1,6 +1,6 @@
 # Mancala
 
-[//]: # ![Logo](/res/logo.png)
+<img src="/res/logo.png" width="70" height="70>
 
 LTW (L.EIC FEUP) 1º semester 1º pratical work
 
