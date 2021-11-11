@@ -154,10 +154,26 @@ h3{
 }
 
 #form-configurations-settings{
+    padding-top: 2em;
     border-radius: 1em;
     border:solid;
     border-color: white;
-    /*background-color: brown;*/
+}
+
+.d-settings-info--quantities{
+    padding-bottom: 0.5em;
+}
+
+.input-settings-info--quantities{
+    border-radius: 0.4em;
+    width: 2em;
+    border:solid;
+    border-color: white;
+}
+
+.p-settings-instructions{
+    font-weight: bold;
+    color: #242331;
 }
 
 .button-commands{
