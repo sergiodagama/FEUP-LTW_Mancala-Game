@@ -93,7 +93,7 @@ footer{
 }
 
 .img-navbar-icon:hover{
-    filter: invert(45%) sepia(85%) saturate(700%) hue-rotate(345deg) brightness(107%) contrast(101%);
+    filter: invert(45%) sepia(85%) saturate(700%) hue-rotate(345deg) brightness(107%) contrast(101%) drop-shadow(2px 2px 20px white);
 }
 
 /* main page area */
@@ -231,6 +231,45 @@ footer{
 .button-settings-info:hover{
     color: #242331;
     background-color: white;
+}
+
+#d-settings-help{
+    position: relative;
+    margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+#p-settings-help--text{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left:0;
+    border-radius: 1em;
+    background: rgba(56, 56, 56, 0.95);
+    color: white;
+   visibility: hidden;
+   padding: 0.3em;
+   font-size:smaller;
+   font-weight: normal;
+   opacity: 0;
+   transition: opacity .2s, visibility .2s;
+}
+
+#d-settings-help:hover #p-settings-help--text{
+    visibility: visible;
+  opacity: 1;
+}
+
+#img-settings-help--icon{
+    float: right;
+    padding-top: 1em;
+    height: 1em;
+    width: 1em;
+}
+   
+#img-settings-help--icon:hover{
+   filter: invert(100%);
 }
 
 #section-main-commands{
