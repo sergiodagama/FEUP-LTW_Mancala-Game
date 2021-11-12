@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+  <head>	  
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css" />
@@ -17,10 +17,48 @@
 		</span>
 
       <span id="s-navbar"> <!--s-navbar-->
-		  <img class="img-navbar-icon" src="../res/chat_icon.png"> <!--img-navbar-icon--> 
-		  <img class="img-navbar-icon" src="../res/rules_icon.png">  <!--img-navbar-icon--> 
-		  <img class="img-navbar-icon" src="../res/score_icon.png"> <!--img-navbar-icon--> 
-      </span>
+		  <img id="img-navbar--chat" class="img-navbar-icon" src="../res/chat_icon.png"> <!--img-navbar-icon--> 
+		  <img id="img-navbar--rules" class="img-navbar-icon" src="../res/rules_icon.png">  <!--img-navbar-icon--> 
+		  <img id="img-navbar--score" class="img-navbar-icon" src="../res/score_icon.png"> <!--img-navbar-icon--> 
+      </span>		
+			  <script>
+var c = document.getElementById("img-navbar--chat");
+c.addEventListener("click", chat);
+				  
+var r = document.getElementById("img-navbar--rules");
+r.addEventListener("click", rules);
+				  
+var s = document.getElementById("img-navbar--score");
+s.addEventListener("click", score);
+
+var flag = [false, false, false];
+
+function toggleIcon(i, image_element, icon1, icon2) {
+	if(flag[i]){ 
+		image_element.src = icon1;
+		flag[i] = false;
+	}
+	else{ 
+		image_element.src = icon2;
+		flag[i] = true;
+	}
+
+}
+
+function chat(){
+  toggleIcon(1, c, "../res/chat_icon.png", "../res/chat_icon_active.png");
+}
+
+				  
+function rules() {
+  toggleIcon(2, r, "../res/rules_icon.png", "../res/rules_icon_active.png");
+
+}
+function score() {
+  toggleIcon(3, s, "../res/score_icon.png", "../res/score_icon_active.png");
+
+}
+</script>
     </header>
 	  
 	<div id="d-main"> <!--d-main--> 
@@ -84,7 +122,7 @@
 
         <p class="p-settings-instructions">Please select your game mode:</p> <!--p-settings-instructions--> 
         <div id="d-settings-info--mode">                                  <!--d-settings-info--mode--> 
-          <input class="radio-settings-info--mode" type="radio" " value="local" />  <!--radio-settings-info--mode--> 
+          <input class="radio-settings-info--mode" type="radio" value="local" />  <!--radio-settings-info--mode--> 
           <label class="label-settings-info--mode">Local Player</label> <!--label-settings-info--mode--> 
         </div>
         <div class="d-settings-info--mode"> <!--d-settings-info--mode--> 
@@ -113,23 +151,19 @@
       </form>
     </section>
 		
-		</div>
-
-    <!--Commands-->
-    <section id="section-commands"> 
+		    <!--Commands-->
+    <section id="section-main-commands"> 
       <input class="button-commands" type="button" value="Start">
       <input class="button-commands" type="button" value="Quit">
     </section>
-	  
-	   <p>
-        To configurate the game, input the parameters values and check the
-        desired options, followed by clicking on configurate button.<br />
-        If you want to reset default configurations, click on the reset button.
-      </p>
-
-     <!--Score Area-->
-     <section id="section-score">
-      <h2>Score</h2>
+		
+		<footer>
+			<p>Just a simple footer to test</p>
+		</footer>
+		
+		     <!--Score Area-->
+     <section id="section-main-score">
+      <h2 id="h2-score-title">Score</h2>
 
       <table border="1">
         <tr>
@@ -142,10 +176,10 @@
         </tr>
       </table>
     </section>
-
-    <!--Rules Area-->
-    <section id="section-rules"> <!--section-main-rules--> 
-      <h2>Rules</h2> <!--h2-rules-title--> 
+		
+		    <!--Rules Area-->
+    <section id="section-main-rules"> <!--section-main-rules--> 
+      <h2 id="h2-rules-title">Rules</h2> <!--h2-rules-title--> 
       <ul>
         <li>
           Each player controls their side's cavities and the storage to their
@@ -172,5 +206,14 @@
         </li>
       </ul>
     </section>
+		
+		</div> <!--MAIN DIV END-->
+	  
+	   <p>
+        To configurate the game, input the parameters values and check the
+        desired options, followed by clicking on configurate button.<br />
+        If you want to reset default configurations, click on the reset button.
+      </p>
+	  
   </body>
 </html>

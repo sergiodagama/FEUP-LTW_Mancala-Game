@@ -1,5 +1,4 @@
 /* General: html tags */
-
 body {
     /*background-image: linear-gradient(to bottom, #B88B4A, #b8a080);*/
     background-color: #2EC4B6;
@@ -46,6 +45,16 @@ h3{
 	font-size: 1.3em;
 }
 
+footer{
+	grid-area: footer;
+	text-align: center;
+	background-color: powderblue;
+	color: #242331;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	margin-top: 1.5em;
+}
+
 /*Specific: ids and classes */ 
 /* header */
 #s-banner {
@@ -90,7 +99,16 @@ h3{
 /* main page area */
 #d-main{
 	display: grid;
-	grid-template-columns: 25% 50% 25%;
+	grid-template-areas: 
+    'auth game game configs'
+    'commands game game configs'
+	'footer footer footer footer';
+	grid-template-columns: 25% 25% 25% 25%;
+	/*grid-template-rows: 0.5fr 0.5fr 0.2fr;*/
+}
+
+#section-main-authentication{
+	grid-area: auth;
 }
 
 #form-authentication-login {
@@ -145,12 +163,17 @@ h3{
 
 #section-main-game {
     padding-left: 0em;
+	grid-area: game;
 }
   
 #d-game-area{
     background-color: #CBF3F0;
     border-radius: 0.5em;
     height: 83%;
+}
+
+#section-main-configurations{
+	grid-area: configs;
 }
 
 #form-configurations-settings{
@@ -210,18 +233,23 @@ h3{
     background-color: white;
 }
 
+#section-main-commands{
+	display: flex;
+	justify-content: space-between;
+	grid-area: commands;
+}
+
 .button-commands{
-    margin:1em;
-    padding-left:3em;
-    padding-right:3em;
-    padding-top:1em;
-    padding-bottom:1em;
+    padding-left:4em;
+    padding-right:4em;
+    padding-top:0.6em;
+    padding-bottom:0.6em;
     border-radius: 0.6em;
     background-color: #242331;
     color: white;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
-    font-size: 0.8em;
+    font-size: 1em;
     border: none;
     display: block;
 }
