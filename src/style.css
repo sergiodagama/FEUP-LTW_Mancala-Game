@@ -259,4 +259,19 @@ footer{
     background-color: white;
 }
 
+#section-main-chat{
+    display: none;
+    grid-area: auth;
+}
+
+#section-main-rules{
+    display: none;
+    grid-area: game;
+}
+
+#section-main-score{
+    display: none;
+    grid-area: configs;
+}
+
 /* footer */

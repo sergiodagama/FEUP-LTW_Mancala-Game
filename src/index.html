@@ -45,19 +45,35 @@ function toggleIcon(i, image_element, icon1, icon2) {
 
 }
 
+function toggleVisibility(flag, primary, secondary, display1, display2){
+  var p = document.getElementById(primary);
+  var s = document.getElementById(secondary);
+
+  if (flag) {
+    p.style.display = "none";
+    s.style.display = display2;
+  } else {
+    p.style.display = display1;
+    s.style.display = "none";
+  }
+}
+
 function chat(){
-  toggleIcon(1, c, "../res/chat_icon.png", "../res/chat_icon_active.png");
+  toggleIcon(0, c, "../res/chat_icon.png", "../res/chat_icon_active.png");
+  toggleVisibility(flag[0], "section-main-authentication", "section-main-chat", "block", "block");
 }
 
 				  
 function rules() {
-  toggleIcon(2, r, "../res/rules_icon.png", "../res/rules_icon_active.png");
+  toggleIcon(1, r, "../res/rules_icon.png", "../res/rules_icon_active.png");
+  toggleVisibility(flag[1], "section-main-game", "section-main-rules", "block", "block");
 
 }
 function score() {
-  toggleIcon(3, s, "../res/score_icon.png", "../res/score_icon_active.png");
-
+  toggleIcon(2, s, "../res/score_icon.png", "../res/score_icon_active.png");
+  toggleVisibility(flag[2], "section-main-configurations", "section-main-score", "block", "block");
 }
+
 </script>
     </header>
 	  
@@ -176,6 +192,22 @@ function score() {
         </tr>
       </table>
     </section>
+
+    	     <!--Chat Area-->
+           <section id="section-main-chat">
+            <h2 id="h2-chat-title">Chat</h2>
+      
+            <table border="1">
+              <tr>
+                <th colspan="1"></th>
+                <th colspan="1">Player 1</th>
+                <th colspan="1">Player 2</th>
+              </tr>
+              <tr>
+                <th>Points</th>
+              </tr>
+            </table>
+          </section>
 		
 		    <!--Rules Area-->
     <section id="section-main-rules"> <!--section-main-rules--> 
