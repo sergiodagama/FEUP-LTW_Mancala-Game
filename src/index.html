@@ -128,10 +128,6 @@
       <input class="button-commands" type="button" value="Quit">
     </section>
 		
-		<footer>
-			<p>Just a simple footer to test</p>
-		</footer>
-		
 		     <!--Score Area-->
      <section id="section-main-score">
       <h2 id="h2-score-title">Score</h2>
@@ -176,8 +172,10 @@
             <h2 id="h2-chat-title">Chat</h2>
 
             <div id="d-chat-messages">
-              <div id="d-chat-messages-area"></div>
-
+              <div id="d-chat-messages-area">
+                <div class="d-chat-messages--text">Hello World!</div>
+                <div class="d-chat-messages--text">Hi there!</div>
+              </div>
               <div id="d-chat-messages-controls">
                 <input id="input-chat-messages-controls" type="text" placeholder="message">
                 <img id="img-chat--messages-controls--send-icon" src="../res/send_icon.png" alt="send message" >
@@ -205,16 +203,26 @@
           the <b>seeds on the opposing side's</b> cavity into <b>your cavity</b>.
         </li>
         <li class="li-rules-list-item">
-          The game ends when one player can't play due to not having anymore
-          seeds in their cavities. If the other player still has seeds, he can
+          The <b>game ends</b> when one player can't play due to <b>not having anymore
+          seeds</b> in their cavities. If the other player still has seeds, he can
           transfer them to his storage.
         </li>
         <li class="li-rules-list-item">
-          At the end of the game, each player counts the number of seeds they
-          have in their storage, the winner is the one with the most seeds.
+          At the <b>end</b> of the game, each player counts the <b>number of seeds</b> they
+          have in <b>their storage</b>, the <b>winner</b> is the one with the <b>most seeds</b>.
         </li>
       </ul>
     </section>
+
+    <footer>
+			<p>About us</p>
+      <p>Mancala - Keep the traditions</p>
+      
+      <span>
+        <img id="footer-bug-icon" src="../res/bug_icon_grey.png">
+        <a>Report a bug</a>
+      </span>
+		</footer>
 		
 		</div> <!--MAIN DIV END-->  
   </body>
