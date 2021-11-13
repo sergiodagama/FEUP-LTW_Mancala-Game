@@ -55,6 +55,25 @@ footer{
 	margin-top: 1.5em;
 }
 
+table{
+    border-collapse: separate;
+    border-spacing: 0.5em;
+    text-align: center;
+}
+
+th{
+    border-radius: 0.6em;
+    background-color: #FF9F1C;
+    padding: 0.8em;
+    color: #242331;
+}
+
+td{
+    background-color: rgba(255, 255, 255, 0.377);
+    color: #242331;
+    border-radius: 0.4em;
+}
+
 /*Specific: ids and classes */ 
 /* header */
 #s-banner {
@@ -104,7 +123,7 @@ footer{
     'commands game game configs'
 	'footer footer footer footer';
 	grid-template-columns: 25% 25% 25% 25%;
-	/*grid-template-rows: 0.5fr 0.5fr 0.2fr;*/
+    grid-template-rows: 70% 12% 19.7%;
 }
 
 #section-main-authentication{
@@ -169,7 +188,7 @@ footer{
 #d-game-area{
     background-color: #CBF3F0;
     border-radius: 0.5em;
-    height: 83%;
+    height: 83.5%;
 }
 
 #section-main-configurations{
@@ -303,14 +322,65 @@ footer{
     grid-area: auth;
 }
 
+#d-chat-messages{
+    height: 75%;
+    background-image: linear-gradient(to bottom, #FF9F1C , #242331);
+    border-radius: 1em;
+    display: grid;
+    grid-template-rows: 75% 25%;
+}
+
+#d-chat-messages-controls{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:1em;
+}
+
+#input-chat-messages-controls{
+    padding-right: 1.2em;
+    padding-left: 1.2em;
+    padding-top: 0.8em;
+    padding-bottom: 0.8em;
+    border-radius: 2em;
+    width: 16em;
+    border:none;
+}
+
+#img-chat--messages-controls--send-icon{
+    width: 2em;
+    height: 2em;
+}
+
+#img-chat--messages-controls--send-icon:hover{
+    filter: invert(45%) sepia(85%) saturate(700%) hue-rotate(345deg) brightness(107%) contrast(101%) drop-shadow(2px 2px 20px white);
+}
+
 #section-main-rules{
     display: none;
     grid-area: game;
 }
 
+#ul-rules-list{
+    padding-right: 1em;
+}
+
+.li-rules-list-item{
+    padding-bottom: 2em;
+}
+
 #section-main-score{
     display: none;
     grid-area: configs;
+}
+
+.h3-score-table{
+    color: white;
+}
+
+.th-score-void{
+    background-color: transparent;
+    border:none;
 }
 
 /* footer */

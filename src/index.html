@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css" />
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@900&display=swap" rel="stylesheet">
@@ -21,61 +22,8 @@
 		  <img id="img-navbar--rules" class="img-navbar-icon" src="../res/rules_icon.png">  <!--img-navbar-icon--> 
 		  <img id="img-navbar--score" class="img-navbar-icon" src="../res/score_icon.png"> <!--img-navbar-icon--> 
       </span>		
-			  <script>
-var c = document.getElementById("img-navbar--chat");
-c.addEventListener("click", chat);
-				  
-var r = document.getElementById("img-navbar--rules");
-r.addEventListener("click", rules);
-				  
-var s = document.getElementById("img-navbar--score");
-s.addEventListener("click", score);
-
-var flag = [false, false, false];
-
-function toggleIcon(i, image_element, icon1, icon2) {
-	if(flag[i]){ 
-		image_element.src = icon1;
-		flag[i] = false;
-	}
-	else{ 
-		image_element.src = icon2;
-		flag[i] = true;
-	}
-
-}
-
-function toggleVisibility(flag, primary, secondary, display1, display2){
-  var p = document.getElementById(primary);
-  var s = document.getElementById(secondary);
-
-  if (flag) {
-    p.style.display = "none";
-    s.style.display = display2;
-  } else {
-    p.style.display = display1;
-    s.style.display = "none";
-  }
-}
-
-function chat(){
-  toggleIcon(0, c, "../res/chat_icon.png", "../res/chat_icon_active.png");
-  toggleVisibility(flag[0], "section-main-authentication", "section-main-chat", "block", "block");
-}
-
-				  
-function rules() {
-  toggleIcon(1, r, "../res/rules_icon.png", "../res/rules_icon_active.png");
-  toggleVisibility(flag[1], "section-main-game", "section-main-rules", "block", "block");
-
-}
-function score() {
-  toggleIcon(2, s, "../res/score_icon.png", "../res/score_icon_active.png");
-  toggleVisibility(flag[2], "section-main-configurations", "section-main-score", "block", "block");
-}
-
-</script>
     </header>
+    <script src="dynamics.js"></script>
 	  
 	<div id="d-main"> <!--d-main--> 
     <!--Authentication Area-->
@@ -188,14 +136,37 @@ function score() {
      <section id="section-main-score">
       <h2 id="h2-score-title">Score</h2>
 
-      <table border="1">
+      <h3 class="h3-score-table">Live</h3>
+
+      <table>
         <tr>
-          <th colspan="1"></th>
-          <th colspan="1">Player 1</th>
-          <th colspan="1">Player 2</th>
+          <th class="th-score-void"></th>
+          <th>Player 1</th>
+          <th>Player 2</th>
+          <th>Game Time</th>
         </tr>
         <tr>
           <th>Points</th>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+
+      <h3 class="h3-score-table">Leaderboard</h3>
+
+      <table>
+        <tr>
+          <th class="th-score-void"></th>
+          <th>Player 1</th>
+          <th>Player 2</th>
+          <th>Games Won</th>
+        </tr>
+        <tr>
+          <th>Points</th>
+          <td></td>
+          <td></td>
+          <td></td>
         </tr>
       </table>
     </section>
@@ -203,43 +174,42 @@ function score() {
     	     <!--Chat Area-->
            <section id="section-main-chat">
             <h2 id="h2-chat-title">Chat</h2>
-      
-            <table border="1">
-              <tr>
-                <th colspan="1"></th>
-                <th colspan="1">Player 1</th>
-                <th colspan="1">Player 2</th>
-              </tr>
-              <tr>
-                <th>Points</th>
-              </tr>
-            </table>
+
+            <div id="d-chat-messages">
+              <div id="d-chat-messages-area"></div>
+
+              <div id="d-chat-messages-controls">
+                <input id="input-chat-messages-controls" type="text" placeholder="message">
+                <img id="img-chat--messages-controls--send-icon" src="../res/send_icon.png" alt="send message" >
+              </div>
+            </div>
           </section>
 		
 		    <!--Rules Area-->
     <section id="section-main-rules"> <!--section-main-rules--> 
       <h2 id="h2-rules-title">Rules</h2> <!--h2-rules-title--> 
-      <ul>
-        <li>
-          Each player controls their side's cavities and the storage to their
+
+      <ul id="ul-rules-list">
+        <li class="li-rules-list-item">
+          Each player controls <b>their side's</b> cavities and the storage to their
           right.
         </li>
-        <li>
+        <li class="li-rules-list-item">
           Each player takes a turn choosing one of their cavities, that cavity's
-          seeds are then distributed one by one into the following
+          seeds are then <b>distributed one by one</b> into the following
           cavities/storages (excluding the opposite player's storage).
         </li>
-        <li>
-          If the last seed you place lands in your own storage, you can play
-          again, if it lands in an empty cavity in your own side, you take all
-          the seeds on the opposing side's cavity into your cavity.
+        <li class="li-rules-list-item">
+          If the <b>last seed</b> you place <b>lands</b> in your <b>own storage</b>, you can <b>play
+          again</b>, if it lands in an <b>empty cavity</b> in <b>your own side</b>, you <b>take all</b>
+          the <b>seeds on the opposing side's</b> cavity into <b>your cavity</b>.
         </li>
-        <li>
+        <li class="li-rules-list-item">
           The game ends when one player can't play due to not having anymore
           seeds in their cavities. If the other player still has seeds, he can
           transfer them to his storage.
         </li>
-        <li>
+        <li class="li-rules-list-item">
           At the end of the game, each player counts the number of seeds they
           have in their storage, the winner is the one with the most seeds.
         </li>
