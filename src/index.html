@@ -46,6 +46,13 @@
       </form>
     </section>
 
+    <section id="section-main-system-messages">
+      <div id="d-system-messages-guest">
+      <p class="p-system-messages-guest">You are playing as a guest!</p>
+        <!--<p class="p-system-messages-guest">Login to play online!</p>-->
+        </div>
+    </section>
+
     <!--Game Area-->
   
     <section id="section-main-game"> <!--section-main-game--> 
@@ -76,35 +83,39 @@
       <form id="form-configurations-settings" action="configurate" method="post"> <!--form-configurations-settings--> 
           <div class="d-settings-info--quantities">
           <label class="label-settings-info--quantities">Number of cavities:</label><!--label-settings-info--quantities-->
-          <input class="input-settings-info--quantities" /> <!--input-settings-info--quantities--> 
+          <input class="input-settings-info--quantities" value="6"/> <!--input-settings-info--quantities--> 
         </div>
         <div class="d-settings-info--quantities">
           <label class="label-settings-info--quantities">Initial seeds per cavity:</label><!--label-settings-info--quantities--> 
-          <input class="input-settings-info--quantities" /> <!--input-settings-info--quantities--> 
+          <input class="input-settings-info--quantities" value="5"/> <!--input-settings-info--quantities--> 
           </div>
 
         <p class="p-settings-instructions">Please select your game mode:</p> <!--p-settings-instructions--> 
         <div id="d-settings-info--mode">                                  <!--d-settings-info--mode--> 
-          <input class="radio-settings-info--mode" type="radio" value="local" />  <!--radio-settings-info--mode--> 
-          <label class="label-settings-info--mode">Local Player</label> <!--label-settings-info--mode--> 
+          <input class="radio-settings-info--mode" type="radio" name="mode" value="local" checked/>  <!--radio-settings-info--mode--> 
+          <label class="label-settings-info--mode">Local player</label> <!--label-settings-info--mode--> 
+        </div>
+        <div id="d-settings-info--mode">                                  <!--d-settings-info--mode--> 
+          <input class="radio-settings-info--mode" type="radio" name="mode" value="local" />  <!--radio-settings-info--mode--> 
+          <label class="label-settings-info--mode">Online player</label> <!--label-settings-info--mode--> 
         </div>
         <div class="d-settings-info--mode"> <!--d-settings-info--mode--> 
-          <input class="radio-settings-info--mode" type="radio" id="ai" value="ai" /> <!--radio-settings-info--mode--> 
-          <label class="label-settings-info--mode">AI</label> <!--label-settings-info--mode--> 
+          <input class="radio-settings-info--mode" type="radio" name="mode" id="ai" value="ai" /> <!--radio-settings-info--mode--> 
+          <label class="label-settings-info--mode">Against the computer</label> <!--label-settings-info--mode--> 
         </div>
 
         <p class="p-settings-instructions">Please select the AI dificulty level:</p> <!--p-settings-instructions--> 
 
         <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
-          <input class="radio-settings-info--dificulty" type="radio" /> <!--radio-settings-info--dificulty--> 
+          <input class="radio-settings-info--dificulty" type="radio" name="dificulty" checked/> <!--radio-settings-info--dificulty--> 
             <label class="label-settings-info--dificulty">Easy</label> <!--label-settings-info--dificulty--> 
         </div> <!--d-settings-info--dificulty--> 
         <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
-          <input class="radio-settings-info--dificulty" type="radio" /> <!--radio-settings-info--dificulty--> 
+          <input class="radio-settings-info--dificulty" type="radio" name="dificulty" /> <!--radio-settings-info--dificulty--> 
             <label class="label-settings-info--dificulty">Medium</label>  <!--label-settings-info--dificulty--> 
         </div> <!--d-settings-info--dificulty--> 
         <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
-          <input class="radio-settings-info--dificulty" type="radio" />  <!--radio-settings-info--dificulty-->
+          <input class="radio-settings-info--dificulty" type="radio" name="dificulty" />  <!--radio-settings-info--dificulty-->
             <label class="label-settings-info--dificulty">Hard</label><br />  <!--label-settings-info--dificulty--> 
         </div>
         <div id="d-settings-buttons">
