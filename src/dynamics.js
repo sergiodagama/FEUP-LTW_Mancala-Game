@@ -41,10 +41,24 @@ function chat(){
 function rules() {
   toggleIcon(1, r, "../res/rules_icon.png", "../res/rules_icon_active.png");
   toggleVisibility(flag[1], "section-main-game", "section-main-rules", "block", "block");
-
 }
 
 function score() {
   toggleIcon(2, s, "../res/score_icon.png", "../res/score_icon_active.png");
   toggleVisibility(flag[2], "section-main-configurations", "section-main-score", "block", "block");
 }
+
+var sign_up = document.getElementById("h3-login-titles-signup--in");
+sign_up.addEventListener("click", signUp);
+
+var sign_in = document.getElementById("h3-login-titles-signin--up");
+sign_in.addEventListener("click", signIn);
+
+function signUp(){
+  toggleVisibility(true, "form-authentication-login", "form-authentication-signup", "block", "block");
+}
+
+function signIn(){
+  toggleVisibility(false, "form-authentication-login", "form-authentication-signup", "block", "block");
+}
+

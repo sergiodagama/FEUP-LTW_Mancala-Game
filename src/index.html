@@ -23,15 +23,16 @@
 		  <img id="img-navbar--score" class="img-navbar-icon" src="../res/score_icon.png"> <!--img-navbar-icon--> 
       </span>		
     </header>
-    <script src="dynamics.js"></script>
-	  
 	<div id="d-main"> <!--d-main--> 
     <!--Authentication Area-->
     <section id="section-main-authentication"> <!--section-main-authentication--> 
       <h2 id="h2-authenticataion-title">Authentication</h2> <!--h2-authenticataion-title--> 
 
       <form id="form-authentication-login" action="signin" method="post"> <!--form-authentication-login--> 
-        <h3 id="h3-login-title">Sign In</h3>
+        <div id="d-login-titles">
+        <h3 id="h3-login-titles-signin--in">Sign In</h3>
+        <h3 id="h3-login-titles-signup--in">Sign Up</h3>
+        </div>
         <div class="d-login-info"> <!--d-login-info--> 
           <label class="label-login-info">Username</label> <!--label-login-info--> 
           <input class="input-login-info" type="text" placeholder="username" />  <!--input-login-info--> 
@@ -44,6 +45,22 @@
         <label id="label-login-rememberme"> <input id="checkbox-login-rememberme" type="checkbox" checked="checked" />Remember me </label><br/>  <!--label-login-rememberme--> <!--checkbox-login-rememberme--> 
 		 <a id="a-login-forgotpass">Forgot Password?</a> <!--a-login-forgotpass--> 
       </form>
+
+      <form id="form-authentication-signup" action="signup" method="post"> <!--form-authentication-login--> 
+        <div id="d-login-titles">
+          <h3 id="h3-login-titles-signin--up">Sign In</h3>
+          <h3 id="h3-login-titles-signup--up">Sign Up</h3>
+          </div>
+        <div class="d-login-info"> <!--d-login-info--> 
+          <label class="label-login-info">Username</label> <!--label-login-info--> 
+          <input class="input-login-info" type="text" placeholder="username" />  <!--input-login-info--> 
+        </div>
+        <div class="d-login-info">
+          <label class="label-login-info">Password</label> <!--label-login-info--> 
+          <input class="input-login-info" type="password" placeholder="password" /><br />  <!--input-login-info--> 
+        </div>
+        <input id="button-login-signin" type="submit" value="Sign In" /><br /> <!--button-login-signin-->
+        </form>
     </section>
 
     <section id="section-main-system-messages">
@@ -57,22 +74,37 @@
   
     <section id="section-main-game"> <!--section-main-game--> 
       <h2 id="h2-game-title">Game</h2> <!--h2-game-title--> 
+    
+
 		
 	<div id="d-game-area"> <!--d-game-area--> 
+
+    <div id="d-game-area-header">
+      <p id="p-game-area-header-score--1" class="p-game-area-header-score">20</p>
+      <p id="p-game-area-header-messages">It's player1 turn</p>
+      <p id="p-game-area-header-score--2" class="p-game-area-header-score">13</p>
+    </div>
+
+    <div id="d-game-area-gameplay">
       <div id="d-area-storage--p1" class="d-area-storage"></div> <!--d-area-storage--p1--> <!--d-area-storage--> 
-      <div id="d-area-cavitity--p1-1" class="d-area-cavitity"></div> <!--d-area-cavitity--p1-1--> <!--d-area-cavitity-->
-      <div id="d-area-cavitity--p1-2" class="d-area-cavitity"></div> <!--d-area-cavitity--p1-2-->
-      <div id="d-area-cavitity--p1-3" class="d-area-cavitity"></div> <!--d-area-cavitity--p1-3-->
-      <div id="d-area-cavitity--p1-4" class="d-area-cavitity"></div>
-      <div id="d-area-cavitity--p1-5" class="d-area-cavitity"></div>
-      <div id="d-area-cavitity--p1-6" class="d-area-cavitity"></div>
-      <div id="d-area-cavitity--p2-1" class="d-area-cavitity"></div> <!--d-area-cavitity--p2-1-->
-      <div id="d-area-cavitity--p2-2" class="d-area-cavitity"></div>
-      <div id="d-area-cavitity--p2-3" class="d-area-cavitity"></div>
-      <div id="d-area-cavitity--p2-4" class="d-area-cavitity"></div>
-      <div id="d-area-cavitity--p2-5" class="d-area-cavitity"></div>
-      <div id="d-area-cavitity--p2-6" class="d-area-cavitity"></div> 
+      <div id="d-area-cavity--p1">
+        <div id="d-area-cavity--p1-1" class="d-area-cavity"></div> <!--d-area-cavity--p1-1--> <!--d-area-cavity-->
+        <div id="d-area-cavity--p1-2" class="d-area-cavity"></div> <!--d-area-cavity--p1-2-->
+        <div id="d-area-cavity--p1-3" class="d-area-cavity"></div> <!--d-area-cavity--p1-3-->
+        <div id="d-area-cavity--p1-4" class="d-area-cavity"></div>
+        <div id="d-area-cavity--p1-5" class="d-area-cavity"></div>
+        <div id="d-area-cavity--p1-6" class="d-area-cavity"></div>
+      </div>
+      <div id="d-area-cavity--p2">
+        <div id="d-area-cavity--p2-1" class="d-area-cavity"></div> <!--d-area-cavity--p2-1-->
+        <div id="d-area-cavity--p2-2" class="d-area-cavity"></div>
+        <div id="d-area-cavity--p2-3" class="d-area-cavity"></div>
+        <div id="d-area-cavity--p2-4" class="d-area-cavity"></div>
+        <div id="d-area-cavity--p2-5" class="d-area-cavity"></div>
+        <div id="d-area-cavity--p2-6" class="d-area-cavity"></div> 
+      </div>
       <div id="d-area-storage--p2" class="d-area-storage"></div><!--d-area-storage--p2--> <!--d-area-storage-->
+      </div>
 		</div>
     </section>
 	 
@@ -226,15 +258,16 @@
     </section>
 
     <footer>
-			<p>About us</p>
-      <p>Mancala - Keep the traditions</p>
-      
-      <span>
-        <img id="footer-bug-icon" src="../res/bug_icon_grey.png">
-        <a>Report a bug</a>
-      </span>
+			<a id="footer-about-us" href="https://github.com/N0il/Mancala" target="_blank">About us</a>
+      <p><b>Mancala</b> - Keep the traditions</p>
+        
+        <a id="a-footer-report-bug" href="https://github.com/N0il/Mancala/issues/new" target="_blank">
+        <img id="footer-bug-icon" src="../res/bug_icon_grey.png" href="https://github.com/N0il/Mancala/issues/new">
+        <p>Report a bug</p>
+        </a>
 		</footer>
 		
 		</div> <!--MAIN DIV END-->  
   </body>
+  <script src="dynamics.js"></script>
 </html>
