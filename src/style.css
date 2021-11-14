@@ -120,6 +120,7 @@ a{
     width: 2.5em;
     height: 2.5em;
 	margin:0;
+    cursor: pointer;
 }
 
 .img-navbar-icon:hover{
@@ -148,28 +149,30 @@ a{
     border-color: white;
 }
 
-#form-authentication-signup{
-    display: none;
-    border-radius: 1em;
-    border:solid;
-    border-color: white;
-}
-
-#d-login-titles{
+.d-login-titles{
     display: flex;
     justify-content: flex-start;
     align-items: center;
     gap: 1.4em;
     color: #242331;
+    cursor: pointer;
 }
 
 #h3-login-titles-signin--in{
     border-bottom: solid #242331;
 }
 
+#h3-login-titles-signup--in:hover{
+    filter: invert(99%) sepia(0%) saturate(4997%) hue-rotate(153deg) brightness(117%) contrast(100%);
+}
+
 #h3-login-titles-signup--up{
     border-bottom: solid #242331;
 }
+
+#h3-login-titles-signin--up:hover{
+    filter: invert(99%) sepia(0%) saturate(4997%) hue-rotate(153deg) brightness(117%) contrast(100%);
+    }
 
 .label-login-info{
 	display: block;
@@ -190,8 +193,8 @@ a{
 	border-radius: 0.6em;
 	margin-top: 1em;
 	margin-bottom: 0.5em;
-	padding-left: 4.3em;
-	padding-right: 4.8em;
+	padding-left: 4.5em;
+	padding-right: 5em;
 	padding-top: 0.5em;
 	padding-bottom: 0.5em;
     background-color: #2EC4B6;
@@ -199,6 +202,7 @@ a{
     color: white;
     font-size: 0.9em;
     font-weight: bold;
+    cursor: pointer;
 }
 
 #button-login-signin:hover{
@@ -210,6 +214,47 @@ a{
 	padding-top: 1em;
 	padding-right: 2em;
 	font-size: 0.8em;
+}
+
+#form-authentication-signup{
+    display: none;
+    border-radius: 1em;
+    border:solid;
+    border-color: white;
+    padding-right: 4em;
+    padding-bottom: 1em;
+}
+
+.d-signup-info{
+    font-weight: 300;
+    display: grid;
+    grid-template-areas: 'label', 'input';
+    margin-bottom: 0.4em;
+}
+
+.input-signup-info{
+	border:none;
+    max-width:80%;
+    border-radius: 0.4em;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    padding-left: 0.7em;
+}
+
+#button-signup-register{
+    border-radius: 0.6em;
+	margin-top: 1em;
+	margin-bottom: 0.5em;
+	padding-left: 4.5em;
+	padding-right: 5.1em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+    background-color: #2EC4B6;
+    border: none;
+    color: white;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 #section-main-system-messages{
@@ -248,8 +293,6 @@ a{
 #d-game-area{
     display: grid;
     grid-template-rows: 10% 90%;
-    background-color: #CBF3F0;
-    border-radius: 0.5em;
     height: 85%;
 }
 
@@ -258,23 +301,31 @@ a{
     justify-content: center;
     align-items: center;
     border-radius: 1em;
-    margin-top: 1em;
-    margin-left:5em;
-    margin-right:5em;
+    background-color: #CBF3F0;
+    padding-left: 5em;
+    padding-right: 5em;
+    padding-top: 1.8em;
+    padding-bottom: 2em;
+    border-radius: 0.5em;  
 }
 
 #p-game-area-header-messages{
     margin-top: 1.1em;
     padding-top: 0.2em;
     padding-bottom: 0.2em;
-    background-image: linear-gradient(to right, #CBF3F0, #242331 , #CBF3F0);
-    border-top:solid;
+   /* background-image: linear-gradient(to right, #CBF3F0, #242331 , #CBF3F0);*/
+   /* border-top:solid;*/
     border-bottom: solid;
     border-width: medium;
     border-color: rgba(255, 255, 255, 0.459);
-    color: white;
+    color: #242331;
+    /*
     padding-left: 5em;
     padding-right: 5em;
+    */
+    padding-left: 3em;
+    padding-right: 3em;
+    font-weight: 600;
 }
 
 .p-game-area-header-score{
@@ -303,22 +354,26 @@ a{
     'storage1 cavity1 storage2'
     'storage1 cavity2 storage2';
     grid-template-columns:  15% 70% 15%;
+    background-image: url("../res/wood_backgroud.jpg") ;
+    background-size: 100% 100%;
+    border-radius: 0.5em;
 }
 
 #d-area-storage--p1{
     grid-area: storage1;
-    background-color: #2EC4B6;
+    filter: sepia(100%) brightness(120%);
 }
 
 #d-area-storage--p2{
     grid-area: storage2;
-    background-color: #2EC4B6;
+    filter: sepia(100%) brightness(60%) saturate(10%) contrast(100%);
 }
 
 #d-area-cavity--p1{
     display: flex;
     justify-content: space-evenly;
     grid-area: cavity1;
+    filter: sepia(100%) brightness(120%);
     /*background-color: #242331;*/
 }
 
@@ -326,23 +381,36 @@ a{
     display: flex;
     justify-content: space-evenly;
     grid-area: cavity2;
+    filter: sepia(100%) brightness(60%) saturate(10%) contrast(100%);
 }
 
 .d-area-storage{
+    background-image: url("../res/wood_backgroud.jpg") ;
+    background-size: 100% 100%;
+    opacity: 0.5;
+    box-shadow: inset 0 0 10px black;
     border-radius: 2em;
     margin: 0.2em;
+    cursor: pointer; 
+    background-color: transparent;
 }
 
 .d-area-cavity{ 
+    background-image: url("../res/wood_backgroud.jpg") ;
+    background-size: 100% 100%;
+    opacity: 0.5;   
+    box-shadow: inset 0 0 10px black;
     margin: 0.2em;  
     border-radius: 6em;
     width: 20%;
     max-width: 100%;
-    background-color: #2EC4B6;
+    background-color: transparent;  
+    cursor: pointer;  
 }
 
 .d-area-storage:hover{
     box-shadow: 0 0 1em #242331;
+    
 }
 .d-area-cavity:hover{
     box-shadow: 0 0 1em #242331;
@@ -402,6 +470,7 @@ a{
     color: white;
     font-size: 0.9em;
     font-weight: bold;
+    cursor: pointer; 
 }
 
 .button-settings-info:hover{
@@ -467,6 +536,7 @@ a{
     font-weight: bold;
     max-width: 50%;
     margin-top: 0.5em;
+    cursor: pointer; 
 }
 
 .button-commands:hover{
@@ -526,6 +596,7 @@ a{
 #img-chat--messages-controls--send-icon{
     width: 2em;
     height: 2em;
+    cursor: pointer; 
 }
 
 #img-chat--messages-controls--send-icon:hover{

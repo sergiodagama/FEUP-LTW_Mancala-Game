@@ -36,6 +36,7 @@ function toggleVisibility(flag, primary, secondary, display1, display2){
 function chat(){
   toggleIcon(0, c, "../res/chat_icon.png", "../res/chat_icon_active.png");
   toggleVisibility(flag[0], "section-main-authentication", "section-main-chat", "block", "block");
+  signIn();
 }
 				  
 function rules() {
@@ -56,9 +57,34 @@ sign_in.addEventListener("click", signIn);
 
 function signUp(){
   toggleVisibility(true, "form-authentication-login", "form-authentication-signup", "block", "block");
+  document.getElementById("section-main-commands").style.display = "none";
 }
 
 function signIn(){
   toggleVisibility(false, "form-authentication-login", "form-authentication-signup", "block", "block");
+  document.getElementById("section-main-commands").style.display = "flex";
+}
+/*
+class Cavity {
+  constructor() {}
 }
 
+class Storage{
+  constructor() {}
+}
+
+class Seed{
+  constructor() {}
+}
+
+class Player{
+  constructor() {}
+}
+
+class Guest extends Player{
+}
+
+class Auth extends Player{
+}
+
+*/

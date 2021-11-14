@@ -29,7 +29,7 @@
       <h2 id="h2-authenticataion-title">Authentication</h2> <!--h2-authenticataion-title--> 
 
       <form id="form-authentication-login" action="signin" method="post"> <!--form-authentication-login--> 
-        <div id="d-login-titles">
+        <div class="d-login-titles">
         <h3 id="h3-login-titles-signin--in">Sign In</h3>
         <h3 id="h3-login-titles-signup--in">Sign Up</h3>
         </div>
@@ -41,25 +41,39 @@
           <label class="label-login-info">Password</label> <!--label-login-info--> 
           <input class="input-login-info" type="password" placeholder="password" /><br />  <!--input-login-info--> 
         </div>
-        <input id="button-login-signin" type="submit" value="Sign In" /><br /> <!--button-login-signin-->
+        <input id="button-login-signin" type="submit" value="Login" /><br /> <!--button-login-signin-->
         <label id="label-login-rememberme"> <input id="checkbox-login-rememberme" type="checkbox" checked="checked" />Remember me </label><br/>  <!--label-login-rememberme--> <!--checkbox-login-rememberme--> 
 		 <a id="a-login-forgotpass">Forgot Password?</a> <!--a-login-forgotpass--> 
       </form>
 
       <form id="form-authentication-signup" action="signup" method="post"> <!--form-authentication-login--> 
-        <div id="d-login-titles">
+        <div class="d-login-titles">
           <h3 id="h3-login-titles-signin--up">Sign In</h3>
           <h3 id="h3-login-titles-signup--up">Sign Up</h3>
           </div>
-        <div class="d-login-info"> <!--d-login-info--> 
-          <label class="label-login-info">Username</label> <!--label-login-info--> 
-          <input class="input-login-info" type="text" placeholder="username" />  <!--input-login-info--> 
+          <div class="d-signup-info"> <!--d-login-info--> 
+          <label class="label-signup-info">Username</label> <!--label-login-info--> 
+          <input class="input-signup-info" type="text" placeholder="username" />  <!--input-login-info--> 
         </div>
-        <div class="d-login-info">
-          <label class="label-login-info">Password</label> <!--label-login-info--> 
-          <input class="input-login-info" type="password" placeholder="password" /><br />  <!--input-login-info--> 
+        <div class="d-signup-info">
+          <label class="label-signup-info">Password</label> <!--label-login-info--> 
+          <input class="input-signup-info" type="password" placeholder="password" />  <!--input-login-info--> 
         </div>
-        <input id="button-login-signin" type="submit" value="Sign In" /><br /> <!--button-login-signin-->
+        <div class="d-signup-info">
+          <label class="label-signup-info">Birthday</label> <!--label-login-info--> 
+          <input class="input-signup-info" type="date" placeholder="password" />  <!--input-login-info--> 
+        </div>
+        <div class="d-signup-info">
+          <label class="label-signup-info">Country</label> <!--label-login-info--> 
+          <select class="input-signup-info">
+            <option value="Portugal">Portugal</option>
+            <option value="France">France</option>
+            <option value="Spain">Spain</option>
+            <option value="Brasil">Brasil</option>
+            <option value="Germany">Germany</option>
+          </select>
+        </div>
+        <input id="button-signup-register" type="submit" value="Register" /><br /> <!--button-login-signin-->
         </form>
     </section>
 
@@ -260,7 +274,6 @@
     <footer>
 			<a id="footer-about-us" href="https://github.com/N0il/Mancala" target="_blank">About us</a>
       <p><b>Mancala</b> - Keep the traditions</p>
-        
         <a id="a-footer-report-bug" href="https://github.com/N0il/Mancala/issues/new" target="_blank">
         <img id="footer-bug-icon" src="../res/bug_icon_grey.png" href="https://github.com/N0il/Mancala/issues/new">
         <p>Report a bug</p>
