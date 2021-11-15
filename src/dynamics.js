@@ -64,6 +64,31 @@ function signIn(){
   toggleVisibility(false, "form-authentication-login", "form-authentication-signup", "block", "block");
   document.getElementById("section-main-commands").style.display = "flex";
 }
+
+var modes = document.getElementsByClassName("radio-settings-info--mode");
+
+modes[0].addEventListener("click", localConfigs);
+modes[1].addEventListener("click", onlineConfigs);
+modes[2].addEventListener("click", computerConfigs);
+
+function localConfigs(){
+  document.getElementById("d-settings-mode--local").style.display = "block";
+  document.getElementById("d-settings-mode--online").style.display = "none";
+  document.getElementById("d-settings-mode--computer").style.display = "none";
+}
+
+function onlineConfigs(){
+  document.getElementById("d-settings-mode--local").style.display = "none";
+  document.getElementById("d-settings-mode--online").style.display = "block";
+  document.getElementById("d-settings-mode--computer").style.display = "none";
+}
+
+function computerConfigs(){
+  document.getElementById("d-settings-mode--local").style.display = "none";
+  document.getElementById("d-settings-mode--online").style.display = "none";
+  document.getElementById("d-settings-mode--computer").style.display = "block";
+}
+
 /*
 class Cavity {
   constructor() {}

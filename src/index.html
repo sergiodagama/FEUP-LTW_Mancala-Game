@@ -129,11 +129,11 @@
       <form id="form-configurations-settings" action="configurate" method="post"> <!--form-configurations-settings--> 
           <div class="d-settings-info--quantities">
           <label class="label-settings-info--quantities">Number of cavities:</label><!--label-settings-info--quantities-->
-          <input class="input-settings-info--quantities" value="6"/> <!--input-settings-info--quantities--> 
+          <input class="input-settings-info--quantities" type="number" value="6"/> <!--input-settings-info--quantities--> 
         </div>
         <div class="d-settings-info--quantities">
           <label class="label-settings-info--quantities">Initial seeds per cavity:</label><!--label-settings-info--quantities--> 
-          <input class="input-settings-info--quantities" value="5"/> <!--input-settings-info--quantities--> 
+          <input class="input-settings-info--quantities" type="number" value="5"/> <!--input-settings-info--quantities--> 
           </div>
 
         <p class="p-settings-instructions">Please select your game mode:</p> <!--p-settings-instructions--> 
@@ -149,20 +149,40 @@
           <input class="radio-settings-info--mode" type="radio" name="mode" id="ai" value="ai" /> <!--radio-settings-info--mode--> 
           <label class="label-settings-info--mode">Against the computer</label> <!--label-settings-info--mode--> 
         </div>
+        <div id="d-settings-mode--local">
+          <p id="p-mode-local-instructions">Instructions to local game:</p>
+          <ul id="ul-mode-local-intructions">
+          <li class="li-mode-local-instructions">Both players use the mouse to play at each turn.</li>
+          <li class="li-mode-local-instructions">If you're logged in, the game score will be saved as against a local player.</li>
+          </ul>
+        </div>
+        <div id="d-settings-mode--online">
+          <p class="p-settings-instructions">Search online players:</p>
+          <div id="d-mode-online-search-bar">
+            <img id="img-search-bar-icon" src="../res/search_icon.png">
+            <input id="input-search-bar" type="text">
+            <img id="img-search-bar-add-icon" src="../res/add_icon.png">
+          </div>
+          <div id="d-mode-online-results">
+          <p id="p-mode-online-results--title">Results:</p>
+          <p id="p-mode-online-results--text">There's no user with that name :(</p>
+          </div>
+        </div>
+        <div id="d-settings-mode--computer">
+          <p class="p-settings-instructions">Please select the AI dificulty level:</p> <!--p-settings-instructions--> 
 
-        <p class="p-settings-instructions">Please select the AI dificulty level:</p> <!--p-settings-instructions--> 
-
-        <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
-          <input class="radio-settings-info--dificulty" type="radio" name="dificulty" checked/> <!--radio-settings-info--dificulty--> 
-            <label class="label-settings-info--dificulty">Easy</label> <!--label-settings-info--dificulty--> 
-        </div> <!--d-settings-info--dificulty--> 
-        <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
-          <input class="radio-settings-info--dificulty" type="radio" name="dificulty" /> <!--radio-settings-info--dificulty--> 
-            <label class="label-settings-info--dificulty">Medium</label>  <!--label-settings-info--dificulty--> 
-        </div> <!--d-settings-info--dificulty--> 
-        <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
-          <input class="radio-settings-info--dificulty" type="radio" name="dificulty" />  <!--radio-settings-info--dificulty-->
-            <label class="label-settings-info--dificulty">Hard</label><br />  <!--label-settings-info--dificulty--> 
+          <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
+            <input class="radio-settings-info--dificulty" type="radio" name="dificulty" checked/> <!--radio-settings-info--dificulty--> 
+              <label class="label-settings-info--dificulty">Easy</label> <!--label-settings-info--dificulty--> 
+          </div> <!--d-settings-info--dificulty--> 
+          <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
+            <input class="radio-settings-info--dificulty" type="radio" name="dificulty" /> <!--radio-settings-info--dificulty--> 
+              <label class="label-settings-info--dificulty">Medium</label>  <!--label-settings-info--dificulty--> 
+          </div> <!--d-settings-info--dificulty--> 
+          <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
+            <input class="radio-settings-info--dificulty" type="radio" name="dificulty" />  <!--radio-settings-info--dificulty-->
+              <label class="label-settings-info--dificulty">Hard</label><br />  <!--label-settings-info--dificulty--> 
+          </div>
         </div>
         <div id="d-settings-buttons">
           <input class="button-settings-info" type="submit" value="Configurate" class="button-settings" /> <!--button-settings-info--> 
@@ -275,7 +295,7 @@
 			<a id="footer-about-us" href="https://github.com/N0il/Mancala" target="_blank">About us</a>
       <p><b>Mancala</b> - Keep the traditions</p>
         <a id="a-footer-report-bug" href="https://github.com/N0il/Mancala/issues/new" target="_blank">
-        <img id="footer-bug-icon" src="../res/bug_icon_grey.png" href="https://github.com/N0il/Mancala/issues/new">
+        <img id="footer-bug-icon" src="../res/bug_icon.png" href="https://github.com/N0il/Mancala/issues/new">
         <p>Report a bug</p>
         </a>
 		</footer>
