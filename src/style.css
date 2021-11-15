@@ -289,12 +289,49 @@ a{
     padding-left: 0em;
 	grid-area: game;
 }
-  
+
 #d-game-area{
     display: grid;
     grid-template-rows: 10% 90%;
     height: 85%;
 }
+
+@keyframes fadeOut {
+    0% {
+      opacity:1;
+    }
+    100% {
+      opacity:0;
+    }
+  }
+
+#d-load-game-area{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1em;
+    margin-top: 1em;
+    border-radius: 0.5em;
+    background-color: #242331;
+    animation: fadeOut ease 1s;
+    animation-delay: 2s;
+}
+
+#img-load-game-logo{
+    width: 10em;
+    height: 10em;
+    animation: rotation 2s linear;
+    animation-iteration-count: 2;
+}
+  
+@keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }
 
 #d-game-area-header{
     display: flex;
@@ -349,7 +386,7 @@ a{
 #d-game-area-gameplay{
     padding: 1em;
     margin-top: 1em;
-    display: grid;
+    display: none; /*changed to grid in js*/
     grid-template-areas: 
     'storage1 cavity1 storage2'
     'storage1 cavity2 storage2';

@@ -89,6 +89,11 @@ function computerConfigs(){
   document.getElementById("d-settings-mode--computer").style.display = "block";
 }
 
+setTimeout(function(){
+  document.getElementById("d-load-game-area").style.display = "none";
+  document.getElementById("d-game-area-gameplay").style.display = "grid";
+},2900);
+
 /*
 class Cavity {
   constructor() {}
