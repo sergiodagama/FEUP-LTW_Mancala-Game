@@ -1,3 +1,5 @@
+//main section, chat, rules and score dynamics
+
 var c = document.getElementById("img-navbar--chat");
 c.addEventListener("click", chat);
 				  
@@ -49,6 +51,8 @@ function score() {
   toggleVisibility(flag[2], "section-main-configurations", "section-main-score", "block", "block");
 }
 
+//signin and signup section
+
 var sign_up = document.getElementById("h3-login-titles-signup--in");
 sign_up.addEventListener("click", signUp);
 
@@ -65,6 +69,7 @@ function signIn(){
   document.getElementById("section-main-commands").style.display = "flex";
 }
 
+//radio buttons configs section
 var modes = document.getElementsByClassName("radio-settings-info--mode");
 
 modes[0].addEventListener("click", localConfigs);
@@ -89,10 +94,54 @@ function computerConfigs(){
   document.getElementById("d-settings-mode--computer").style.display = "block";
 }
 
+//loading screen /*UNCOMMENT*/
+document.getElementById("d-game-area-gameplay").style.display = "grid";
+/*
 setTimeout(function(){
   document.getElementById("d-load-game-area").style.display = "none";
   document.getElementById("d-game-area-gameplay").style.display = "grid";
 },2900);
+*/
+
+//connect cavities number in configs to html
+var configs = document.getElementById("button-settings-info--config");
+configs.addEventListener("click", config);
+
+function config(){
+  var cavities = document.getElementsByClassName("d-area-cavity");
+
+  while(cavities[0]){
+    cavities[0].remove();
+  }
+
+  var quantities = document.getElementsByClassName("input-settings-info--quantities");
+
+  for(i = 0; i < quantities[0].value; i++){
+    var cavitie = document.createElement("div");
+    cavitie.classList.add("d-area-cavity");
+    document.getElementById("d-area-cavity--p1").appendChild(cavitie);
+  }
+
+  for(i = 0; i < quantities[0].value; i++){
+    var cavitie = document.createElement("div");
+    cavitie.classList.add("d-area-cavity");
+    document.getElementById("d-area-cavity--p2").appendChild(cavitie);
+  }
+}
+
+//reset configs
+
+var resetElement = document.getElementById("button-settings-info--reset");
+resetElement.addEventListener("click", reset);
+
+function reset(){
+  var quantities = document.getElementsByClassName("input-settings-info--quantities");
+
+  quantities[0].value = 6;
+  quantities[1].value = 5;
+
+  config();
+}
 
 /*
 class Cavity {

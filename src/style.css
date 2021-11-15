@@ -306,7 +306,7 @@ a{
   }
 
 #d-load-game-area{
-    display: flex;
+    display: none;/*flex;*/ /*UNCOMMENT*/
     justify-content: center;
     align-items: center;
     padding: 1em;

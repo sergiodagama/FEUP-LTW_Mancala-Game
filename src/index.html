@@ -132,11 +132,11 @@
       <form id="form-configurations-settings" action="configurate" method="post"> <!--form-configurations-settings--> 
           <div class="d-settings-info--quantities">
           <label class="label-settings-info--quantities">Number of cavities:</label><!--label-settings-info--quantities-->
-          <input class="input-settings-info--quantities" type="number" value="6"/> <!--input-settings-info--quantities--> 
+          <input class="input-settings-info--quantities" type="number" value="6" min="2" max="8"/> <!--input-settings-info--quantities--> 
         </div>
         <div class="d-settings-info--quantities">
           <label class="label-settings-info--quantities">Initial seeds per cavity:</label><!--label-settings-info--quantities--> 
-          <input class="input-settings-info--quantities" type="number" value="5"/> <!--input-settings-info--quantities--> 
+          <input class="input-settings-info--quantities" type="number" value="5" min="1" max="10"/> <!--input-settings-info--quantities--> 
           </div>
 
         <p class="p-settings-instructions">Please select your game mode:</p> <!--p-settings-instructions--> 
@@ -188,8 +188,8 @@
           </div>
         </div>
         <div id="d-settings-buttons">
-          <input class="button-settings-info" type="submit" value="Configurate" class="button-settings" /> <!--button-settings-info--> 
-          <input class="button-settings-info" type="reset" value="Reset" /> <!--button-settings-info--> 
+          <input id="button-settings-info--config" class="button-settings-info" type="button" value="Configurate"  /> <!--button-settings-info--> 
+          <input id="button-settings-info--reset" class="button-settings-info" type="button" value="Reset" /> <!--button-settings-info--> 
         </div>
         <div id="d-settings-help">
         <img id="img-settings-help--icon" src="../res/info_icon.png">
