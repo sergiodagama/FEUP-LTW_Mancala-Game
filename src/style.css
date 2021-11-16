@@ -137,6 +137,7 @@ a{
 	'footer footer footer footer';
 	grid-template-columns: 25% 25% 25% 25%;
     grid-template-rows: 66% 9% 9% 17%;
+    min-height: 81.5vh;
 }
 
 #section-main-authentication{
