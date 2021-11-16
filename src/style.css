@@ -615,7 +615,7 @@ a{
 
 #p-settings-help--text{
     position: absolute;
-    bottom: 0;
+    bottom: -2em;
     right: 0;
     left:0;
     border-radius: 1em;
