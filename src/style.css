@@ -393,6 +393,7 @@ a{
     'storage1 cavity1 storage2'
     'storage1 cavity2 storage2';
     grid-template-columns:  15% 70% 15%;
+    grid-template-rows: 50% 50%;
     background-image: url("../res/wood/wood_backgroud.jpg") ;
     background-size: 100% 100%;
     border-radius: 0.5em;
