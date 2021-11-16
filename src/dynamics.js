@@ -59,6 +59,11 @@ sign_up.addEventListener("click", signUp);
 var sign_in = document.getElementById("h3-login-titles-signin--up");
 sign_in.addEventListener("click", signIn);
 
+var recover =document.getElementById("a-login-forgotpass");
+recover.addEventListener("click", recoverPass);
+console.log(recover);
+
+
 function signUp(){
   toggleVisibility(true, "form-authentication-login", "form-authentication-signup", "block", "block");
   document.getElementById("section-main-commands").style.display = "none";
@@ -67,6 +72,12 @@ function signUp(){
 function signIn(){
   toggleVisibility(false, "form-authentication-login", "form-authentication-signup", "block", "block");
   document.getElementById("section-main-commands").style.display = "flex";
+}
+
+function recoverPass(){
+  toggleVisibility(true, "form-authentication-login", "form-authentication-forgot", "block","block");
+  console.log("here");
+
 }
 
 //radio buttons configs section

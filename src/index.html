@@ -75,6 +75,51 @@
         </div>
         <input id="button-signup-register" type="submit" value="Register" /><br /> <!--button-login-signin-->
         </form>
+        <form id="form-authentication-signup" action="signup" method="post"> <!--form-authentication-login--> 
+        <div class="d-login-titles">
+          <h3 id="h3-login-titles-signin--up">Sign In</h3>
+          <h3 id="h3-login-titles-signup--up">Sign Up</h3>
+          </div>
+          <div class="d-signup-info"> <!--d-login-info--> 
+          <label class="label-signup-info">Username</label> <!--label-login-info--> 
+          <input class="input-signup-info" type="text" placeholder="username" />  <!--input-login-info--> 
+        </div>
+        <div class="d-signup-info">
+          <label class="label-signup-info">Password</label> <!--label-login-info--> 
+          <input class="input-signup-info" type="password" placeholder="password" />  <!--input-login-info--> 
+        </div>
+        <div class="d-signup-info">
+          <label class="label-signup-info">Birthday</label> <!--label-login-info--> 
+          <input class="input-signup-info" type="date" placeholder="password" />  <!--input-login-info--> 
+        </div>
+        <div class="d-signup-info">
+          <label class="label-signup-info">Country</label> <!--label-login-info--> 
+          <select class="input-signup-info">
+            <option value="Portugal">Portugal</option>
+            <option value="France">France</option>
+            <option value="Spain">Spain</option>
+            <option value="Brasil">Brasil</option>
+            <option value="Germany">Germany</option>
+          </select>
+        </div>
+        <input id="button-signup-register" type="submit" value="Register" /><br /> <!--button-login-signin-->
+        </form>
+
+
+        <form id="form-authentication-forgot" action="recover" method="post"> <!--form-authentication-login--> 
+          <div class="d-forgot-titles">
+          <h3 id="h3-forgot-titles-recover">Recover your Password</h3>
+          </div>
+          <div class="d-forgot-info"> <!--d-login-info--> 
+          <p class ="p-forgot-info-description">We'll send you a password recovery email shortly.</p>
+            <label class="label-forgot-info">Email</label> <!--label-login-info--> 
+            <input class="input-forgot-info" type="email" placeholder="email" />  <!--input-login-info--> 
+          </div>
+          <input id="button-forgot-recover" type="submit" value="Send email" /><br /> <!--button-login-signin--> 
+          <a id="a-forgot-goback">Go back</a>
+        </form>
+
+
     </section>
 
     <section id="section-main-system-messages">
