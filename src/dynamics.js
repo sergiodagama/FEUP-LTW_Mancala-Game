@@ -95,7 +95,7 @@ function computerConfigs(){
 }
 
 //loading screen /*UNCOMMENT*/
-document.getElementById("d-game-area-gameplay").style.display = "grid";
+document.getElementById("d-game-area-gameplay").style.display = "grid";  /* COMMENT HERE */
 /*
 setTimeout(function(){
   document.getElementById("d-load-game-area").style.display = "none";
@@ -105,9 +105,9 @@ setTimeout(function(){
 
 //connect cavities number in configs to html
 var configs = document.getElementById("button-settings-info--config");
-configs.addEventListener("click", config);
+configs.addEventListener("click", cavitiesConfig);
 
-function config(){
+function cavitiesConfig(){
   var cavities = document.getElementsByClassName("d-area-cavity");
 
   while(cavities[0]){
@@ -127,7 +127,26 @@ function config(){
     cavitie.classList.add("d-area-cavity");
     document.getElementById("d-area-cavity--p2").appendChild(cavitie);
   }
+
+  seedsConfig();
 }
+
+//connect seeds number with configs
+
+
+function seedsConfig(){
+  var quantities = document.getElementsByClassName("input-settings-info--quantities");
+  var cavs = document.getElementsByClassName("d-area-cavity");
+
+  for(i = 0; i < quantities[1].value;i++){
+    for(j = 0; j < quantities[0].value * 2; j++){
+      var seed = document.createElement("img");
+      seed.style.src = "../res/seeds/seed.png";
+      cavs[i].appendChild(seed);
+    }
+  }
+}
+
 
 //reset configs
 
@@ -140,8 +159,9 @@ function reset(){
   quantities[0].value = 6;
   quantities[1].value = 5;
 
-  config();
+  cavitiesConfig();
 }
+
 
 /*
 class Cavity {

@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css" />
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@900&display=swap" rel="stylesheet">
+    <script defer src="dynamics.js"></script>
     <title>Mancala</title>
   </head>
   <body>
@@ -102,7 +102,13 @@
     <div id="d-game-area-gameplay">
       <div id="d-area-storage--p1" class="d-area-storage"></div> <!--d-area-storage--p1--> <!--d-area-storage--> 
       <div id="d-area-cavity--p1">
-        <div id="d-area-cavity--p1-1" class="d-area-cavity"></div> <!--d-area-cavity--p1-1--> <!--d-area-cavity-->
+        <div id="d-area-cavity--p1-1" class="d-area-cavity">
+          <img class="img-seed" src="../res/seeds/seed.png">
+          <img class="img-seed" src="../res/seeds/seed.png">
+          <img class="img-seed" src="../res/seeds/seed.png">
+          <img class="img-seed" src="../res/seeds/seed.png">
+          <img class="img-seed" src="../res/seeds/seed.png">
+        </div> <!--d-area-cavity--p1-1--> <!--d-area-cavity-->
         <div id="d-area-cavity--p1-2" class="d-area-cavity"></div> <!--d-area-cavity--p1-2-->
         <div id="d-area-cavity--p1-3" class="d-area-cavity"></div> <!--d-area-cavity--p1-3-->
         <div id="d-area-cavity--p1-4" class="d-area-cavity"></div>
@@ -123,6 +129,8 @@
         <img id="img-load-game-logo" src="../res/logo.png">
       </div>
 		</div>
+
+    
     </section>
 	 
 	  <!--Configurations Area-->
@@ -305,5 +313,4 @@
 		
 		</div> <!--MAIN DIV END-->  
   </body>
-  <script src="dynamics.js"></script>
 </html>

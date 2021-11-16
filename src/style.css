@@ -234,7 +234,7 @@ a{
 
 .input-signup-info{
 	border:none;
-    max-width:80%;
+    width: 14em;
     border-radius: 0.4em;
     padding-top: 0.3em;
     padding-bottom: 0.3em;
@@ -306,7 +306,7 @@ a{
   }
 
 #d-load-game-area{
-    display: none;/*flex;*/ /*UNCOMMENT*/
+    display: none; /* flex UNCOMMENT*/
     justify-content: center;
     align-items: center;
     padding: 1em;
@@ -391,7 +391,7 @@ a{
     'storage1 cavity1 storage2'
     'storage1 cavity2 storage2';
     grid-template-columns:  15% 70% 15%;
-    background-image: url("../res/wood_backgroud.jpg") ;
+    background-image: url("../res/wood/wood_backgroud.jpg") ;
     background-size: 100% 100%;
     border-radius: 0.5em;
 }
@@ -422,7 +422,7 @@ a{
 }
 
 .d-area-storage{
-    background-image: url("../res/wood_backgroud.jpg") ;
+    background-image: url("../res/wood/wood_backgroud.jpg") ;
     background-size: 100% 100%;
     opacity: 0.5;
     box-shadow: inset 0 0 10px black;
@@ -433,7 +433,7 @@ a{
 }
 
 .d-area-cavity{ 
-    background-image: url("../res/wood_backgroud.jpg") ;
+    background-image: url("../res/wood/wood_backgroud.jpg") ;
     background-size: 100% 100%;
     opacity: 0.5;   
     box-shadow: inset 0 0 10px black;
@@ -452,6 +452,12 @@ a{
 .d-area-cavity:hover{
     box-shadow: 0 0 1em #242331;
 }
+
+.img-seed{
+    width: 1.8em;
+    height: 1.8em;
+}
+
 
 #section-main-configurations{
 	grid-area: configs;
@@ -600,7 +606,7 @@ a{
 
 #d-settings-help{
     position: relative;
-    margin: 0;
+    padding-top: 1em;
   padding: 0;
   border: 0;
 }
