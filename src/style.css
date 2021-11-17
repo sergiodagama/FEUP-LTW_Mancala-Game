@@ -668,7 +668,7 @@ a{
 	grid-area: commands;
 }
 
-.button-commands{
+.button-command{
     text-align: center;
     border-radius: 0.6em;
 	padding-right: 4.5em;
@@ -707,7 +707,7 @@ a{
     display: block;
 }
 
-.d-chat-messages--text{
+.d-chat-messages-text{
     margin-bottom: 0.8em;
     padding-left: 1em;
     font-size: 0.9em;
@@ -721,14 +721,14 @@ a{
     text-align: left;
 }
 
-#d-chat-messages-controls{
+#d-chat-controls{
     display: flex;
     justify-content: center;
     align-items: center;
     gap:1em;
 }
 
-#input-chat-messages-controls{
+#input-chat-controls{
     padding-right: 1.2em;
     padding-left: 1.2em;
     padding-top: 0.8em;
@@ -738,13 +738,13 @@ a{
     border:none;
 }
 
-#img-chat--messages-controls--send-icon{
+#img-chat-controls-send-icon{
     width: 2em;
     height: 2em;
     cursor: pointer; 
 }
 
-#img-chat--messages-controls--send-icon:hover{
+#img-chat-controls-send-icon:hover{
     filter: invert(45%) sepia(85%) saturate(700%) hue-rotate(345deg) brightness(107%) contrast(101%) drop-shadow(2px 2px 20px white);
 }
 
@@ -766,23 +766,23 @@ a{
     grid-area: configs;
 }
 
-.h3-score-table{
+.h3-score-table-title{
     color: white;
 }
 
-.th-score-void{
+.th-table-void{
     background-color: transparent;
     border:none;
 }
 
 /* footer */
 
-#footer-about-us{
+#footer-aboutus{
     padding-left: 1em;
     justify-self: start;
 }
 
-#footer-bug-icon{
+#img-footer-report-bug-icon{
     width: 1.1em;
     height: 1.1em;
     padding-right: 0.5em;
