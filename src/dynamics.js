@@ -1,12 +1,12 @@
 //main section, chat, rules and score dynamics
 
-var c = document.getElementById("img-navbar--chat");
+var c = document.getElementById("img-header-navbar-chat-icon");
 c.addEventListener("click", chat);
 				  
-var r = document.getElementById("img-navbar--rules");
+var r = document.getElementById("img-header-navbar-rules-icon");
 r.addEventListener("click", rules);
 				  
-var s = document.getElementById("img-navbar--score");
+var s = document.getElementById("img-header-navbar-score-icon");
 s.addEventListener("click", score);
 
 var flag = [false, false, false];
