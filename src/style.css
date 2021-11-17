@@ -1,7 +1,7 @@
 /* || General */
 /* css rules applied to multiple sections */
 body{
-    margin:0;
+    margin: 0;
     background-color: #2EC4B6;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -53,23 +53,21 @@ td{
     border-radius: 0.4em;
 }
 
-/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DONE UNTIL HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-
 a{
     text-decoration: none;
 }
 
 /* || Header */
 header{
-    padding-top: 0.3em;
-    padding-bottom: 0.3em;
-    padding-left: 4em;
-    padding-right: 4em;
-    margin:0;
-    background-color: #242331;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 0;
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    padding-right: 4em;
+    padding-left: 4em;
+    background-color: #242331;
 }
 
 /* || Logo */
@@ -106,7 +104,7 @@ header{
 .img-header-navbar-icon{
     width: 2.5em;
     height: 2.5em;
-	margin:0;
+	margin: 0;
     cursor: pointer;
 }
 
@@ -122,8 +120,8 @@ header{
     'commands game game configs'
     'system_messages game game configs'
 	'footer footer footer footer';
-	grid-template-columns: 25% 25% 25% 25%;
     grid-template-rows: 66% 9% 9% 17%;
+	grid-template-columns: 25% 25% 25% 25%;
     min-height: 81.5vh;
 }
 
@@ -133,9 +131,9 @@ header{
 }
 
 #form-authentication-login{
-    border-radius: 1em;
     border:solid;
     border-color: white;
+    border-radius: 1em;
 }
 
 .d-login-titles{
@@ -165,30 +163,30 @@ header{
 
 .label-login-info{
 	display: block;
-	font-size: 1.1em;
+    padding-top: 0.3em;
 	color: white;
-	font-weight: bold;
-	padding-top: 0.3em;
+    font-size: 1.1em;
+    font-weight: bold;
 }
 
 .input-login-info{
-	border-radius: 0.4em;
-	border: none;
-	padding: 0.5em;
-    max-width:80%;
+    max-width: 80%;
+    padding: 0.5em;
+    border: none;
+    border-radius: 0.4em;
 }
 
 #button-login-signin{
-	border-radius: 0.6em;
 	margin-top: 1em;
 	margin-bottom: 0.5em;
-	padding-left: 4.5em;
-	padding-right: 5em;
-	padding-top: 0.5em;
+    padding-top: 0.5em;
 	padding-bottom: 0.5em;
+    padding-right: 5em;
+	padding-left: 4.5em;
+    color: white;
     background-color: #2EC4B6;
     border: none;
-    color: white;
+    border-radius: 0.6em;
     font-size: 0.9em;
     font-weight: bold;
     cursor: pointer;
@@ -211,28 +209,28 @@ header{
 
 #form-authentication-signup{
     display: none;
-    border-radius: 1em;
-    border: solid;
-    border-color: white;
-    padding-right: 4em;
     padding-bottom: 1em;
+    padding-right: 4em;
+    border: solid;
+    border-radius: 1em;
+    border-color: white;
 }
 
 .d-signup-info{
-    font-weight: 300;
     display: grid;
     grid-template-areas: 'label', 'input';
     margin-bottom: 0.4em;
+    font-weight: 300;
 }
 
 .input-signup-info{
 	border: none;
     width: 14em;
-    border-radius: 0.4em;
-    padding-right: 0em;
     padding-top: 0.3em;
     padding-bottom: 0.3em;
+    padding-right: 0em;
     padding-left: 0.7em;
+    border-radius: 0.4em;
 }
 
 .d-signup-info select{
@@ -240,48 +238,48 @@ header{
 }
 
 #button-signup-register{
-    border-radius: 0.6em;
 	margin-top: 1em;
 	margin-bottom: 0.5em;
+    padding-top: 0.5em;
+	padding-bottom: 0.5em;
 	padding-left: 4.5em;
 	padding-right: 5.1em;
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
-    background-color: #2EC4B6;
-    border: none;
     color: white;
+    background-color: #2EC4B6;
     font-size: 0.9em;
     font-weight: bold;
+    border: none;
+    border-radius: 0.6em;
     cursor: pointer;
 }
 
 /* || System Messages */
 #section-main-system-messages{
-    font-size: 0.9em;
-    font-weight:600;
-    text-align: center;
     grid-area: system_messages;
+    font-size: 0.9em;
+    font-weight: 600;
+    text-align: center;
 }
 
 #p-system-messages-message{
-    margin-top: 0.9em;
-    padding-top: 0.7em;
-    padding-bottom: 0.7em;
-    background-image: linear-gradient(to right, #2EC4B6, #242331 , #2EC4B6);
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    margin-top: 0.9em;
+    padding-top: 0.7em;
+    padding-bottom: 0.7em;
+    color: white;
+    background-image: linear-gradient(to right, #2EC4B6, #242331 , #2EC4B6);
+    border-width: medium;
     border-top: solid;
     border-bottom: solid;
-    border-width: medium;
     border-color: rgba(255, 255, 255, 0.6);
-    color: white;
 }
 
 /* || Game */
 #section-main-game{
+    grid-area: game;
     padding-left: 0em;
-	grid-area: game;
 }
 
 #d-game-area{
@@ -313,10 +311,10 @@ header{
     display: none; /* flex UNCOMMENT*/
     justify-content: center;
     align-items: center;
-    padding: 1em;
     margin-top: 1em;
-    border-radius: 0.5em;
+    padding: 1em;
     background-color: #242331;
+    border-radius: 0.5em;
     animation: fadeOut ease 1s;
     animation-delay: 2s;
 }
@@ -333,12 +331,11 @@ header{
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 1em;
-    background-color: #CBF3F0;
-    padding-left: 5em;
-    padding-right: 5em;
     padding-top: 1.8em;
     padding-bottom: 2em;
+    padding-right: 5em;
+    padding-left: 5em;
+    background-color: #CBF3F0;
     border-radius: 0.5em;  
 }
 
@@ -346,40 +343,41 @@ header{
     margin-top: 1.1em;
     padding-top: 0.2em;
     padding-bottom: 0.2em;
+    padding-right: 3em;
+    padding-left: 3em;
+    color: #242331;
+    font-weight: 600;
     border-bottom: solid;
     border-width: medium;
     border-color: rgba(255, 255, 255, 0.459);
-    color: #242331;
-    padding-left: 3em;
-    padding-right: 3em;
-    font-weight: 600;
 }
 
 .p-game-area-header-score{
     font-family: 'Encode Sans', sans-serif;
-    font-size:1.7em;
-    padding:0.5em;
+    font-size: 1.7em;
+    padding: 0.5em;
     color: #242331;
     font-weight: 500;
 }
 
 #d-game-area-gameplay-top{
     grid-area: gamegameplay;
+    /*display: none; */ /* UNCOMMENT HERE */
     z-index: 1;
-    padding: 1em;
     margin-top: 1em;
+    padding: 1em;
 }
 
 #d-game-area-gameplay{
     grid-area: gamegameplay;
-    padding: 1em;
-    margin-top: 1em;
     display: none; /*changed to grid in js*/
     grid-template-areas: 
     'storage1 cavity1 storage2'
     'storage1 cavity2 storage2';
     grid-template-columns:  15% 70% 15%;
     grid-template-rows: 50% 50%;
+    margin-top: 1em;
+    padding: 1em;
     background-image: url("../res/wood/wood_backgroud.jpg") ;
     background-size: 100% 100%;
     border-radius: 0.5em;
@@ -396,40 +394,40 @@ header{
 }
 
 #d-area-cavity--p1{
+    grid-area: cavity1;
     display: flex;
     justify-content: space-evenly;
-    grid-area: cavity1;
     filter: sepia(100%) brightness(120%);
 }
 
 #d-area-cavity--p2{
+    grid-area: cavity2;
     display: flex;
     justify-content: space-evenly;
-    grid-area: cavity2;
     filter: sepia(100%) brightness(60%) saturate(10%) contrast(100%);
 }
 
 .d-area-storage{
+    margin: 0.2em;
+    opacity: 0.5;
+    background-color: transparent;
     background-image: url("../res/wood/wood_backgroud.jpg") ;
     background-size: 100% 100%;
-    opacity: 0.5;
     box-shadow: inset 0 0 10px black;
     border-radius: 2em;
-    margin: 0.2em;
     cursor: pointer; 
-    background-color: transparent;
 }
 
 .d-area-cavity{ 
-    background-image: url("../res/wood/wood_backgroud.jpg") ;
-    background-size: 100% 100%;
-    opacity: 0.5;   
-    box-shadow: inset 0 0 10px black;
-    margin: 0.2em;  
-    border-radius: 6em;
     width: 20%;
     max-width: 100%;
+    margin: 0.2em;  
+    opacity: 0.5;   
     background-color: transparent;  
+    background-image: url("../res/wood/wood_backgroud.jpg") ;
+    background-size: 100% 100%;
+    box-shadow: inset 0 0 10px black;
+    border-radius: 6em;
     cursor: pointer;  
 }
 
@@ -453,50 +451,50 @@ header{
 
 #form-configurations-settings{
     padding-top: 2em;
-    padding-left: 2em;
     padding-right: 2em;
+    padding-left: 2em;
     border-radius: 1em;
     border: solid;
     border-color: white;
 }
 
 .d-settings-info--quantities{
-    padding-bottom: 0.5em;
     display: flex;
     justify-content: space-between;
+    padding-bottom: 0.5em;
 }
 
 .label-settings-info--quantities{
-    font-weight:600;
+    font-weight: 600;
 }
 
 .input-settings-info--quantities{
-    border-radius: 0.4em;
     width: 4em;
     border: solid;
     border-color: white;
+    border-radius: 0.4em;
 }
 
 .p-settings-instructions{
-    font-weight: bold;
-    color: #242331;
-    padding-bottom: 0em;
     margin-bottom: 1em;
+    padding-bottom: 0em;
+    color: #242331;
+    font-weight: bold;
 }
 
 #p-mode-local-instructions{
-    font-weight: bold;
-    color: #242331;
-    padding-bottom: 0em;
     margin-bottom: 0.75em;
+    padding-bottom: 0em;
+    color: #242331;
+    font-weight: bold;
 }
 
 #ul-mode-local-intructions{
-    padding-top: 0em;
     margin-top: 0em;
+    padding-top: 0em;
     padding-left: 1.2em;
-    font-weight: 400;
     font-size: 0.9em;
+    font-weight: 400;
 }
 
 #d-settings-mode--local{
@@ -525,10 +523,10 @@ header{
 }
 
 #input-search-bar{
-    border-radius: 0.4em;
-	border: none;
+    max-width: 80%;
 	padding: 0.5em;
-    max-width:80%;
+    border: none;
+    border-radius: 0.4em;
 }
 
 #img-search-bar-add-icon{
@@ -551,10 +549,10 @@ header{
 }
 
 #p-mode-online-results--title{
-    font-weight: bold;
-    color: #242331;
-    padding:0em;
     margin: 0;
+    padding: 0em;
+    color: #242331;
+    font-weight: bold;
 }
 
 #p-mode-online-results--text{
@@ -575,15 +573,15 @@ header{
 }
 
 .button-settings-info{
-    border-radius: 0.6em;
     width: 9.2em;
 	padding-top: 0.7em;
     padding-bottom: 0.7em;
-    background-color: #242331;
-    border: none;
     color: white;
+    background-color: #242331;
     font-size: 0.9em;
     font-weight: bold;
+    border: none;
+    border-radius: 0.6em;
     cursor: pointer; 
 }
 
@@ -594,7 +592,6 @@ header{
 
 #d-settings-help{
     position: relative;
-    padding-top: 1em;
     padding: 0;
     border: 0;
 }
@@ -603,28 +600,28 @@ header{
     position: absolute;
     bottom: -2em;
     right: 0;
-    left:0;
-    border-radius: 1em;
-    background: rgba(56, 56, 56, 0.95);
-    color: white;
-    visibility: hidden;
+    left: 0;
     padding: 0.3em;
+    color: white;
+    background: rgba(56, 56, 56, 0.95);
+    visibility: hidden;
     font-size: smaller;
     font-weight: normal;
     opacity: 0;
+    border-radius: 1em;
     transition: opacity .2s, visibility .2s;
 }
 
 #d-settings-help:hover #p-settings-help--text{
-    visibility: visible;
     opacity: 1;
+    visibility: visible;
 }
 
 #img-settings-help--icon{
     float: right;
-    padding-top: 1em;
-    height: 1em;
     width: 1em;
+    height: 1em;
+    padding-top: 1em;
 }
    
 #img-settings-help--icon:hover{
@@ -633,24 +630,24 @@ header{
 
 /* || Commands */
 #section-main-commands{
+    grid-area: commands;
 	display: flex;
 	justify-content: space-between;
-	grid-area: commands;
 }
 
 .button-command{
-    text-align: center;
-    border-radius: 0.6em;
-	padding-right: 4.5em;
-    padding-left: 4.5em;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #242331;
-    border: none;
-    color: white;
-    font-size: 0.9em;
-    font-weight: bold;
     max-width: 50%;
     margin-top: 0.5em;
+	padding-right: 4.5em;
+    padding-left: 4.5em;
+    color: white;
+    background-color: #242331;
+    font-size: 0.9em;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    border: none;
+    border-radius: 0.6em;
     cursor: pointer; 
 }
 
@@ -661,8 +658,8 @@ header{
 
 /* || Score */
 #section-main-score{
-    display: none;
     grid-area: configs;
+    display: none;
 }
 
 .h3-score-table-title{
@@ -676,51 +673,51 @@ header{
 
 /* || Chat */
 #section-main-chat{
-    display: none;
     grid-area: auth;
+    display: none;
 }
 
 #d-chat-messages{
+    display: grid;
+    grid-template-rows: 75% 25%;
     height: 75%;
     background-image: linear-gradient(to bottom, #FF9F1C , #242331);
     border-radius: 1em;
-    display: grid;
-    grid-template-rows: 75% 25%;
 }
 
 #d-chat-messages-area{
-    padding: 1em;
     display: block;
+    padding: 1em;
 }
 
 .d-chat-messages-text{
-    margin-bottom: 0.8em;
-    padding-left: 1em;
-    font-size: 0.9em;
     display: flex;
     justify-content: left;
     align-items: center;
-    border-radius: 2em;
-    background-color: rgba(255, 255, 255, 0.8);
-    height: 18%;
     width: 65%;
+    height: 18%;
+    margin-bottom: 0.8em;
+    padding-left: 1em;
+    background-color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9em;
     text-align: left;
+    border-radius: 2em;
 }
 
 #d-chat-controls{
     display: flex;
     justify-content: center;
     align-items: center;
-    gap:1em;
+    gap: 1em;
 }
 
 #input-chat-controls{
-    padding-right: 1.2em;
-    padding-left: 1.2em;
+    width: 16em;
     padding-top: 0.8em;
     padding-bottom: 0.8em;
+    padding-right: 1.2em;
+    padding-left: 1.2em;
     border-radius: 2em;
-    width: 16em;
     border: none;
 }
 
@@ -736,8 +733,8 @@ header{
 
 /* || Rules */
 #section-main-rules{
-    display: none;
     grid-area: game;
+    display: none;
 }
 
 #ul-rules-list{
@@ -750,25 +747,25 @@ header{
 
 /* || Footer */
 footer{
-    padding-left: 1.5em;
-    padding-right: 1.5em;
-	grid-area: footer;
+    grid-area: footer;
+    align-self: end;
     display: grid;
     justify-items: center;
     align-items: center;
     grid-template-columns: 10% 80% 10%;
-	background-color: powderblue;
-	color: #242331;
+    margin-top: 1.4em;
 	padding-top: 0.5em;
 	padding-bottom: 0.5em;
-	margin-top: 1.4em;
-    align-self: end;
+    padding-right: 1.5em;
+    padding-left: 1.5em;
+	color: #242331;
+	background-color: powderblue;
     font-weight: 200;
 }
 
 #footer-aboutus{
-    padding-left: 1em;
     justify-self: start;
+    padding-left: 1em;
 }
 
 #img-footer-report-bug-icon{

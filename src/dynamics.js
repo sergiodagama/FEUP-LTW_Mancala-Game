@@ -99,9 +99,11 @@ document.getElementById("d-game-area-gameplay").style.display = "grid";  /* COMM
 /*
 setTimeout(function(){
   document.getElementById("d-load-game-area").style.display = "none";
+  document.getElementById("d-game-area-gameplay-top").style.display = "grid";
   document.getElementById("d-game-area-gameplay").style.display = "grid";
 },2900);
 */
+
 
 //connect cavities number in configs to html
 var configs = document.getElementById("button-settings-info--config");
