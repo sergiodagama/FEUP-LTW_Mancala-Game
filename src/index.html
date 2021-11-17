@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>	  
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css" />
@@ -12,320 +12,362 @@
   </head>
   <body>
     <header>
-		<span id="s-banner"> <!--s-banner-->
-		  <img id="img-banner-logo" src="../res/logo.png"> <!--img-banner-logo-->
-		  <h1 id="img-banner-name">Mancala</h1> <!--img-banner-name-->
-		</span>
+      <!--Logo-->
+      <span id="s-header-banner">
+        <img id="img-header-banner-logo" src="../res/logo.png">
+        <h1 id="img-header-banner-name">Mancala</h1>
+      </span>
 
-      <span id="s-navbar"> <!--s-navbar-->
-		  <img id="img-navbar--chat" class="img-navbar-icon" src="../res/chat_icon.png"> <!--img-navbar-icon--> 
-		  <img id="img-navbar--rules" class="img-navbar-icon" src="../res/rules_icon.png">  <!--img-navbar-icon--> 
-		  <img id="img-navbar--score" class="img-navbar-icon" src="../res/score_icon.png"> <!--img-navbar-icon--> 
+      <!--Navigation bar-->
+      <span id="s-header-navbar">
+        <img id="img-header-navbar-chat-icon" class="img-header-navbar-icon" src="../res/chat_icon.png"> 
+        <img id="img-header-navbar-rules-icon" class="img-header-navbar-icon" src="../res/rules_icon.png">  
+		    <img id="img-header-navbar-score-icon" class="img-header-navbar-icon" src="../res/score_icon.png"> 
       </span>		
     </header>
-	<div id="d-main"> <!--d-main--> 
-    <!--Authentication Area-->
-    <section id="section-main-authentication"> <!--section-main-authentication--> 
-      <h2 id="h2-authenticataion-title">Authentication</h2> <!--h2-authenticataion-title--> 
 
-      <form id="form-authentication-login" action="signin" method="post"> <!--form-authentication-login--> 
-        <div class="d-login-titles">
-        <h3 id="h3-login-titles-signin--in">Sign In</h3>
-        <h3 id="h3-login-titles-signup--in">Sign Up</h3>
-        </div>
-        <div class="d-login-info"> <!--d-login-info--> 
-          <label class="label-login-info">Username</label> <!--label-login-info--> 
-          <input class="input-login-info" type="text" placeholder="username" />  <!--input-login-info--> 
-        </div>
-        <div class="d-login-info">
-          <label class="label-login-info">Password</label> <!--label-login-info--> 
-          <input class="input-login-info" type="password" placeholder="password" /><br />  <!--input-login-info--> 
-        </div>
-        <input id="button-login-signin" type="submit" value="Login" /><br /> <!--button-login-signin-->
-        <label id="label-login-rememberme"> <input id="checkbox-login-rememberme" type="checkbox" checked="checked" />Remember me </label><br/>  <!--label-login-rememberme--> <!--checkbox-login-rememberme--> 
-		 <a id="a-login-forgotpass">Forgot Password?</a> <!--a-login-forgotpass--> 
-      </form>
+    <div id="d-main">
+      <!--Authentication-->
+      <section id="section-main-authentication">
+        <h2 id="h2-authentication-title">Authentication</h2>
 
-      <form id="form-authentication-signup" action="signup" method="post"> <!--form-authentication-login--> 
-        <div class="d-login-titles">
-          <h3 id="h3-login-titles-signin--up">Sign In</h3>
-          <h3 id="h3-login-titles-signup--up">Sign Up</h3>
+        <!--Sign In-->
+        <form id="form-authentication-login" action="signin" method="post">
+
+          <div class="d-login-titles">
+            <h3 id="h3-login-titles-signin--in">Sign In</h3>
+            <h3 id="h3-login-titles-signup--in">Sign Up</h3>
           </div>
-          <div class="d-signup-info"> <!--d-login-info--> 
-          <label class="label-signup-info">Username</label> <!--label-login-info--> 
-          <input class="input-signup-info" type="text" placeholder="username" />  <!--input-login-info--> 
-        </div>
-        <div class="d-signup-info">
-          <label class="label-signup-info">Password</label> <!--label-login-info--> 
-          <input class="input-signup-info" type="password" placeholder="password" />  <!--input-login-info--> 
-        </div>
-        <div class="d-signup-info">
-          <label class="label-signup-info">Birthday</label> <!--label-login-info--> 
-          <input class="input-signup-info" type="date" placeholder="password" />  <!--input-login-info--> 
-        </div>
-        <div class="d-signup-info">
-          <label class="label-signup-info">Country</label> <!--label-login-info--> 
-          <select class="input-signup-info">
-            <option value="Portugal">Portugal</option>
-            <option value="France">France</option>
-            <option value="Spain">Spain</option>
-            <option value="Brasil">Brasil</option>
-            <option value="Germany">Germany</option>
-          </select>
-        </div>
-        <input id="button-signup-register" type="submit" value="Register" /><br /> <!--button-login-signin-->
+
+          <div class="d-login-info"> 
+            <label class="label-login-info">Username</label> 
+            <input class="input-login-info" type="text" placeholder="username"/> 
+          </div>
+
+          <div class="d-login-info">
+            <label class="label-login-info">Password</label> 
+            <input class="input-login-info" type="password" placeholder="password"/>
+          </div>
+
+          <input id="button-login-signin" type="submit" value="Login"/><br/>
+          <label id="label-login-rememberme"> 
+            <input id="checkbox-login-rememberme" type="checkbox" checked="checked"/>
+            Remember me
+          </label><br/>
+          <a id="a-login-forgotpass">Forgot Password?</a>
         </form>
-    </section>
 
-    <section id="section-main-system-messages">
-      <div id="d-system-messages-guest">
-      <p class="p-system-messages-guest">You are playing as a guest!</p>
-        <!--<p class="p-system-messages-guest">Login to play online!</p>-->
-        </div>
-    </section>
+        <!--Sign Up-->
+        <form id="form-authentication-signup" action="signup" method="post"> 
 
-    <!--Game Area-->
-  
-    <section id="section-main-game"> <!--section-main-game--> 
-      <h2 id="h2-game-title">Game</h2> <!--h2-game-title--> 
-		
-	<div id="d-game-area"> <!--d-game-area--> 
-
-    <div id="d-game-area-header">
-      <p id="p-game-area-header-score--1" class="p-game-area-header-score">20</p>
-      <p id="p-game-area-header-messages">It's player1 turn</p>
-      <p id="p-game-area-header-score--2" class="p-game-area-header-score">13</p>
-    </div>
-
-    <div id="d-game-area-gameplay">
-      <div id="d-area-storage--p1" class="d-area-storage"></div> <!--d-area-storage--p1--> <!--d-area-storage--> 
-      <div id="d-area-cavity--p1">
-        <div id="d-area-cavity--p1-1" class="d-area-cavity">
-        </div> <!--d-area-cavity--p1-1--> <!--d-area-cavity-->
-        <div id="d-area-cavity--p1-2" class="d-area-cavity"></div> <!--d-area-cavity--p1-2-->
-        <div id="d-area-cavity--p1-3" class="d-area-cavity"></div> <!--d-area-cavity--p1-3-->
-        <div id="d-area-cavity--p1-4" class="d-area-cavity"></div>
-        <div id="d-area-cavity--p1-5" class="d-area-cavity"></div>
-        <div id="d-area-cavity--p1-6" class="d-area-cavity"></div>
-      </div>
-      <div id="d-area-cavity--p2">
-        <div id="d-area-cavity--p2-1" class="d-area-cavity"></div> <!--d-area-cavity--p2-1-->
-        <div id="d-area-cavity--p2-2" class="d-area-cavity"></div>
-        <div id="d-area-cavity--p2-3" class="d-area-cavity"></div>
-        <div id="d-area-cavity--p2-4" class="d-area-cavity"></div>
-        <div id="d-area-cavity--p2-5" class="d-area-cavity"></div>
-        <div id="d-area-cavity--p2-6" class="d-area-cavity"></div> 
-      </div>
-      <div id="d-area-storage--p2" class="d-area-storage"></div><!--d-area-storage--p2--> <!--d-area-storage-->
-      </div>
-      <div id="d-load-game-area"> 
-        <img id="img-load-game-logo" src="../res/logo.png">
-      </div>
-
-          <!--NEWWWWWWWWWWWW-->
-
-    <div id="d-game-area-gameplay-top">
-      <div class="d-area-storage--game">
-        <div class="d-area-cavity--game">          <img class="img-seed" src="../res/seeds/seed.png"></div>
-        <div class="d-area-cavity--game"></div>
-        <div class="d-area-cavity--game"></div>
-        <div class="d-area-cavity--game"></div>
-        <div class="d-area-cavity--game"></div>
-        <div class="d-area-cavity--game"></div>
-      </div>
-      <div class="d-area-storage--game">
-        <div class="d-area-cavity--game"></div>
-        <div class="d-area-cavity--game"></div>
-        <div class="d-area-cavity--game"></div>
-        <div class="d-area-cavity--game"></div>
-        <div class="d-area-cavity--game"></div>
-        <div class="d-area-cavity--game"></div>
-      </div>
-    </div>
-
-    <!--END NEWWWWWWWWWWWWWWW-->
-		</div>
-    
-    </section>
-	 
-	  <!--Configurations Area-->
-    <section id="section-main-configurations"> <!--section-main-configurations-->
-        <h2 id="h2-configurations-title">Configurations</h2> <!--h2-configurations-title-->
-
-      <form id="form-configurations-settings" action="configurate" method="post"> <!--form-configurations-settings--> 
-          <div class="d-settings-info--quantities">
-          <label class="label-settings-info--quantities">Number of cavities:</label><!--label-settings-info--quantities-->
-          <input class="input-settings-info--quantities" type="number" value="6" min="2" max="8"/> <!--input-settings-info--quantities--> 
-        </div>
-        <div class="d-settings-info--quantities">
-          <label class="label-settings-info--quantities">Initial seeds per cavity:</label><!--label-settings-info--quantities--> 
-          <input class="input-settings-info--quantities" type="number" value="5" min="1" max="10"/> <!--input-settings-info--quantities--> 
+          <div class="d-login-titles">
+            <h3 id="h3-login-titles-signin--up">Sign In</h3>
+            <h3 id="h3-login-titles-signup--up">Sign Up</h3>
           </div>
 
-        <p class="p-settings-instructions">Please select your game mode:</p> <!--p-settings-instructions--> 
-        <div id="d-settings-info--mode">                                  <!--d-settings-info--mode--> 
-          <input class="radio-settings-info--mode" type="radio" name="mode" value="local" checked/>  <!--radio-settings-info--mode--> 
-          <label class="label-settings-info--mode">Local player</label> <!--label-settings-info--mode--> 
-        </div>
-        <div id="d-settings-info--mode">                                  <!--d-settings-info--mode--> 
-          <input class="radio-settings-info--mode" type="radio" name="mode" value="local" />  <!--radio-settings-info--mode--> 
-          <label class="label-settings-info--mode">Online player</label> <!--label-settings-info--mode--> 
-        </div>
-        <div class="d-settings-info--mode"> <!--d-settings-info--mode--> 
-          <input class="radio-settings-info--mode" type="radio" name="mode" id="ai" value="ai" /> <!--radio-settings-info--mode--> 
-          <label class="label-settings-info--mode">Against the computer</label> <!--label-settings-info--mode--> 
-        </div>
-        <div id="d-settings-mode--local">
-          <p id="p-mode-local-instructions">Instructions to local game:</p>
-          <ul id="ul-mode-local-intructions">
-          <li class="li-mode-local-instructions">Both players use the mouse to play at each turn.</li>
-          <li class="li-mode-local-instructions">If you're logged in, the game score will be saved as against a local player.</li>
-          </ul>
-        </div>
-        <div id="d-settings-mode--online">
-          <p class="p-settings-instructions">Search online players:</p>
-          <div id="d-mode-online-search-bar">
-            <img id="img-search-bar-icon" src="../res/search_icon.png">
-            <input id="input-search-bar" type="text">
-            <img id="img-search-bar-add-icon" src="../res/add_icon.png">
+          <div class="d-signup-info">
+            <label class="label-signup-info">Username</label> 
+            <input class="input-signup-info" type="text" placeholder="username"/>  
           </div>
-          <div id="d-mode-online-results">
-          <p id="p-mode-online-results--title">Results:</p>
-          <p id="p-mode-online-results--text">There's no user with that name :(</p>
+
+          <div class="d-signup-info">
+            <label class="label-signup-info">Password</label> 
+            <input class="input-signup-info" type="password" placeholder="password"/>  
           </div>
-        </div>
-        <div id="d-settings-mode--computer">
-          <p class="p-settings-instructions">Please select the AI dificulty level:</p> <!--p-settings-instructions--> 
 
-          <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
-            <input class="radio-settings-info--dificulty" type="radio" name="dificulty" checked/> <!--radio-settings-info--dificulty--> 
-              <label class="label-settings-info--dificulty">Easy</label> <!--label-settings-info--dificulty--> 
-          </div> <!--d-settings-info--dificulty--> 
-          <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
-            <input class="radio-settings-info--dificulty" type="radio" name="dificulty" /> <!--radio-settings-info--dificulty--> 
-              <label class="label-settings-info--dificulty">Medium</label>  <!--label-settings-info--dificulty--> 
-          </div> <!--d-settings-info--dificulty--> 
-          <div class="d-settings-info--dificulty"> <!--d-settings-info--dificulty--> 
-            <input class="radio-settings-info--dificulty" type="radio" name="dificulty" />  <!--radio-settings-info--dificulty-->
-              <label class="label-settings-info--dificulty">Hard</label><br />  <!--label-settings-info--dificulty--> 
+          <div class="d-signup-info">
+            <label class="label-signup-info">Birthday</label>
+            <input class="input-signup-info" type="date" placeholder="password"/>
           </div>
-        </div>
-        <div id="d-settings-buttons">
-          <input id="button-settings-info--config" class="button-settings-info" type="button" value="Configurate"  /> <!--button-settings-info--> 
-          <input id="button-settings-info--reset" class="button-settings-info" type="button" value="Reset" /> <!--button-settings-info--> 
-        </div>
-        <div id="d-settings-help">
-        <img id="img-settings-help--icon" src="../res/info_icon.png">
-        <p id="p-settings-help--text">	
-          To configurate the game, input the parameters values and check the
-          desired options, followed by clicking on configurate button.<br />
-          If you want to reset default configurations, click on the reset button.
-        </p>
-        </div>
-      </form>
-    </section>
-		
-		    <!--Commands-->
-    <section id="section-main-commands"> 
-      <input class="button-commands" type="button" value="Start">
-      <input class="button-commands" type="button" value="Quit">
-    </section>
-		
-		     <!--Score Area-->
-     <section id="section-main-score">
-      <h2 id="h2-score-title">Score</h2>
 
-      <h3 class="h3-score-table">Live</h3>
+          <div class="d-signup-info">
+            <label class="label-signup-info">Country</label>
+            <select class="input-signup-info">
+              <option value="Portugal">Portugal</option>
+              <option value="France">France</option>
+              <option value="Spain">Spain</option>
+              <option value="Brasil">Brasil</option>
+              <option value="Germany">Germany</option>
+            </select>
+          </div>
 
-      <table>
-        <tr>
-          <th class="th-score-void"></th>
-          <th>Player 1</th>
-          <th>Player 2</th>
-          <th>Game Time</th>
-        </tr>
-        <tr>
-          <th>Points</th>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      </table>
+          <input id="button-signup-register" type="submit" value="Register"/>
+        </form>
+      </section>
 
-      <h3 class="h3-score-table">Leaderboard</h3>
+      <!--System Messages-->
+      <section id="section-main-system-messages">
+        <p id="p-system-messages-message">You are playing as a guest!</p>
+      </section>
 
-      <table>
-        <tr>
-          <th class="th-score-void"></th>
-          <th>Player 1</th>
-          <th>Player 2</th>
-          <th>Games Won</th>
-        </tr>
-        <tr>
-          <th>Points</th>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      </table>
-    </section>
+      <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DONE IDS AND CLASSES CHECKING UNTIL HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
 
-    	     <!--Chat Area-->
-           <section id="section-main-chat">
-            <h2 id="h2-chat-title">Chat</h2>
+      <!--Game-->
+      <section id="section-main-game">
+        <h2 id="h2-game-title">Game</h2> 
+        
+        <div id="d-game-area">
 
-            <div id="d-chat-messages">
-              <div id="d-chat-messages-area">
-                <div class="d-chat-messages--text">Hello World!</div>
-                <div class="d-chat-messages--text">Hi there!</div>
-              </div>
-              <div id="d-chat-messages-controls">
-                <input id="input-chat-messages-controls" type="text" placeholder="message">
-                <img id="img-chat--messages-controls--send-icon" src="../res/send_icon.png" alt="send message" >
-              </div>
+          <!--Game Header-->
+          <div id="d-game-area-header">
+            <p id="p-game-area-header-score--1" class="p-game-area-header-score">20</p>
+            <p id="p-game-area-header-messages">It's player1 turn</p>
+            <p id="p-game-area-header-score--2" class="p-game-area-header-score">13</p>
+          </div>
+
+          <!--Game Background-->
+          <div id="d-game-area-gameplay">
+            <div id="d-area-storage--p1" class="d-area-storage"></div>
+
+            <div id="d-area-cavity--p1">
+              <div id="d-area-cavity--p1-1" class="d-area-cavity"></div>
+              <div id="d-area-cavity--p1-2" class="d-area-cavity"></div> 
+              <div id="d-area-cavity--p1-3" class="d-area-cavity"></div> 
+              <div id="d-area-cavity--p1-4" class="d-area-cavity"></div>
+              <div id="d-area-cavity--p1-5" class="d-area-cavity"></div>
+              <div id="d-area-cavity--p1-6" class="d-area-cavity"></div>
             </div>
-          </section>
-		
-		    <!--Rules Area-->
-    <section id="section-main-rules"> <!--section-main-rules--> 
-      <h2 id="h2-rules-title">Rules</h2> <!--h2-rules-title--> 
 
-      <ul id="ul-rules-list">
-        <li class="li-rules-list-item">
-          Each player controls <b>their side's</b> cavities and the storage to their
-          right.
-        </li>
-        <li class="li-rules-list-item">
-          Each player takes a turn choosing one of their cavities, that cavity's
-          seeds are then <b>distributed one by one</b> into the following
-          cavities/storages (excluding the opposite player's storage).
-        </li>
-        <li class="li-rules-list-item">
-          If the <b>last seed</b> you place <b>lands</b> in your <b>own storage</b>, you can <b>play
-          again</b>, if it lands in an <b>empty cavity</b> in <b>your own side</b>, you <b>take all</b>
-          the <b>seeds on the opposing side's</b> cavity into <b>your cavity</b>.
-        </li>
-        <li class="li-rules-list-item">
-          The <b>game ends</b> when one player can't play due to <b>not having anymore
-          seeds</b> in their cavities. If the other player still has seeds, he can
-          transfer them to his storage.
-        </li>
-        <li class="li-rules-list-item">
-          At the <b>end</b> of the game, each player counts the <b>number of seeds</b> they
-          have in <b>their storage</b>, the <b>winner</b> is the one with the <b>most seeds</b>.
-        </li>
-      </ul>
-    </section>
+            <div id="d-area-cavity--p2">
+              <div id="d-area-cavity--p2-1" class="d-area-cavity"></div>
+              <div id="d-area-cavity--p2-2" class="d-area-cavity"></div>
+              <div id="d-area-cavity--p2-3" class="d-area-cavity"></div>
+              <div id="d-area-cavity--p2-4" class="d-area-cavity"></div>
+              <div id="d-area-cavity--p2-5" class="d-area-cavity"></div>
+              <div id="d-area-cavity--p2-6" class="d-area-cavity"></div> 
+            </div>
 
-    <footer>
-			<a id="footer-about-us" href="https://github.com/N0il/Mancala" target="_blank">About us</a>
-      <p><b>Mancala</b> - Keep the traditions</p>
+            <div id="d-area-storage--p2" class="d-area-storage"></div>
+          </div>
+            
+          <!--Gameplay Area-->
+          <div id="d-game-area-gameplay-top">
+
+            <div class="d-area-storage--game">
+              <div class="d-area-cavity--game">
+                <img class="img-seed" src="../res/seeds/seed.png">
+              </div>
+              <div class="d-area-cavity--game"></div>
+              <div class="d-area-cavity--game"></div>
+              <div class="d-area-cavity--game"></div>
+              <div class="d-area-cavity--game"></div>
+              <div class="d-area-cavity--game"></div>
+            </div>
+
+            <div class="d-area-storage--game">
+              <div class="d-area-cavity--game"></div>
+              <div class="d-area-cavity--game"></div>
+              <div class="d-area-cavity--game"></div>
+              <div class="d-area-cavity--game"></div>
+              <div class="d-area-cavity--game"></div>
+              <div class="d-area-cavity--game"></div>
+            </div>
+          </div>
+
+          <!--Game Loading Screen-->
+          <div id="d-load-game-area"> 
+            <img id="img-load-game-logo" src="../res/logo.png">
+          </div>
+        </div>
+      </section>
+    
+      <!--Configurations-->
+      <section id="section-main-configurations">
+        
+        <h2 id="h2-configurations-title">Configurations</h2>
+
+        <form id="form-configurations-settings" action="configurate" method="post">
+          
+          <div class="d-settings-info--quantities">
+            <label class="label-settings-info--quantities">Number of cavities:</label>
+            <input class="input-settings-info--quantities" type="number" value="6" min="2" max="8"/> 
+          </div>
+
+          <div class="d-settings-info--quantities">
+            <label class="label-settings-info--quantities">Initial seeds per cavity:</label>
+            <input class="input-settings-info--quantities" type="number" value="5" min="1" max="10"/> 
+          </div>
+
+          <p class="p-settings-instructions">Please select your game mode:</p>
+
+          <div id="d-settings-info--mode">                                 
+            <input class="radio-settings-info--mode" type="radio" name="mode" value="local" checked/> 
+            <label class="label-settings-info--mode">Local player</label> 
+          </div>
+
+          <div id="d-settings-info--mode">                                
+            <input class="radio-settings-info--mode" type="radio" name="mode" value="local"/>  
+            <label class="label-settings-info--mode">Online player</label> 
+          </div>
+
+          <div class="d-settings-info--mode">
+            <input class="radio-settings-info--mode" type="radio" name="mode" id="ai" value="ai"/> 
+            <label class="label-settings-info--mode">Against the computer</label>
+          </div>
+
+          <!--Local mode Settings-->
+          <div id="d-settings-mode--local">
+            <p id="p-mode-local-instructions">Instructions to local game:</p>
+
+            <ul id="ul-mode-local-intructions">
+              <li class="li-mode-local-instructions">Both players use the mouse to play at each turn.</li>
+              <li class="li-mode-local-instructions">If you're logged in, the game score will be saved as against a local player.</li>
+            </ul>
+          </div>
+
+          <!--Online mode Settings-->
+          <div id="d-settings-mode--online">
+            <p class="p-settings-instructions">Search online players:</p>
+
+            <div id="d-mode-online-search-bar">
+              <img id="img-search-bar-icon" src="../res/search_icon.png">
+              <input id="input-search-bar" type="text"/>
+              <img id="img-search-bar-add-icon" src="../res/add_icon.png">
+            </div>
+
+            <div id="d-mode-online-results">
+              <p id="p-mode-online-results--title">Results:</p>
+              <p id="p-mode-online-results--text">There's no user with that name :(</p>
+            </div>
+          </div>
+
+          <!--Against the Computer mode Settings-->
+          <div id="d-settings-mode--computer">
+            <p class="p-settings-instructions">Please select the AI dificulty level:</p> 
+
+            <div class="d-settings-info--dificulty">
+              <input class="radio-settings-info--dificulty" type="radio" name="dificulty" checked/>
+                <label class="label-settings-info--dificulty">Easy</label>
+            </div>  
+            <div class="d-settings-info--dificulty"> 
+              <input class="radio-settings-info--dificulty" type="radio" name="dificulty"/> 
+                <label class="label-settings-info--dificulty">Medium</label>  
+            </div> 
+            <div class="d-settings-info--dificulty"> 
+              <input class="radio-settings-info--dificulty" type="radio" name="dificulty"/> 
+                <label class="label-settings-info--dificulty">Hard</label><br/>   
+            </div>
+          </div>
+
+          <div id="d-settings-buttons">
+            <input id="button-settings-info--config" class="button-settings-info" type="button" value="Configurate"/> 
+            <input id="button-settings-info--reset" class="button-settings-info" type="button" value="Reset"/> 
+          </div>
+
+          <div id="d-settings-help">
+            <img id="img-settings-help--icon" src="../res/info_icon.png">
+            <p id="p-settings-help--text">	
+              To configurate the game, input the parameters values and check the
+              desired options, followed by clicking on configurate button.<br />
+              If you want to reset default configurations, click on the reset button.
+            </p>
+          </div>
+        </form>
+      </section>
+      
+      <!--Commands-->
+      <section id="section-main-commands"> 
+        <input class="button-commands" type="button" value="Start"/>
+        <input class="button-commands" type="button" value="Quit"/>
+      </section>
+      
+      <!--Score Area-->
+      <section id="section-main-score">
+        <h2 id="h2-score-title">Score</h2>
+
+        <!--Player Games Records-->
+        <h3 class="h3-score-table">Your Games</h3>
+        <table>
+          <tr>
+            <th class="th-score-void"></th>
+            <th>Player 1</th>
+            <th>Player 2</th>
+            <th>Game Time</th>
+          </tr>
+          <tr>
+            <th>Points</th>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+
+        <!--Global Players Leaderboard-->
+        <h3 class="h3-score-table">Leaderboard</h3>
+        <table>
+          <tr>
+            <th class="th-score-void"></th>
+            <th>Player 1</th>
+            <th>Player 2</th>
+            <th>Games Won</th>
+          </tr>
+          <tr>
+            <th>Points</th>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </section>
+
+      <!--Chat-->
+      <section id="section-main-chat">
+        <h2 id="h2-chat-title">Chat</h2>
+
+        <div id="d-chat-messages">
+          <div id="d-chat-messages-area">
+            <div class="d-chat-messages--text">Hello World!</div>
+            <div class="d-chat-messages--text">Hi there!</div>
+          </div>
+
+          <div id="d-chat-messages-controls">
+            <input id="input-chat-messages-controls" type="text" placeholder="message"/>
+            <img id="img-chat--messages-controls--send-icon" src="../res/send_icon.png" alt="send message">
+          </div>
+        </div>
+      </section>
+      
+      <!--Rules-->
+      <section id="section-main-rules">
+        <h2 id="h2-rules-title">Rules</h2>
+
+        <ul id="ul-rules-list">
+          <li class="li-rules-list-item">
+            Each player controls <b>their side's</b> cavities and the storage to their
+            right.
+          </li>
+          <li class="li-rules-list-item">
+            Each player takes a turn choosing one of their cavities, that cavity's
+            seeds are then <b>distributed one by one</b> into the following
+            cavities/storages (excluding the opposite player's storage).
+          </li>
+          <li class="li-rules-list-item">
+            If the <b>last seed</b> you place <b>lands</b> in your <b>own storage</b>, you can <b>play
+            again</b>, if it lands in an <b>empty cavity</b> in <b>your own side</b>, you <b>take all</b>
+            the <b>seeds on the opposing side's</b> cavity into <b>your cavity</b>.
+          </li>
+          <li class="li-rules-list-item">
+            The <b>game ends</b> when one player can't play due to <b>not having anymore
+            seeds</b> in their cavities. If the other player still has seeds, he can
+            transfer them to his storage.
+          </li>
+          <li class="li-rules-list-item">
+            At the <b>end</b> of the game, each player counts the <b>number of seeds</b> they
+            have in <b>their storage</b>, the <b>winner</b> is the one with the <b>most seeds</b>.
+          </li>
+        </ul>
+      </section>
+
+      <footer>
+        <a id="footer-about-us" href="https://github.com/N0il/Mancala" target="_blank">About us</a>
+
+        <p><b>Mancala</b> - Keep the traditions</p>
+
         <a id="a-footer-report-bug" href="https://github.com/N0il/Mancala/issues/new" target="_blank">
-        <img id="footer-bug-icon" src="../res/bug_icon.png" href="https://github.com/N0il/Mancala/issues/new">
-        <p>Report a bug</p>
+          <img id="footer-bug-icon" src="../res/bug_icon.png" href="https://github.com/N0il/Mancala/issues/new">
+          <p>Report a bug</p>
         </a>
-		</footer>
-		
-		</div> <!--MAIN DIV END-->  
+      </footer>
+    </div> 
   </body>
 </html>
