@@ -111,9 +111,11 @@ configs.addEventListener("click", cavitiesConfig);
 
 function cavitiesConfig(){
   var cavities = document.getElementsByClassName("d-area-cavity");
+  var cavitiesTop = document.getElementsByClassName("d-area-cavity--top");
 
   while(cavities[0]){
     cavities[0].remove();
+    cavitiesTop[0].remove();
   }
 
   var quantities = document.getElementsByClassName("input-settings-info--quantities");
@@ -122,23 +124,31 @@ function cavitiesConfig(){
     var cavitie = document.createElement("div");
     cavitie.classList.add("d-area-cavity");
     document.getElementById("d-area-cavity--p1").appendChild(cavitie);
+
+    var cavitie2 = document.createElement("div");
+    cavitie2.classList.add("d-area-cavity");
+    document.getElementById("d-area-cavity--p2").appendChild(cavitie2);
+
+    //Top layer
+    var cavitieTop = document.createElement("div");
+    cavitieTop.classList.add("d-area-cavity--top");
+    document.getElementById("d-area-cavity--p1--top").appendChild(cavitieTop);
+
+    var cavitieTop2 = document.createElement("div");
+    cavitieTop2.classList.add("d-area-cavity--top");
+    document.getElementById("d-area-cavity--p2--top").appendChild(cavitieTop2);
   }
 
-  for(i = 0; i < quantities[0].value; i++){
-    var cavitie = document.createElement("div");
-    cavitie.classList.add("d-area-cavity");
-    document.getElementById("d-area-cavity--p2").appendChild(cavitie);
-  }
-
-  seedsConfig();
+  //seedsConfig();
 }
 
 //connect seeds number with configs
 
-
 function seedsConfig(){
   var quantities = document.getElementsByClassName("input-settings-info--quantities");
-  var cavs = document.getElementsByClassName("d-area-cavity");
+  var cavs = document.getElementsByClassName("d-area-cavity--game");
+
+  //remove current seeds HERE MISSING
 
   for(i = 0; i < quantities[1].value;i++){
     for(j = 0; j < quantities[0].value * 2; j++){

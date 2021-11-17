@@ -360,14 +360,6 @@ header{
     font-weight: 500;
 }
 
-#d-game-area-gameplay-top{
-    grid-area: gamegameplay;
-    /*display: none; */ /* UNCOMMENT HERE */
-    z-index: 1;
-    margin-top: 1em;
-    padding: 1em;
-}
-
 #d-game-area-gameplay{
     grid-area: gamegameplay;
     display: none; /*changed to grid in js*/
@@ -431,11 +423,70 @@ header{
     cursor: pointer;  
 }
 
-.d-area-storage:hover{
+/* TEMPORARY REPEAT FOR TOP LAYER */
+#d-game-area-gameplay-top{
+    grid-area: gamegameplay;
+    /*display: none; */ /* UNCOMMENT HERE */
+    z-index: 1;
+    display: grid;
+    grid-template-areas: 
+    'storage1t cavity1t storage2t'
+    'storage1t cavity2t storage2t';
+    grid-template-columns:  15% 70% 15%;
+    grid-template-rows: 50% 50%;
+    margin-top: 1em;
+    padding: 1em;
+    border-radius: 0.5em;
+}
+
+#d-area-storage--p1--top{
+    grid-area: storage1t;
+}
+
+#d-area-storage--p2--top{
+    grid-area: storage2t;
+}
+
+#d-area-cavity--p1--top{
+    grid-area: cavity1t;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#d-area-cavity--p2--top{
+    grid-area: cavity2t;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.d-area-storage--top{
+    margin: 0.2em;
+    opacity: 0.5;
+    background-color: transparent;
+    background-size: 100% 100%;
+    box-shadow: inset 0 0 10px black;
+    border-radius: 2em;
+    cursor: pointer; 
+}
+
+.d-area-cavity--top{ 
+    width: 20%;
+    max-width: 100%;
+    margin: 0.2em;  
+    opacity: 0.5;   
+    background-color: transparent;  
+    background-size: 100% 100%;
+    box-shadow: inset 0 0 10px black;
+    border-radius: 6em;
+    cursor: pointer;  
+}
+/* END OF TEMP TOP LAYER */
+
+.d-area-storage--top:hover{
     box-shadow: 0 0 1em #242331;
     
 }
-.d-area-cavity:hover{
+.d-area-cavity--top:hover{
     box-shadow: 0 0 1em #242331;
 }
 
