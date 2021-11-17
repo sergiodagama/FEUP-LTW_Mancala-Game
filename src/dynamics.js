@@ -113,6 +113,12 @@ function cavitiesConfig(){
   var cavities = document.getElementsByClassName("d-area-cavity");
   var cavitiesTop = document.getElementsByClassName("d-area-cavity--top");
 
+  var seeds = document.getElementsByClassName("img-seed");
+
+  while(seeds[0]){
+    seeds[0].remove();
+  }
+
   while(cavities[0]){
     cavities[0].remove();
     cavitiesTop[0].remove();
@@ -139,21 +145,21 @@ function cavitiesConfig(){
     document.getElementById("d-area-cavity--p2--top").appendChild(cavitieTop2);
   }
 
-  //seedsConfig();
+  seedsConfig();
 }
 
 //connect seeds number with configs
 
 function seedsConfig(){
   var quantities = document.getElementsByClassName("input-settings-info--quantities");
-  var cavs = document.getElementsByClassName("d-area-cavity--game");
+  var cavs = document.getElementsByClassName("d-area-cavity--top");
 
-  //remove current seeds HERE MISSING
 
-  for(i = 0; i < quantities[1].value;i++){
-    for(j = 0; j < quantities[0].value * 2; j++){
+  for(i = 0; i < quantities[0].value * 2;i++){
+    for(j = 0; j < quantities[1].value; j++){
       var seed = document.createElement("img");
-      seed.style.src = "../res/seeds/seed.png";
+      seed.classList.add("img-seed");
+      seed.src = "../res/seeds/seed.png";
       cavs[i].appendChild(seed);
     }
   }
