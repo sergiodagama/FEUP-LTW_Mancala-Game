@@ -113,12 +113,6 @@ function cavitiesConfig(){
   var cavities = document.getElementsByClassName("d-area-cavity");
   var cavitiesTop = document.getElementsByClassName("d-area-cavity--top");
 
-  var seeds = document.getElementsByClassName("img-seed");
-
-  while(seeds[0]){
-    seeds[0].remove();
-  }
-
   while(cavities[0]){
     cavities[0].remove();
     cavitiesTop[0].remove();
@@ -154,6 +148,17 @@ function seedsConfig(){
   var quantities = document.getElementsByClassName("input-settings-info--quantities");
   var cavs = document.getElementsByClassName("d-area-cavity--top");
 
+  var cavsBot = document.getElementsByClassName("d-area-cavity");
+
+  var seeds = document.getElementsByClassName("img-seed");
+  
+  var seedsBack = document.getElementsByClassName("img-seed-back");
+
+  while(seeds[0]){
+    seeds[0].remove();
+    seedsBack[0].remove();
+  }
+
 
   for(i = 0; i < quantities[0].value * 2;i++){
     for(j = 0; j < quantities[1].value; j++){
@@ -161,6 +166,14 @@ function seedsConfig(){
       seed.classList.add("img-seed");
       seed.src = "../res/seeds/seed.png";
       cavs[i].appendChild(seed);
+    }
+  }
+
+  for(i = 0; i < quantities[0].value * 2;i++){
+    for(j = 0; j < quantities[1].value; j++){
+      var seed2 = document.createElement("img");
+      seed2.classList.add("img-seed-back");
+      cavsBot[i].appendChild(seed2);
     }
   }
 }
