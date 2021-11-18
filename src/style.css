@@ -503,14 +503,22 @@ header{
     visibility: hidden;
 }
 
+.d-area-storage--top:hover .p-seed-quantitie{
+    visibility: visible;
+}
+
+.d-area-storage--top .p-seed-quantitie{
+    visibility: hidden;
+}
+
 .p-seed-quantitie{
     position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10%;
+    top:20%;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
     color: white;
     background-color: #242331bb;
-    border-radius: 6em;
+    border-radius: 4em;
     font-size: 1.5em;
     font-weight: bold;
     text-align: center;

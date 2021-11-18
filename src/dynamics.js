@@ -215,6 +215,14 @@ function seedsConfig(){
     seedQuan.innerHTML += cavs[i].childElementCount;
     cavs[i].appendChild(seedQuan);
   }
+
+  for(i = 0; i < 2;i++){
+  var storages = document.getElementsByClassName("d-area-storage--top");
+  var seedQuanS = document.createElement("p");
+    seedQuanS.classList.add("p-seed-quantitie");
+    seedQuanS.innerHTML += storages[i].childElementCount;
+    storages[i].appendChild(seedQuanS);
+  }
 /*
   for(i = 0; i < quantities[0].value * 2;i++){
     for(j = 0; j < quantities[1].value; j++){
