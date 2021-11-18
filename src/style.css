@@ -287,6 +287,7 @@ header{
     grid-template-areas: 'gameheader' 'gamegameplay';
     grid-template-rows: 10% 90%;
     height: 85%;
+    max-height: 27.5em;  /* TO BE REVIEWED */
 }
 
 @keyframes fadeOut{
@@ -414,7 +415,7 @@ header{
     width: 20%;
     max-width: 100%;
     margin: 0.2em;  
-    padding: 0.9em;
+    padding: 0.9em;  /* FOUND THE CAUSE OF THE LATEST BUG */
     opacity: 0.5;   
     background-color: transparent;  
     background-image: url("../res/wood/wood_backgroud.jpg") ;
@@ -470,10 +471,11 @@ header{
 }
 
 .d-area-cavity--top{ 
+    position: relative;
     width: 20%;
     max-width: 100%;
     margin: 0.2em;  
-    padding: 0.9em;
+    padding: 0.9em;    /* FOUND THE CAUSE OF THE LATEST BUG */
     background-color: transparent;  
     background-size: 100% 100%;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
@@ -491,15 +493,19 @@ header{
 }
 
 .img-seed{
-    width: 1.4em;
-    height: 1.4em;
+    position: absolute;
+    max-width: 1.4em;
+    max-height: 1.4em;
+    filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.5));
 }
 
+/*
 .img-seed-back{
     opacity: 0;
     width: 1.4em;
     height: 1.4em;
 }
+*/
 
 /* || Configurations */
 #section-main-configurations{

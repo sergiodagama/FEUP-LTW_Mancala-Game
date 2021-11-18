@@ -142,33 +142,69 @@ function cavitiesConfig(){
   seedsConfig();
 }
 
+var seedRes = ["../res/seeds/seed_red.png", "../res/seeds/seed_green.png", "../res/seeds/seed_yellow.png", "../res/seeds/seed_blue.png"];
+var seedResAlt = ["../res/seeds/seed_red_alt.png", "../res/seeds/seed_green_alt.png", "../res/seeds/seed_yellow_alt.png", "../res/seeds/seed_blue_alt.png"];
+
+function randomSeedRes(){
+  // Returns a random integer from 0 to 3:
+  var randNum = Math.ceil(Math.random() * 4) - 1;
+
+    // Returns a random integer from 0 to 1:
+  var altShape = Math.ceil(Math.random() * 2) - 1;
+
+  console.log("alt: " + altShape);
+
+  console.log(randNum);
+
+  if(altShape){
+    return seedResAlt[randNum];
+  }else{
+    return seedRes[randNum];
+  }
+}
+
+//returns in percentage
+function randSeedPositionTop(){
+  var randPos = Math.random() * 65 + 10;
+
+  return randPos + "%";
+}
+
+//returns in percentage
+function randSeedPositionLeft(){
+  var randPos = Math.random() * 55 + 10;
+
+  return randPos + "%";
+}
+
 //connect seeds number with configs
 
 function seedsConfig(){
   var quantities = document.getElementsByClassName("input-settings-info--quantities");
   var cavs = document.getElementsByClassName("d-area-cavity--top");
 
-  var cavsBot = document.getElementsByClassName("d-area-cavity");
+  //var cavsBot = document.getElementsByClassName("d-area-cavity");
 
   var seeds = document.getElementsByClassName("img-seed");
   
-  var seedsBack = document.getElementsByClassName("img-seed-back");
+  //var seedsBack = document.getElementsByClassName("img-seed-back");
 
   while(seeds[0]){
     seeds[0].remove();
-    seedsBack[0].remove();
+    //seedsBack[0].remove();
   }
-
 
   for(i = 0; i < quantities[0].value * 2;i++){
     for(j = 0; j < quantities[1].value; j++){
       var seed = document.createElement("img");
       seed.classList.add("img-seed");
-      seed.src = "../res/seeds/seed.png";
+      seed.style.top =  randSeedPositionTop();
+      seed.style.left = randSeedPositionLeft();
+      seed.src = randomSeedRes();
       cavs[i].appendChild(seed);
     }
   }
-
+/*
   for(i = 0; i < quantities[0].value * 2;i++){
     for(j = 0; j < quantities[1].value; j++){
       var seed2 = document.createElement("img");
@@ -176,6 +212,7 @@ function seedsConfig(){
       cavsBot[i].appendChild(seed2);
     }
   }
+  */
 }
 
 
