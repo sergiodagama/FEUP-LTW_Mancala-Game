@@ -376,31 +376,31 @@ header{
     border-radius: 0.5em;
 }
 
-#d-storage-background--p1{
+#d-game-background-storage-p1{
     grid-area: storage1;
     filter: sepia(100%) brightness(120%);
 }
 
-#d-storage-background--p2{
+#d-game-background-storage-p2{
     grid-area: storage2;
     filter: sepia(100%) brightness(60%) saturate(10%) contrast(100%);
 }
 
-#d-cavity-background--p1{
+#d-game-background-cavities-p1{
     grid-area: cavity1;
     display: flex;
     justify-content: space-evenly;
     filter: sepia(100%) brightness(120%);
 }
 
-#d-cavity-background--p2{
+#d-game-background-cavities-p2{
     grid-area: cavity2;
     display: flex;
     justify-content: space-evenly;
     filter: sepia(100%) brightness(60%) saturate(10%) contrast(100%);
 }
 
-.d-storage-background{
+.d-game-background-storage{
     margin: 0.2em;
     opacity: 0.5;
     background-color: transparent;
@@ -411,7 +411,7 @@ header{
     cursor: pointer; 
 }
 
-.d-area-cavity-background{ 
+.d-game-background-cavity{ 
     width: 20%;
     margin: 0.2em;  
     opacity: 0.5;   
@@ -424,7 +424,7 @@ header{
 }
 
 /* TEMPORARY REPEAT FOR TOP LAYER */
-#d-game-area-gameplay-top{
+#d-game-area-gameplay{
     grid-area: gamegameplay;
     /*display: none; */ /* UNCOMMENT HERE */
     z-index: 1;
@@ -439,27 +439,27 @@ header{
     border-radius: 0.5em;
 }
 
-#d-area-storage--p1--top{
+#d-gameplay-storage-p1{
     grid-area: storage1t;
 }
 
-#d-area-storage--p2--top{
+#d-gameplay-storage-p2{
     grid-area: storage2t;
 }
 
-#d-area-cavity--p1--top{
+#d-gameplay-cavities-p1{
     grid-area: cavity1t;
     display: flex;
     justify-content: space-evenly;
 }
 
-#d-area-cavity--p2--top{
+#d-gameplay-cavities-p2{
     grid-area: cavity2t;
     display: flex;
     justify-content: space-evenly;
 }
 
-.d-area-storage--top{
+.d-gameplay-storage{
     margin: 0.2em;
     background-color: transparent;
     background-size: 100% 100%;
@@ -468,7 +468,7 @@ header{
     cursor: pointer; 
 }
 
-.d-area-cavity--top{ 
+.d-gameplay-cavity{ 
     position: relative;
     width: 20%;
     margin: 0.2em;  
@@ -480,11 +480,11 @@ header{
 }
 /* END OF TEMP TOP LAYER */
 
-.d-area-storage--top:hover{
+.d-gameplay-storage:hover{
     box-shadow: 0 0 1em #242331;
     
 }
-.d-area-cavity--top:hover{
+.d-gameplay-cavity:hover{
     box-shadow: 0 0 1em #242331;
 }
 
@@ -495,22 +495,30 @@ header{
     filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.5));
 }
 
-.d-area-cavity--top:hover .p-seed-quantitie{
+.d-gameplay-cavity:hover .p-seed-quantitie{
     visibility: visible;
 }
 
-.d-area-cavity--top .p-seed-quantitie{
+.d-gameplay-cavity .p-seed-quantitie{
+    visibility: hidden;
+}
+
+.d-gameplay-storage:hover .p-seed-quantitie{
+    visibility: visible;
+}
+
+.d-gameplay-storage .p-seed-quantitie{
     visibility: hidden;
 }
 
 .p-seed-quantitie{
     position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10%;
+    top:20%;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
     color: white;
     background-color: #242331bb;
-    border-radius: 6em;
+    border-radius: 4em;
     font-size: 1.5em;
     font-weight: bold;
     text-align: center;
