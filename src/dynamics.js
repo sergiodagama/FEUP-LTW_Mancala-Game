@@ -99,9 +99,11 @@ document.getElementById("d-game-area-gameplay").style.display = "grid";  /* COMM
 /*
 setTimeout(function(){
   document.getElementById("d-load-game-area").style.display = "none";
+  document.getElementById("d-game-area-gameplay-top").style.display = "grid";
   document.getElementById("d-game-area-gameplay").style.display = "grid";
 },2900);
 */
+
 
 //connect cavities number in configs to html
 var configs = document.getElementById("button-settings-info--config");
@@ -109,9 +111,11 @@ configs.addEventListener("click", cavitiesConfig);
 
 function cavitiesConfig(){
   var cavities = document.getElementsByClassName("d-area-cavity");
+  var cavitiesTop = document.getElementsByClassName("d-area-cavity--top");
 
   while(cavities[0]){
     cavities[0].remove();
+    cavitiesTop[0].remove();
   }
 
   var quantities = document.getElementsByClassName("input-settings-info--quantities");
@@ -120,31 +124,106 @@ function cavitiesConfig(){
     var cavitie = document.createElement("div");
     cavitie.classList.add("d-area-cavity");
     document.getElementById("d-area-cavity--p1").appendChild(cavitie);
-  }
 
-  for(i = 0; i < quantities[0].value; i++){
-    var cavitie = document.createElement("div");
-    cavitie.classList.add("d-area-cavity");
-    document.getElementById("d-area-cavity--p2").appendChild(cavitie);
+    var cavitie2 = document.createElement("div");
+    cavitie2.classList.add("d-area-cavity");
+    document.getElementById("d-area-cavity--p2").appendChild(cavitie2);
+
+    //Top layer
+    var cavitieTop = document.createElement("div");
+    cavitieTop.classList.add("d-area-cavity--top");
+    document.getElementById("d-area-cavity--p1--top").appendChild(cavitieTop);
+
+    var cavitieTop2 = document.createElement("div");
+    cavitieTop2.classList.add("d-area-cavity--top");
+    document.getElementById("d-area-cavity--p2--top").appendChild(cavitieTop2);
   }
 
   seedsConfig();
 }
 
-//connect seeds number with configs
+var seedRes = ["../res/seeds/seed_red.png", "../res/seeds/seed_green.png", "../res/seeds/seed_yellow.png", "../res/seeds/seed_blue.png"];
+var seedResAlt = ["../res/seeds/seed_red_alt.png", "../res/seeds/seed_green_alt.png", "../res/seeds/seed_yellow_alt.png", "../res/seeds/seed_blue_alt.png"];
 
+function randomSeedRes(){
+  // Returns a random integer from 0 to 3:
+  var randNum = Math.ceil(Math.random() * 4) - 1;
+
+    // Returns a random integer from 0 to 1:
+  var altShape = Math.ceil(Math.random() * 2) - 1;
+
+  console.log("alt: " + altShape);
+
+  console.log(randNum);
+
+  if(altShape){
+    return seedResAlt[randNum];
+  }else{
+    return seedRes[randNum];
+  }
+}
+
+//returns in percentage
+function randSeedPositionTop(){
+  var randPos = Math.random() * 65 + 10;
+
+  return randPos + "%";
+}
+
+//returns in percentage
+function randSeedPositionLeft(){
+  var randPos = Math.random() * 55 + 10;
+
+  return randPos + "%";
+}
+
+//connect seeds number with configs
 
 function seedsConfig(){
   var quantities = document.getElementsByClassName("input-settings-info--quantities");
-  var cavs = document.getElementsByClassName("d-area-cavity");
+  var cavs = document.getElementsByClassName("d-area-cavity--top");
 
-  for(i = 0; i < quantities[1].value;i++){
-    for(j = 0; j < quantities[0].value * 2; j++){
+  //var cavsBot = document.getElementsByClassName("d-area-cavity");
+
+  var seeds = document.getElementsByClassName("img-seed");
+  
+  //var seedsBack = document.getElementsByClassName("img-seed-back");
+
+  while(seeds[0]){
+    seeds[0].remove();
+    //seedsBack[0].remove();
+  }
+
+  var seedQuantities = document.getElementsByClassName("p-seed-quantitie");
+
+  while(seedQuantities[0]){
+    seedQuantities[0].remove();
+  }
+
+  for(i = 0; i < quantities[0].value * 2;i++){
+    for(j = 0; j < quantities[1].value; j++){
       var seed = document.createElement("img");
-      seed.style.src = "../res/seeds/seed.png";
+      seed.classList.add("img-seed");
+      seed.style.top =  randSeedPositionTop();
+      seed.style.left = randSeedPositionLeft();
+      seed.src = randomSeedRes();
       cavs[i].appendChild(seed);
     }
+    
+    var seedQuan = document.createElement("p");
+    seedQuan.classList.add("p-seed-quantitie");
+    seedQuan.innerHTML += cavs[i].childElementCount;
+    cavs[i].appendChild(seedQuan);
   }
+/*
+  for(i = 0; i < quantities[0].value * 2;i++){
+    for(j = 0; j < quantities[1].value; j++){
+      var seed2 = document.createElement("img");
+      seed2.classList.add("img-seed-back");
+      cavsBot[i].appendChild(seed2);
+    }
+  }
+  */
 }
 
 
