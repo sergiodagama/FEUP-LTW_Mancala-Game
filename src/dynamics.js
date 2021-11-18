@@ -194,6 +194,12 @@ function seedsConfig(){
     //seedsBack[0].remove();
   }
 
+  var seedQuantities = document.getElementsByClassName("p-seed-quantitie");
+
+  while(seedQuantities[0]){
+    seedQuantities[0].remove();
+  }
+
   for(i = 0; i < quantities[0].value * 2;i++){
     for(j = 0; j < quantities[1].value; j++){
       var seed = document.createElement("img");
@@ -203,6 +209,11 @@ function seedsConfig(){
       seed.src = randomSeedRes();
       cavs[i].appendChild(seed);
     }
+    
+    var seedQuan = document.createElement("p");
+    seedQuan.classList.add("p-seed-quantitie");
+    seedQuan.innerHTML += cavs[i].childElementCount;
+    cavs[i].appendChild(seedQuan);
   }
 /*
   for(i = 0; i < quantities[0].value * 2;i++){

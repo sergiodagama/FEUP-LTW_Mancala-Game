@@ -499,6 +499,27 @@ header{
     filter: drop-shadow(3px 3px 3px rgba(0, 0, 0, 0.5));
 }
 
+.d-area-cavity--top:hover .p-seed-quantitie{
+    visibility: visible;
+}
+
+.d-area-cavity--top .p-seed-quantitie{
+    visibility: hidden;
+}
+
+.p-seed-quantitie{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10%;
+    color: white;
+    background-color: #242331bb;
+    border-radius: 6em;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}
+
 /*
 .img-seed-back{
     opacity: 0;
