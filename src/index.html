@@ -14,15 +14,15 @@
     <header>
       <!--|| Logo-->
       <span id="s-header-banner">
-        <img id="img-header-banner-logo" src="../res/logo.png">
+        <img id="img-header-banner-logo" src="../res/logo.png" alt="Mancala logo">
         <h1 id="img-header-banner-name">Mancala</h1>
       </span>
 
       <!--|| Navigation bar-->
       <span id="s-header-navbar">
-        <img id="img-header-navbar-chat-icon" class="img-header-navbar-icon" src="../res/chat_icon.png"> 
-        <img id="img-header-navbar-rules-icon" class="img-header-navbar-icon" src="../res/rules_icon.png">  
-		    <img id="img-header-navbar-score-icon" class="img-header-navbar-icon" src="../res/score_icon.png"> 
+        <img id="img-header-navbar-chat-icon" class="img-header-navbar-icon" src="../res/chat_icon.png" alt="Chat icon"> 
+        <img id="img-header-navbar-rules-icon" class="img-header-navbar-icon" src="../res/rules_icon.png" alt="Rules icon">  
+		    <img id="img-header-navbar-score-icon" class="img-header-navbar-icon" src="../res/score_icon.png" alt="Leaderboard icon"> 
       </span>		
     </header>
 
@@ -40,17 +40,17 @@
           </div>
 
           <div class="d-login-info"> 
-            <label class="label-login-info">Username</label> 
-            <input class="input-login-info" type="text" placeholder="username"/> 
+            <label class="label-login-info" for="input-login-info--1">Username</label>   <!-- IDS that are only used for -for- atribute of label only have identifaction as numbers -->
+            <input id="input-login-info--1" class="input-login-info" type="text" placeholder="username"/> 
           </div>
 
           <div class="d-login-info">
-            <label class="label-login-info">Password</label> 
-            <input class="input-login-info" type="password" placeholder="password"/>
+            <label class="label-login-info" for="input-login-info--2">Password</label> 
+            <input id="input-login-info--2" class="input-login-info" type="password" placeholder="password"/>
           </div>
 
           <input id="button-login-signin" type="submit" value="Login"/><br/>
-          <label id="label-login-rememberme"> 
+          <label id="label-login-rememberme" for="checkbox-login-rememberme"> 
             <input id="checkbox-login-rememberme" type="checkbox" checked="checked"/>
             Remember me
           </label><br/>
@@ -66,23 +66,23 @@
           </div>
 
           <div class="d-signup-info">
-            <label class="label-signup-info">Username</label> 
-            <input class="input-signup-info" type="text" placeholder="username"/>  
+            <label class="label-signup-info" for="input-signup-info--1">Username</label> 
+            <input id="input-signup-info--1" class="input-signup-info" type="text" placeholder="username"/>  
           </div>
 
           <div class="d-signup-info">
-            <label class="label-signup-info">Password</label> 
-            <input class="input-signup-info" type="password" placeholder="password"/>  
+            <label class="label-signup-info" for="input-signup-info--2">Password</label> 
+            <input id="input-signup-info--2" class="input-signup-info" type="password" placeholder="password"/>  
           </div>
 
           <div class="d-signup-info">
-            <label class="label-signup-info">Birthday</label>
-            <input class="input-signup-info" type="date" placeholder="password"/>
+            <label class="label-signup-info" for="input-signup-info--3">Birthday</label>
+            <input id="input-signup-info--3" class="input-signup-info" type="date" placeholder="password"/>
           </div>
 
           <div class="d-signup-info">
-            <label class="label-signup-info">Country</label>
-            <select class="input-signup-info">
+            <label class="label-signup-info" for="input-signup-info--4">Country</label>
+            <select id="input-signup-info--4" class="input-signup-info">
               <option value="Portugal">Portugal</option>
               <option value="France">France</option>
               <option value="Spain">Spain</option>
@@ -166,7 +166,7 @@
 
           <!--|| Game Loading Screen-->
           <div id="d-load-game-area"> 
-            <img id="img-load-game-logo" src="../res/logo.png">
+            <img id="img-load-game-logo" src="../res/logo.png" alt="Mancala Logo for animation">
           </div>
         </div>
       </section>
@@ -179,30 +179,30 @@
         <form id="form-configurations-settings" action="configurate" method="post">
           
           <div class="d-settings-info--quantities">
-            <label class="label-settings-info--quantities">Number of cavities:</label>
-            <input class="input-settings-info--quantities" type="number" value="6" min="2" max="8"/>   <!--On this settings ids/classes there is a bit of abuse of modifiers, still valid nominations tho-->
+            <label class="label-settings-info--quantities" for="input-settings-info--1">Number of cavities:</label>
+            <input id="input-settings-info--1" class="input-settings-info--quantities" type="number" value="6" min="2" max="8"/>   <!--On this settings ids/classes there is a bit of abuse of modifiers, still valid nominations tho-->
           </div>
 
           <div class="d-settings-info--quantities">
-            <label class="label-settings-info--quantities">Initial seeds per cavity:</label>
-            <input class="input-settings-info--quantities" type="number" value="5" min="1" max="10"/> 
+            <label class="label-settings-info--quantities" for="input-settings-info--2">Initial seeds per cavity:</label>
+            <input id="input-settings-info--2" class="input-settings-info--quantities" type="number" value="5" min="1" max="10"/> 
           </div>
 
           <p class="p-settings-instructions">Please select your game mode:</p>
 
           <div id="d-settings-info--mode">                                 
-            <input class="radio-settings-info--mode" type="radio" name="mode" value="local" checked/> 
-            <label class="label-settings-info--mode">Local player</label> 
+            <input id="input-settings-info--3" class="radio-settings-info--mode" type="radio" name="mode" value="local" checked/> 
+            <label class="label-settings-info--mode" for="input-settings-info--3">Local player</label> 
           </div>
 
           <div id="d-settings-info--mode">                                
-            <input class="radio-settings-info--mode" type="radio" name="mode" value="local"/>  
-            <label class="label-settings-info--mode">Online player</label> 
+            <input id="input-settings-info--4" class="radio-settings-info--mode" type="radio" name="mode" value="local"/>  
+            <label class="label-settings-info--mode" for="input-settings-info--4">Online player</label> 
           </div>
 
           <div class="d-settings-info--mode">
-            <input class="radio-settings-info--mode" type="radio" name="mode" id="ai" value="ai"/> 
-            <label class="label-settings-info--mode">Against the computer</label>
+            <input id="input-settings-info--5" class="radio-settings-info--mode" type="radio" name="mode" id="ai" value="ai"/> 
+            <label class="label-settings-info--mode" for="input-settings-info--5">Against the computer</label>
           </div>
 
           <!--|| Local mode Settings-->
@@ -220,9 +220,9 @@
             <p class="p-settings-instructions">Search online players:</p>
 
             <div id="d-mode-online-search-bar">
-              <img id="img-search-bar-icon" src="../res/search_icon.png">
+              <img id="img-search-bar-icon" src="../res/search_icon.png" alt="Search bar icon">
               <input id="input-search-bar" type="text"/>
-              <img id="img-search-bar-add-icon" src="../res/add_icon.png">
+              <img id="img-search-bar-add-icon" src="../res/add_icon.png" alt="Online player add icon">
             </div>
 
             <div id="d-mode-online-results">
@@ -236,16 +236,16 @@
             <p class="p-settings-instructions">Please select the AI dificulty level:</p> 
 
             <div class="d-settings-info--dificulty">
-              <input class="radio-settings-info--dificulty" type="radio" name="dificulty" checked/>
-                <label class="label-settings-info--dificulty">Easy</label>
+              <input id="input-settings-info--6" class="radio-settings-info--dificulty" type="radio" name="dificulty" checked/>
+                <label class="label-settings-info--dificulty" for="input-settings-info--6">Easy</label>
             </div>  
             <div class="d-settings-info--dificulty"> 
-              <input class="radio-settings-info--dificulty" type="radio" name="dificulty"/> 
-                <label class="label-settings-info--dificulty">Medium</label>  
+              <input id="input-settings-info--7" class="radio-settings-info--dificulty" type="radio" name="dificulty"/> 
+                <label class="label-settings-info--dificulty" for="input-settings-info--7">Medium</label>  
             </div> 
             <div class="d-settings-info--dificulty"> 
-              <input class="radio-settings-info--dificulty" type="radio" name="dificulty"/> 
-                <label class="label-settings-info--dificulty">Hard</label><br/>   
+              <input id="input-settings-info--8" class="radio-settings-info--dificulty" type="radio" name="dificulty"/> 
+                <label class="label-settings-info--dificulty" for="input-settings-info--8">Hard</label><br/>   
             </div>
           </div>
 
@@ -255,7 +255,7 @@
           </div>
 
           <div id="d-settings-help">
-            <img id="img-settings-help--icon" src="../res/info_icon.png">
+            <img id="img-settings-help--icon" src="../res/info_icon.png" alt="Help settings information">
             <p id="p-settings-help--text">	
               To configurate the game, input the parameters values and check the
               desired options, followed by clicking on configurate button.<br />
@@ -322,7 +322,7 @@
 
           <div id="d-chat-controls">
             <input id="input-chat-controls" type="text" placeholder="message"/>
-            <img id="img-chat-controls-send-icon" src="../res/send_icon.png" alt="send message">
+            <img id="img-chat-controls-send-icon" src="../res/send_icon.png" alt="Send message icon">
           </div>
         </div>
       </section>
@@ -365,7 +365,7 @@
         <p><b>Mancala</b> - Keep the traditions</p>
 
         <a id="a-footer-report-bug" href="https://github.com/N0il/Mancala/issues/new" target="_blank">
-          <img id="img-footer-report-bug-icon" src="../res/bug_icon.png" href="https://github.com/N0il/Mancala/issues/new">
+          <img id="img-footer-report-bug-icon" src="../res/bug_icon.png" href="https://github.com/N0il/Mancala/issues/new" alt="Report bug icon">
           <p>Report a bug</p>
         </a>
       </footer>
