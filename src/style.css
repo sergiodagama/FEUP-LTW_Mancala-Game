@@ -361,7 +361,7 @@ header{
     font-weight: 500;
 }
 
-#d-game-area-gameplay{
+#d-game-area-background{
     grid-area: gamegameplay;
     display: none; /*changed to grid in js*/
     grid-template-areas: 
@@ -376,31 +376,31 @@ header{
     border-radius: 0.5em;
 }
 
-#d-area-storage--p1{
+#d-storage-background--p1{
     grid-area: storage1;
     filter: sepia(100%) brightness(120%);
 }
 
-#d-area-storage--p2{
+#d-storage-background--p2{
     grid-area: storage2;
     filter: sepia(100%) brightness(60%) saturate(10%) contrast(100%);
 }
 
-#d-area-cavity--p1{
+#d-cavity-background--p1{
     grid-area: cavity1;
     display: flex;
     justify-content: space-evenly;
     filter: sepia(100%) brightness(120%);
 }
 
-#d-area-cavity--p2{
+#d-cavity-background--p2{
     grid-area: cavity2;
     display: flex;
     justify-content: space-evenly;
     filter: sepia(100%) brightness(60%) saturate(10%) contrast(100%);
 }
 
-.d-area-storage{
+.d-storage-background{
     margin: 0.2em;
     opacity: 0.5;
     background-color: transparent;
@@ -411,11 +411,9 @@ header{
     cursor: pointer; 
 }
 
-.d-area-cavity{ 
+.d-area-cavity-background{ 
     width: 20%;
-    max-width: 100%;
     margin: 0.2em;  
-    padding: 0.9em;  /* FOUND THE CAUSE OF THE LATEST BUG */
     opacity: 0.5;   
     background-color: transparent;  
     background-image: url("../res/wood/wood_backgroud.jpg") ;
@@ -473,9 +471,7 @@ header{
 .d-area-cavity--top{ 
     position: relative;
     width: 20%;
-    max-width: 100%;
     margin: 0.2em;  
-    padding: 0.9em;    /* FOUND THE CAUSE OF THE LATEST BUG */
     background-color: transparent;  
     background-size: 100% 100%;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
