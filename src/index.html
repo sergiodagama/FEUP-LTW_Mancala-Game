@@ -100,13 +100,13 @@
         <p id="p-system-messages-message">You are playing as a guest!</p>
       </section>
 
-      <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DONE IDS AND CLASSES CHECKING FROM TOP UNTIL HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
-
       <!--|| Game-->
       <section id="section-main-game">
         <h2 id="h2-game-title">Game</h2> 
         
         <div id="d-game-area">
+
+               
 
           <!--|| Game Header-->
           <div id="d-game-area-header">
@@ -115,29 +115,31 @@
             <p id="p-game-area-header-score--2" class="p-game-area-header-score">13</p>
           </div>
 
+           <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DONE IDS AND CLASSES CHECKING FROM TOP UNTIL HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
+
           <!--|| Game Background-->
-          <div id="d-game-area-gameplay">
-            <div id="d-area-storage--p1" class="d-area-storage"></div>
+          <div id="d-game-area-background">
+            <div id="d-storage-background--p1" class="d-storage-background"></div>
 
-            <div id="d-area-cavity--p1">
-              <div id="d-area-cavity--p1-1" class="d-area-cavity"></div>
-              <div id="d-area-cavity--p1-2" class="d-area-cavity"></div> 
-              <div id="d-area-cavity--p1-3" class="d-area-cavity"></div> 
-              <div id="d-area-cavity--p1-4" class="d-area-cavity"></div>
-              <div id="d-area-cavity--p1-5" class="d-area-cavity"></div>
-              <div id="d-area-cavity--p1-6" class="d-area-cavity"></div>
+            <div id="d-cavity-background--p1">
+              <div class="d-area-cavity-background"></div>
+              <div class="d-area-cavity-background"></div> 
+              <div class="d-area-cavity-background"></div> 
+              <div class="d-area-cavity-background"></div>
+              <div class="d-area-cavity-background"></div>
+              <div class="d-area-cavity-background"></div>
             </div>
 
-            <div id="d-area-cavity--p2">
-              <div id="d-area-cavity--p2-1" class="d-area-cavity"></div>
-              <div id="d-area-cavity--p2-2" class="d-area-cavity"></div>
-              <div id="d-area-cavity--p2-3" class="d-area-cavity"></div>
-              <div id="d-area-cavity--p2-4" class="d-area-cavity"></div>
-              <div id="d-area-cavity--p2-5" class="d-area-cavity"></div>
-              <div id="d-area-cavity--p2-6" class="d-area-cavity"></div> 
+            <div id="d-cavity-background--p2">
+              <div class="d-area-cavity-background"></div>
+              <div class="d-area-cavity-background"></div>
+              <div class="d-area-cavity-background"></div>
+              <div class="d-area-cavity-background"></div>
+              <div class="d-area-cavity-background"></div>
+              <div class="d-area-cavity-background"></div> 
             </div>
 
-            <div id="d-area-storage--p2" class="d-area-storage"></div>
+            <div id="d-storage-background--p2" class="d-storage-background"></div>
           </div>
             
           <!--|| Gameplay Area-->
@@ -164,8 +166,8 @@
               <div class="d-area-cavity--top"></div>
               <div class="d-area-cavity--top"></div>
             </div>
-
           </div>
+          <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DONE CLASSES AND IDS CHECKING UNTIL HERE FROM BOTTOM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
 
           <!--|| Game Loading Screen-->
           <div id="d-load-game-area"> 
@@ -173,7 +175,7 @@
           </div>
         </div>
       </section>
-    
+
       <!--|| Configurations-->
       <section id="section-main-configurations">
         
@@ -183,7 +185,7 @@
           
           <div class="d-settings-info--quantities">
             <label class="label-settings-info--quantities">Number of cavities:</label>
-            <input class="input-settings-info--quantities" type="number" value="6" min="2" max="8"/> 
+            <input class="input-settings-info--quantities" type="number" value="6" min="2" max="8"/>   <!--On this settings ids/classes there is a bit of abuse of modifiers, still valid nominations tho-->
           </div>
 
           <div class="d-settings-info--quantities">
@@ -267,8 +269,6 @@
           </div>
         </form>
       </section>
-
-      <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DONE CLASSES AND IDS CHECKING UNTIL HERE FROM BOTTOM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
 
       <!--|| Commands-->
       <section id="section-main-commands"> 

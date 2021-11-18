@@ -95,12 +95,12 @@ function computerConfigs(){
 }
 
 //loading screen /*UNCOMMENT*/
-document.getElementById("d-game-area-gameplay").style.display = "grid";  /* COMMENT HERE */
+document.getElementById("d-game-area-background").style.display = "grid";  /* COMMENT HERE */
 /*
 setTimeout(function(){
   document.getElementById("d-load-game-area").style.display = "none";
   document.getElementById("d-game-area-gameplay-top").style.display = "grid";
-  document.getElementById("d-game-area-gameplay").style.display = "grid";
+  document.getElementById("d-game-area-background").style.display = "grid";
 },2900);
 */
 
@@ -110,7 +110,7 @@ var configs = document.getElementById("button-settings-info--config");
 configs.addEventListener("click", cavitiesConfig);
 
 function cavitiesConfig(){
-  var cavities = document.getElementsByClassName("d-area-cavity");
+  var cavities = document.getElementsByClassName("d-area-cavity-background");
   var cavitiesTop = document.getElementsByClassName("d-area-cavity--top");
 
   while(cavities[0]){
@@ -122,12 +122,12 @@ function cavitiesConfig(){
 
   for(i = 0; i < quantities[0].value; i++){
     var cavitie = document.createElement("div");
-    cavitie.classList.add("d-area-cavity");
-    document.getElementById("d-area-cavity--p1").appendChild(cavitie);
+    cavitie.classList.add("d-area-cavity-background");
+    document.getElementById("d-cavity-background--p1").appendChild(cavitie);
 
     var cavitie2 = document.createElement("div");
-    cavitie2.classList.add("d-area-cavity");
-    document.getElementById("d-area-cavity--p2").appendChild(cavitie2);
+    cavitie2.classList.add("d-area-cavity-background");
+    document.getElementById("d-cavity-background--p2").appendChild(cavitie2);
 
     //Top layer
     var cavitieTop = document.createElement("div");
@@ -183,7 +183,7 @@ function seedsConfig(){
   var quantities = document.getElementsByClassName("input-settings-info--quantities");
   var cavs = document.getElementsByClassName("d-area-cavity--top");
 
-  //var cavsBot = document.getElementsByClassName("d-area-cavity");
+  //var cavsBot = document.getElementsByClassName("d-area-cavity-background");
 
   var seeds = document.getElementsByClassName("img-seed");
   
