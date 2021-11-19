@@ -110,6 +110,7 @@ configsButton.addEventListener("click", gameplayAreaConfigs);
 function gameplayAreaConfigs(){
   cavitiesConfig();
   seedsConfig();
+  listenToCavitiesAndSeeds();
 }
 
 function cavitiesConfig(){
@@ -233,7 +234,64 @@ function reset(){
   gameplayAreaConfigs();
 }
 
-//TODO IMPLEMENTATION OF MVC? OR STATE PATTERN? or BOTH?
+function listenToCavitiesAndSeeds(){
+  var cavities = document.getElementsByClassName("d-gameplay-cavity");
+  var storages = document.getElementsByClassName("d-gameplay-storage");
+
+  for (i = 0; i < cavities.length; i++) {
+    console.log("II: " + i);
+    cavities[i].addEventListener('click', cavitiesClickHandler);
+  }
+
+  for (i = 0; i < storages.length; i++) {
+    storages[i].addEventListener('click', storagesClickHandler);
+  }
+}
+
+function removeOneSeedFrom(gameElement){
+  if (gameElement.hasChildNodes()) {
+    gameElement.removeChild(gameElement.childNodes[0]);
+  }
+}
+
+function removeAllSeeds(gameElement){
+  var nSeeds = 0;
+
+  while (gameElement.hasChildNodes()) {
+    gameElement.removeChild(gameElement.childNodes[0]);
+    nSeeds++;
+  }
+  return nSeeds;
+}
+
+function addSeedToElement(gameElement) {
+  var seed = document.createElement("img");
+  seed.classList.add("img-seed");
+  seed.style.top =  randSeedPositionTop();
+  seed.style.left = randSeedPositionLeft();
+  seed.src = randomSeedResource();
+  gameElement.appendChild(seed);
+}
+
+function cavitiesClickHandler(index){
+  console.log("index:" + index);
+  var cavities = document.getElementsByClassName("d-gameplay-cavity");
+
+  removeAllSeeds(this);
+
+  //var nSeeds = removeAllSeeds(cavities[2]);
+/*
+  for(i = 1; i < nSeeds + 1; i++){
+    addSeedToElement(cavities[index + i]);
+  }
+  */
+}
+
+function storagesClickHandler(index){
+  var storages = document.getElementsByClassName("d-gameplay-storage");
+}
+
+//TODO IMPLEMENTATION OF MVP? OR STATE PATTERN? or BOTH?
 /*
 class Cavity {
   constructor() {}
