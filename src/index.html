@@ -66,6 +66,11 @@
           </div>
 
           <div class="d-signup-info">
+            <label class="label-signup-info" for="input-signup-info--0">Email</label> 
+            <input id="input-signup-info--0" class="input-signup-info" type="text" placeholder="email"/>  
+          </div>
+
+          <div class="d-signup-info">
             <label class="label-signup-info" for="input-signup-info--1">Username</label> 
             <input id="input-signup-info--1" class="input-signup-info" type="text" placeholder="username"/>  
           </div>
@@ -75,20 +80,22 @@
             <input id="input-signup-info--2" class="input-signup-info" type="password" placeholder="password"/>  
           </div>
 
-          <div class="d-signup-info">
-            <label class="label-signup-info" for="input-signup-info--3">Birthday</label>
-            <input id="input-signup-info--3" class="input-signup-info" type="date" placeholder="password"/>
-          </div>
+          <div id="d-signup-info-additional">
+            <div class="d-signup-info">
+              <label class="label-signup-info" for="input-signup-info--3">Birthday</label>
+              <input id="input-signup-info--3" class="input-signup-info signup-additional" type="date" placeholder="password"/>
+            </div>
 
-          <div class="d-signup-info">
-            <label class="label-signup-info" for="input-signup-info--4">Country</label>
-            <select id="input-signup-info--4" class="input-signup-info">
-              <option value="Portugal">Portugal</option>
-              <option value="France">France</option>
-              <option value="Spain">Spain</option>
-              <option value="Brasil">Brasil</option>
-              <option value="Germany">Germany</option>
-            </select>
+            <div class="d-signup-info">
+              <label class="label-signup-info" for="input-signup-info--4">Country</label>
+              <select id="input-signup-info--4" class="input-signup-info signup-additional">
+                <option value="Portugal">Portugal</option>
+                <option value="France">France</option>
+                <option value="Spain">Spain</option>
+                <option value="Brasil">Brasil</option>
+                <option value="Germany">Germany</option>
+              </select>
+            </div>
           </div>
 
           <input id="button-signup-register" type="submit" value="Register"/>
@@ -108,9 +115,13 @@
 
           <!--|| Game Header-->
           <div id="d-game-area-header">
+            <p id="p-game-area-header-p1-name" class="p-game-area-header-username">Player1</p>
+            <img id="img-game-area-header-p1-country" class="img-game-area-header-country-icon" src="../res/flags/pt.png" alt="Player one Country"> 
             <p id="p-game-area-header-score--1" class="p-game-area-header-score">20</p>
             <p id="p-game-area-header-messages">It's player1 turn</p>
             <p id="p-game-area-header-score--2" class="p-game-area-header-score">13</p>
+            <img id="img-game-area-header-p2-country" class="img-game-area-header-country-icon game-user-icon" src="../res/flags/guest.png" alt="Player two Country"> 
+            <p id="p-game-area-header-p2-name" class="p-game-area-header-username">Guest</p>
           </div>
 
           <!--|| Game Background-->

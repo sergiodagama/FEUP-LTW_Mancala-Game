@@ -233,8 +233,15 @@ header{
     border-radius: 0.4em;
 }
 
-.d-signup-info select{
-    width: 14.7em;
+#d-signup-info-additional{
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.signup-additional{
+    padding-left: 1em;
+    padding-right: 1em;
+    width: 6em;
 }
 
 #button-signup-register{
@@ -359,6 +366,24 @@ header{
     padding: 0.5em;
     color: #242331;
     font-weight: 500;
+}
+
+.p-game-area-header-username{
+    padding-right: 1em;
+    padding-left: 1em;
+    color: #242331;
+    font-size: 1.1em;
+}
+
+.img-game-area-header-country-icon{
+    width: 2em;
+    height: 2em;
+    padding-top: 0.2em;
+}
+
+.game-user-icon{
+    width: 1.3em;
+    height: 1.3em;
 }
 
 #d-game-area-background{
