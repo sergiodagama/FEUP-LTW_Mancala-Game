@@ -225,15 +225,46 @@ function seedsConfig(){
 var resetElement = document.getElementById("button-settings-info--reset");
 resetElement.addEventListener("click", reset);
 
-function reset(){
-  var quantities = document.getElementsByClassName("input-settings-info--quantities");
+var quantities = document.getElementsByClassName("input-settings-info--quantities");
 
+function reset(){
   quantities[0].value = 6;
   quantities[1].value = 5;
 
   gameplayAreaConfigs();
 }
 
+// Changing icon and name of player when changing game mode in configurations
+var modeLocal = document.getElementById("input-settings-info--local");
+modeLocal.addEventListener("click", displayModeLocal);
+
+var modeOnline = document.getElementById("input-settings-info--online");
+modeOnline.addEventListener("click", displayModeOnline);
+
+var modeComputer = document.getElementById("input-settings-info--computer");
+modeComputer.addEventListener("click", displayModeComputer);
+
+var p2Icon = document.getElementById("img-game-area-header-p2-country");
+var p2Name = document.getElementById("p-game-area-header-p2-name");
+
+function displayModeLocal(){
+  p2Icon.src = "../res/flags/guest.png";
+  p2Name.innerHTML = "Guest";
+}
+
+function displayModeOnline(){
+  p2Icon.src = "../res/flags/online.png";
+  p2Name.innerHTML = "Online";
+}
+
+function displayModeComputer(){
+  p2Icon.src = "../res/flags/computer.png";
+  p2Name.innerHTML = "Computer";
+}
+
+
+
+//FROM THIS POINT THE CODE SHOULD BE IN OTHER FILE RELATED TO MVP PATTERN GAME DEV MILESTONE
 function listenToCavitiesAndSeeds(){
   var cavities = document.getElementsByClassName("d-gameplay-cavity");
   var storages = document.getElementsByClassName("d-gameplay-storage");
