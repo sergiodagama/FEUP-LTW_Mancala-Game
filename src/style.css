@@ -218,7 +218,7 @@ header{
 
 .d-signup-info{
     display: grid;
-    grid-template-areas: 'label', 'input';
+    grid-template-areas: 'label' 'input';
     margin-bottom: 0.4em;
     font-weight: 300;
 }
