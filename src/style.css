@@ -120,9 +120,9 @@ header{
     'commands game game configs'
     'system_messages game game configs'
 	'footer footer footer footer';
-    grid-template-rows: 66% 9% 9% 17%;
+    grid-template-rows: 66% 9% 9% 16%;
 	grid-template-columns: 25% 25% 25% 25%;
-    min-height: 81.5vh;
+    min-height: 82.3vh;
 }
 
 /* || Authentication */
