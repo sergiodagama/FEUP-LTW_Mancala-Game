@@ -71,7 +71,7 @@ header{
 }
 
 /* || Logo */
-#s-header-banner{
+#d-header-banner{
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -412,7 +412,7 @@ header{
     grid-template-rows: 50% 50%;
     margin-top: 1em;
     padding: 1em;
-    background-image: url("../res/wood/wood_backgroud.jpg") ;
+    background-image: url("../../res/wood/wood_backgroud.jpg") ;
     background-size: 100% 100%;
     border-radius: 0.5em;
 }
@@ -445,7 +445,7 @@ header{
     margin: 0.2em;
     opacity: 0.5;
     background-color: transparent;
-    background-image: url("../res/wood/wood_backgroud.jpg") ;
+    background-image: url("../../res/wood/wood_backgroud.jpg") ;
     background-size: 100% 100%;
     box-shadow: inset 0 0 10px black;
     border-radius: 2em;
@@ -457,7 +457,7 @@ header{
     margin: 0.2em;  
     opacity: 0.5;   
     background-color: transparent;  
-    background-image: url("../res/wood/wood_backgroud.jpg") ;
+    background-image: url("../../res/wood/wood_backgroud.jpg") ;
     background-size: 100% 100%;
     box-shadow: inset 0 0 10px black;
     border-radius: 6em;
