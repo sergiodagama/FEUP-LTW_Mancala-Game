@@ -71,7 +71,7 @@ header{
 }
 
 /* || Logo */
-#s-header-banner{
+#d-header-banner{
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -120,9 +120,10 @@ header{
     'commands game game configs'
     'system_messages game game configs'
 	'footer footer footer footer';
-    grid-template-rows: 66% 9% 9% 17%;
+    /* grid-template-rows: 66% 9% 9% 16%;*/
+    grid-template-rows:  25.5em 3.5em 3.5em 6.5em;
 	grid-template-columns: 25% 25% 25% 25%;
-    min-height: 81.5vh;
+    min-height: 82.3vh;
 }
 
 /* || Authentication */
@@ -336,23 +337,20 @@ header{
 
 #d-game-area-header{
     grid-area: gameheader;
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 15% 10% 10% 30% 10% 10% 15%;
     align-items: center;
-    padding-top: 1.8em;
-    padding-bottom: 2em;
-    padding-right: 5em;
-    padding-left: 5em;
+    justify-items: center;
+    height: 3.8em;
+    padding-right: 4em;
+    padding-left: 4em;
     background-color: #CBF3F0;
     border-radius: 0.5em;  
 }
 
 #p-game-area-header-messages{
-    margin-top: 1.1em;
-    padding-top: 0.2em;
-    padding-bottom: 0.2em;
-    padding-right: 3em;
-    padding-left: 3em;
+    margin: 0em;
+    padding: 0em;
     color: #242331;
     font-weight: 600;
     border-bottom: solid;
@@ -361,16 +359,17 @@ header{
 }
 
 .p-game-area-header-score{
+    margin: 0em;
+    padding: 0em;
     font-family: 'Encode Sans', sans-serif;
     font-size: 1.7em;
-    padding: 0.5em;
     color: #242331;
     font-weight: 500;
 }
 
 .p-game-area-header-username{
-    padding-right: 1em;
-    padding-left: 1em;
+    margin: 0em;
+    padding: 0em;
     color: #242331;
     font-size: 1.1em;
 }
@@ -379,6 +378,24 @@ header{
     width: 2em;
     height: 2em;
     padding-top: 0.2em;
+}
+
+#p-game-area-header-p1-name{
+    justify-self: end;
+    padding-right: 0.5em;
+}
+
+#p-game-area-header-p2-name{
+    justify-self: start;
+    padding-left: 0.5em;
+}
+
+#img-game-area-header-p1-country{
+    justify-self: start;
+}
+
+#img-game-area-header-p2-country{
+    justify-self: end;
 }
 
 .game-user-icon{
@@ -396,7 +413,7 @@ header{
     grid-template-rows: 50% 50%;
     margin-top: 1em;
     padding: 1em;
-    background-image: url("../res/wood/wood_backgroud.jpg") ;
+    background-image: url("../../res/wood/wood_backgroud.jpg") ;
     background-size: 100% 100%;
     border-radius: 0.5em;
 }
@@ -429,7 +446,7 @@ header{
     margin: 0.2em;
     opacity: 0.5;
     background-color: transparent;
-    background-image: url("../res/wood/wood_backgroud.jpg") ;
+    background-image: url("../../res/wood/wood_backgroud.jpg") ;
     background-size: 100% 100%;
     box-shadow: inset 0 0 10px black;
     border-radius: 2em;
@@ -441,7 +458,7 @@ header{
     margin: 0.2em;  
     opacity: 0.5;   
     background-color: transparent;  
-    background-image: url("../res/wood/wood_backgroud.jpg") ;
+    background-image: url("../../res/wood/wood_backgroud.jpg") ;
     background-size: 100% 100%;
     box-shadow: inset 0 0 10px black;
     border-radius: 6em;
@@ -548,14 +565,6 @@ header{
     font-weight: bold;
     text-align: center;
 }
-
-/*
-.img-seed-back{
-    opacity: 0;
-    width: 1.4em;
-    height: 1.4em;
-}
-*/
 
 /* || Configurations */
 #section-main-configurations{

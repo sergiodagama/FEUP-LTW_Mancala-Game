@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style/main_style.css" />
+    <link rel="stylesheet" href="style/tablet_style.css" />
+    <link rel="stylesheet" href="style/mobile_style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@900&display=swap" rel="stylesheet">
@@ -13,10 +15,10 @@
   <body>
     <header>
       <!--|| Logo-->
-      <span id="s-header-banner">
+      <div id="d-header-banner">
         <img id="img-header-banner-logo" src="../res/logo.png" alt="Mancala logo">
         <h1 id="img-header-banner-name">Mancala</h1>
-      </span>
+      </div>
 
       <!--|| Navigation bar-->
       <span id="s-header-navbar">
@@ -202,18 +204,18 @@
           <p class="p-settings-instructions">Please select your game mode:</p>
 
           <div class="d-settings-info--mode">                                 
-            <input id="input-settings-info--3" class="radio-settings-info--mode" type="radio" name="mode" value="local" checked/> 
-            <label class="label-settings-info--mode" for="input-settings-info--3">Local player</label> 
+            <input id="input-settings-info--local" class="radio-settings-info--mode" type="radio" name="mode" value="local" checked/> 
+            <label class="label-settings-info--mode" for="input-settings-info--local">Local player</label> 
           </div>
 
           <div class="d-settings-info--mode">                                
-            <input id="input-settings-info--4" class="radio-settings-info--mode" type="radio" name="mode" value="local"/>  
-            <label class="label-settings-info--mode" for="input-settings-info--4">Online player</label> 
+            <input id="input-settings-info--online" class="radio-settings-info--mode" type="radio" name="mode" value="local"/>  
+            <label class="label-settings-info--mode" for="input-settings-info--online">Online player</label> 
           </div>
 
           <div class="d-settings-info--mode">
-            <input id="input-settings-info--5" class="radio-settings-info--mode" type="radio" name="mode" value="ai"/> 
-            <label class="label-settings-info--mode" for="input-settings-info--5">Against the computer</label>
+            <input id="input-settings-info--computer" class="radio-settings-info--mode" type="radio" name="mode" value="ai"/> 
+            <label class="label-settings-info--mode" for="input-settings-info--computer">Against the computer</label>
           </div>
 
           <!--|| Local mode Settings-->
