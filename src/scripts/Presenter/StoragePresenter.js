@@ -1,0 +1,4 @@
+class StoragePresenter {
+    constructor(){   
+    }
+}

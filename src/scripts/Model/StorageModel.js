@@ -1,5 +1,7 @@
-class StorageModel{
-    constructor(nSeeds = 0){
-        this.nSeeds = nSeeds;
+import "CavityModel.js"
+
+class StorageModel extends CavityModel{  //one storage is a cavity with special properties
+    constructor(nSeeds = 0) {
+        super(nSeeds);
     }
 }

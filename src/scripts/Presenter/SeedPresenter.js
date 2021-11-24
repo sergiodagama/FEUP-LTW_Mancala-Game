@@ -1,0 +1,4 @@
+class SeedPresenter {
+    constructor(){   
+    }
+}
