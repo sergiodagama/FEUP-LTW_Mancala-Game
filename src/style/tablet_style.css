@@ -17,8 +17,8 @@
 
     /* || Configurations */
     #section-main-configurations{
-        grid-area: auth;
         display: none;
+        grid-area: auth;
     }
 }
 

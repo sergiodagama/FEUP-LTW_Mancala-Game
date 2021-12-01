@@ -5,7 +5,7 @@ import "../External/Position.js";
 
 let nextSeedId = 0;  //used to autoincrement seeds ids, useful when needed to identify each seed
 
-class SeedModel{
+export class SeedModel{
     constructor(x = 0, y = 0, resource){
         this.#id = nextSeedId++;
         this.position = new Position(x, y);

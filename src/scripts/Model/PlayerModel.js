@@ -1,5 +1,5 @@
-import "CavityModel.js"
-import "StorageModel.js"
+import {CavityModel} from "./CavityModel.js"
+import {StorageModel} from "./StorageModel.js"
 
 let nextPlayerId = 0;
 

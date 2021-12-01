@@ -1,6 +1,6 @@
-import "SeedModel.js";
+import {SeedModel} from "./SeedModel.js"
 
-class CavityModel {
+export class CavityModel {
     constructor(nSeeds){
         this.seeds = [];
         init(nSeeds);
