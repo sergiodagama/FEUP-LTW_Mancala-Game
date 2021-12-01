@@ -1,0 +1,57 @@
+/* big tablets or small pc's */
+@media screen and (max-width: 1200px) {
+
+    /* || Main */
+    #d-main{
+        display: grid;
+        grid-template-areas: 
+        'auth game'
+        'commands game'
+        'system_messages game'
+        'footer footer footer';
+        /* grid-template-rows: 66% 9% 9% 16%;*/
+        grid-template-rows:  25.5em 3.5em 3.5em 6.5em;
+        grid-template-columns: 35% 65%;
+        min-height: 82.3vh;
+    }
+
+    /* || Configurations */
+    #section-main-configurations{
+        display: none;
+        grid-area: auth;
+    }
+}
+
+/* small tablets */
+@media screen and (max-width: 850px){
+
+    /* || Navigation Bar */
+    .img-header-navbar-icon{
+        display: none;
+    }
+
+    #img-header-navbar-menu-icon{
+        display: block;
+    }
+    
+    /* || Main */
+    #d-main{
+        display: grid;
+        grid-template-areas: 
+        'game game'
+        'commands system_messages';
+        grid-template-rows:  34em 5em;
+        grid-template-columns: 50% 50%;
+        min-height: 82.3vh;
+    }
+
+    #section-main-authentication{
+        grid-area: auth;
+        display: none;
+    }
+
+    /* || Footer */
+    footer{
+        display: none;
+    }
+}

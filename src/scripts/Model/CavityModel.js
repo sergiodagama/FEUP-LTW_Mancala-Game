@@ -1,13 +1,13 @@
-import "SeedModel.js";
+import {SeedModel} from "./SeedModel.js"
 
-class CavityModel {
-    constructor(nSeeds = 5){
+export class CavityModel {
+    constructor(nSeeds){
         this.seeds = [];
         init(nSeeds);
     }
 
     init(nSeeds){
-        emptyCavity();
+        empty();
         for(i = 0; i < nSeeds; i++){
             seed = new SeedModel();
             seed.randAll();
@@ -15,11 +15,15 @@ class CavityModel {
         }
     }
 
-    emptyCavity(){
+    empty(){
         this.seeds = [];
     }
 
     addSeed(seed){
-        this.seeds.push(seed)
+        this.seeds.push(seed);
+    }
+
+    removeSeed(seedToRemove){
+        this.seeds = seeds.filter(seed => seed.getId() != seedToRemove.getId());
     }
 }

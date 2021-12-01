@@ -1,4 +1,4 @@
-class CavityPresenter {
+export class GameModel {
     constructor(){
     }
 }

@@ -36,18 +36,18 @@ function toggleVisibility(isOpen, primaryId, secondaryId, display1, display2) {
 }
 
 function toggleChat(){
-  toggleIcon(0, chat, "../res/chat_icon.png", "../res/chat_icon_active.png");
+  toggleIcon(0, chat, "../res/icons/chat_icon.png", "../res/icons/chat_icon_active.png");
   toggleVisibility(isSectionOpen[0], "section-main-authentication", "section-main-chat", "block", "block");
   toggleSignIn();
 }
 				  
 function toggleRules() {
-  toggleIcon(1, rules, "../res/rules_icon.png", "../res/rules_icon_active.png");
+  toggleIcon(1, rules, "../res/icons/rules_icon.png", "../res/icons/rules_icon_active.png");
   toggleVisibility(isSectionOpen[1], "section-main-game", "section-main-rules", "block", "block");
 }
 
 function toggleScore() {
-  toggleIcon(2, score, "../res/score_icon.png", "../res/score_icon_active.png");
+  toggleIcon(2, score, "../res/icons/score_icon.png", "../res/icons/score_icon_active.png");
   toggleVisibility(isSectionOpen[2], "section-main-configurations", "section-main-score", "block", "block");
 }
 
@@ -321,29 +321,3 @@ function cavitiesClickHandler(index){
 function storagesClickHandler(index){
   var storages = document.getElementsByClassName("d-gameplay-storage");
 }
-
-//TODO IMPLEMENTATION OF MVP? OR STATE PATTERN? or BOTH?
-/*
-class Cavity {
-  constructor() {}
-}
-
-class Storage{
-  constructor() {}
-}
-
-class Seed{
-  constructor() {}
-}
-
-class Player{
-  constructor() {}
-}
-
-class Guest extends Player{
-}
-
-class Auth extends Player{
-}
-
-*/

@@ -3,10 +3,13 @@ const seedResAlt = ["../res/seeds/seed_red_alt.png", "../res/seeds/seed_green_al
 
 import "../External/Position.js";
 
-class SeedModel{
-    constructor(x = 0, y = 0, res){
+let nextSeedId = 0;  //used to autoincrement seeds ids, useful when needed to identify each seed
+
+export class SeedModel{
+    constructor(x = 0, y = 0, resource){
+        this.#id = nextSeedId++;
         this.position = new Position(x, y);
-        this.res = res;
+        this.resource = resource;
     }
 
     randSeedResource(){
@@ -17,9 +20,9 @@ class SeedModel{
         const altShape = Math.ceil(Math.random()*2) - 1;
 
         if(altShape){
-            this.res = seedResAlt[randColor];
+            this.resource = seedResAlt[randColor];
         }else{
-            this.res = seedRes[randColor];
+            this.resource = seedRes[randColor];
         }
     }
       
@@ -41,5 +44,9 @@ class SeedModel{
     randAll(){
         randSeedResource();
         randSeedPosition();
+    }
+
+    getId(){
+        return this.#id;
     }
 }

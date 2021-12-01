@@ -1,5 +1,9 @@
 /* || General */
 /* css rules applied to multiple sections */
+.responsive{
+    display: none;
+}
+
 body{
     margin: 0;
     background-color: #2EC4B6;
@@ -54,6 +58,7 @@ td{
 }
 
 a{
+    color: #242331;
     text-decoration: none;
 }
 
@@ -205,6 +210,7 @@ header{
 	float: right;
 	padding-top: 1em;
 	padding-right: 2em;
+    color: white;
 	font-size: 0.8em;
 }
 
@@ -890,6 +896,10 @@ footer{
     padding-left: 1em;
 }
 
+#footer-aboutus:hover{
+    filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(345deg) brightness(107%) contrast(101%);
+}
+
 #img-footer-report-bug-icon{
     width: 1.1em;
     height: 1.1em;
@@ -900,4 +910,8 @@ footer{
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+}
+
+#a-footer-report-bug:hover{
+    filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(345deg) brightness(107%) contrast(101%);
 }
