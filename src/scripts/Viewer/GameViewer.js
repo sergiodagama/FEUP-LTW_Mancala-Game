@@ -1,19 +1,37 @@
-const GameState = {  //upper case because it's almost considered a class
-    CONFIG: Symbol("CONFIG"),  //configurating the game
-    PLAYING: Symbol("PLAYING"),  //player started the game
-    TURN_PLAYER1: Symbol("TURN_PLAYER1"),  //player one turn (by convention the main user)
-    TURN_PLAYER2: Symbol("TURN_PLAYER2"),  //player two turn
-    PAUSE: Symbol("PAUSE"),  //pausing the game, disabled when online
-    QUIT: Symbol("QUIT"),  //when player wants to give up
-    END: Symbol("END"),  //show winner and ask to play again or back to home
- };
-
 export class GameViewer {
     constructor(){
-        this.presenter = null;
+        this.gamePresenter = null;
     }
 
-    registerWith(presenter){
-        this.presenter = presenter;
+    registerWith(gamePresenter){
+        this.gamePresenter = gamePresenter;
+        listenCavityClicks();
     }
+
+    //listeners
+    listenCavityClicks(){
+        var cavities = document.getElementsByClassName("d-gameplay-cavity");
+        var storages = document.getElementsByClassName("d-gameplay-storage");
+
+        for (i = 0; i < cavities.length; i++) {
+            cavities[i].addEventListener('click', this.cavityPresenter.cavitiesClickHandler);
+        }
+
+        for (i = 0; i < storages.length; i++) {
+            storages[i].addEventListener('click', this.cavityPresenter.cavitiesClickHandler);
+        }
+    }
+
+    listenCommands(){
+        var startButton = document.getElementById("button-command-start");
+        startButton.addEventListener("click", this.cavityPresenter.startClickHandler);
+
+        var quitButton = document.getElementById("button-command-quit");
+        quitButton.addEventListener("click", this.cavityPresenter.quitClickHandler);
+    }
+
+    listenConfigurations(){
+    }
+
+    //
 }

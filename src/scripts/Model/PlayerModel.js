@@ -3,9 +3,11 @@ import {StorageModel} from "./StorageModel.js"
 
 let nextPlayerId = 0;
 
-class PlayerModel{
-    constructor(){
+class PlayerModel{  //guests
+    constructor(boardId){
         this.id = nextPlayerId++;
+        this.username = "Guest" + this.id;
+        this.boardId = boardId; //1 or 2: indicates the player side of cavities (1 are the top cavites and left storage, 2 are the rest)
         this.defaultCavities = 6;
         this.defaultSeeds = 5;
         this.cavities = [];
@@ -18,7 +20,7 @@ class PlayerModel{
         emptyStorages();
         emptyCavities();
         for(let i = 0; i < initialCavities; i++){
-            cavity = new CavityModel(initialSeeds);
+            cavity = new CavityModel(initialSeeds, this.boardId);
             this.cavities.push(cavity);
         }
     }
@@ -36,23 +38,17 @@ class PlayerModel{
     }
 }
 
-class Guest extends PlayerModel{
-    constructor() {
-        super(); 
-    }
-}
-
 class Registered extends PlayerModel{
     constructor(username, country) {
-        super(); 
+        super();
         this.username = username;
         this.country = country;
-    }  
+    }
 }
 
 class Computer extends PlayerModel{
     constructor(aiLevel) {
-        super(); 
+        super();
         this.aiLevel = aiLevel;
     }
 }
