@@ -61,7 +61,11 @@ sign_in.addEventListener("click", signIn);
 
 var recover =document.getElementById("a-login-forgotpass");
 recover.addEventListener("click", recoverPass);
-console.log(recover);
+
+
+var goback = document.getElementById("a-forgot-goback");
+goback.addEventListener("click", goBackPass);
+
 
 
 function signUp(){
@@ -76,6 +80,11 @@ function signIn(){
 
 function recoverPass(){
   toggleVisibility(true, "form-authentication-login", "form-authentication-forgot", "block","block");
+  console.log("here");
+
+}
+function  goBackPass(){
+  toggleVisibility(true, "form-authentication-forgot", "form-authentication-login", "block","block");
   console.log("here");
 
 }

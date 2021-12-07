@@ -233,7 +233,7 @@ a{
     padding-left:1em;
     padding-bottom:0.5em;
     margin-top: 1em;
-	margin-bottom: 3em;
+	margin-bottom: em;
     margin-right:0.75em;
 	padding-right: 1em;
 	font-size: 0.75em;
@@ -265,16 +265,17 @@ a{
 #a-forgot-goback{
     float:right;
     border-radius: 0.6em;
+    border-bottom :10em;
 	padding-top: 0.5em;
     padding-left:1em;
     padding-bottom:0.5em;
-    margin-top: 1em;
-	margin-bottom: 3em;
+    margin-top: 0em;
+	margin-bottom: 2em;
     margin-right:0.75em;
 	padding-right: 1em;
 	font-size: 0.8em;
     background-color: #2EC4B6;
-    border: none;
+   
     color: white;
     font-weight: bold;
     cursor: pointer;
