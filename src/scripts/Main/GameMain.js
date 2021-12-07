@@ -12,5 +12,9 @@ class GameMain{
         this.gameViewer = new GameViewer();
         this.gamePresenter = new GamePresenter(this.gameModel, this.gameViewer);
         this.gameViewer.registerWith(this.gamePresenter);
+
+        this.gameViewer.listenConfigurations();
     }
 }
+
+let game = new GameMain();

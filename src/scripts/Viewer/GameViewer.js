@@ -9,6 +9,7 @@ export class GameViewer {
     }
 
     //listeners
+    /*
     listenCavityClicks(){
         var cavities = document.getElementsByClassName("d-gameplay-cavity");
         var storages = document.getElementsByClassName("d-gameplay-storage");
@@ -23,15 +24,15 @@ export class GameViewer {
     }
 
     listenCommands(){
-        var startButton = document.getElementById("button-command-start");
+        let startButton = document.getElementById("button-command-start");
         startButton.addEventListener("click", this.cavityPresenter.startClickHandler);
 
-        var quitButton = document.getElementById("button-command-quit");
+        let quitButton = document.getElementById("button-command-quit");
         quitButton.addEventListener("click", this.cavityPresenter.quitClickHandler);
     }
-
+    */
     listenConfigurations(){
+        let configsButton = document.getElementById("button-settings-info--config");
+        configsButton.addEventListener("click", gameplayAreaConfigs);
     }
-
-    //
 }
