@@ -212,6 +212,97 @@ header{
 	padding-right: 2em;
     color: white;
 	font-size: 0.8em;
+    cursor: pointer;
+}
+
+#button-forgot-recover{
+    text-align: left;
+    display:block;
+    border-radius: 0.6em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+    padding-right: 5em;
+	padding-left: 1em;
+    margin-top: 1em;
+	padding-right: 1em;
+	font-size: 0.9em;
+    background-color: #2EC4B6;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+
+}
+
+#button-forgot-recover:hover{
+    background-color: #242331;
+}
+
+#a-login-forgotpass:hover{
+    color: #242331;
+}
+
+#h3-forgot-titles-recover{
+    
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1.4em;
+    color: #242331;
+    border-bottom: solid #242331;
+}
+
+#a-forgot-goback{
+    float:right;
+    border-radius: 0.6em;
+    border-bottom :10em;
+	padding-top: 0.5em;
+    padding-left:1em;
+    padding-bottom:0.5em;
+    margin-bottom: 1.5em;
+	padding-right: 1em;
+	font-size: 0.8em;
+    background-color: #2EC4B6;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#a-forgot-goback:hover{
+    background-color: #242331;
+}
+
+#d-forgot-goback{
+
+    display:flex;
+    justify-content: flex-end;
+    
+}
+
+
+.label-forgot-info{
+	display: block;
+	font-size: 1.1em;
+	color: white;
+	font-weight: bold;
+	padding-top: 0.3em;
+}
+
+.input-forgot-info{
+	border-radius: 0.4em;
+	border:none;
+	padding: 0.5em;
+    max-width:80%;
+}
+
+
+#form-authentication-forgot{
+    display: none;
+    border-radius: 1em;
+    border:solid;
+    border-color: white;
+    padding-right: 4em;
+    padding-bottom: 1em;
 }
 
 #form-authentication-signup{
