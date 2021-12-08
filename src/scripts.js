@@ -2,8 +2,8 @@
  * Constants
  */
 //Seed Resources
-//const seedRes = ["../res/seeds/seed_red.png", "../res/seeds/seed_green.png", "../res/seeds/seed_yellow.png", "../res/seeds/seed_blue.png"];
-//const seedResAlt = ["../res/seeds/seed_red_alt.png", "../res/seeds/seed_green_alt.png", "../res/seeds/seed_yellow_alt.png", "../res/seeds/seed_blue_alt.png"];
+const seedRes = ["../res/seeds/seed_red.png", "../res/seeds/seed_green.png", "../res/seeds/seed_yellow.png", "../res/seeds/seed_blue.png"];
+const seedResAlt = ["../res/seeds/seed_red_alt.png", "../res/seeds/seed_green_alt.png", "../res/seeds/seed_yellow_alt.png", "../res/seeds/seed_blue_alt.png"];
 
 //Country Resources
 const countryRes = ["../res/flags/guest.png", "../res/flags/online.png", "../res/flags/computer.png", "../res/flags/al.png", "../res/flags/br.png", "../res/flags/computer.png", "../res/flags/es.png", "../res/flags/fr.png", "../res/flags/pt.png"];
@@ -18,7 +18,7 @@ const configDefaultValues = {
  * Models
  */
 class Position{
-    constructor(x, y){
+    constructor(x = 0, y = 0){
         this.x = x;
         this.y = y;
     }
@@ -81,9 +81,9 @@ let nextSeedId = 0;  //used to autoincrement seeds ids, useful when needed to id
 class Seed{
     constructor(){
         this.id = nextSeedId++;
-        this.position = null;
+        this.position = new Position();
         this.seedRes = seedRes[0];
-        randAll();
+        this.randAll();
     }
 
     //Getters
@@ -134,13 +134,13 @@ class Seed{
     }
 
     randSeedPosition(){
-        this.position.x = this.randSeedPositionLeft();
-        this.position.y = this.randSeedPositionTop();
+        this.position.setX(this.randSeedPositionLeft());
+        this.position.setY(this.randSeedPositionTop());
     }
 
     randAll(){
-        randSeedResource();
-        randSeedPosition();
+        this.randSeedResource();
+        this.randSeedPosition();
     }
 }
 
@@ -148,7 +148,11 @@ class GameModel{
     constructor(){
         this.players = [];  //fixed to 2
         this.storages = [];  //fixed to 2 nº storages [nº storages][nº Seeds] stores seeds objects
-        this.cavities = [];  //array of arrays [nº Cavities][nº Seeds] stores seeds objects
+        /*
+        player1 -> [1][2][3][4][5]
+        player2 -> [6][7][8][9][10]
+        */
+        this.cavities = [];  //array of arrays [nº Cavities * 2][nº Seeds] stores seeds objects
         this.turnMessage = "Default turn Message";
         this.systemMessage = "Default system Message";
         this.score = []; //fixed to 2
@@ -209,7 +213,7 @@ class GameModel{
         this.deleteCavities();
 
         //add cavites and create seeds
-        for(let i = 0; i < nCavities; i++){
+        for(let i = 0; i < nCavities * 2; i++){
             let seeds = [];
             for(let k = 0; k < nSeeds; k++){
                 seeds.push(new Seed());
@@ -218,7 +222,7 @@ class GameModel{
         }
     }
 
-    resetConfig(){
+    resetConfigs(){
         this.config(configDefaultValues.N_CAVITIES, configDefaultValues.N_SEEDS);
     }
 }
@@ -233,6 +237,7 @@ class GameViewer{
 
     registerWith(presenter){
         this.presenter = presenter;
+        console.log(this.getPresenter());
     }
 
     getPresenter(){
@@ -240,29 +245,112 @@ class GameViewer{
     }
 
     //Create and delete DOM Components
-    createCavity(){}
+    createCavity(){
+        //Game Background
+        var cavitie = document.createElement("div");
+        cavitie.classList.add("d-game-background-cavity");
+        document.getElementById("d-game-background-cavities-p1").appendChild(cavitie);
 
-    createSeed(){}
+        var cavitie2 = document.createElement("div");
+        cavitie2.classList.add("d-game-background-cavity");
+        document.getElementById("d-game-background-cavities-p2").appendChild(cavitie2);
 
-    deleteCavity(){}
+        //Gameplay Area (Top of background)
+        var cavitieTop = document.createElement("div");
+        cavitieTop.classList.add("d-gameplay-cavity");
+        document.getElementById("d-gameplay-cavities-p1").appendChild(cavitieTop);
+
+        var cavitieTop2 = document.createElement("div");
+        cavitieTop2.classList.add("d-gameplay-cavity");
+        document.getElementById("d-gameplay-cavities-p2").appendChild(cavitieTop2);
+    }
+
+    createSeed(id, cavityElement, randSeedPositionTop, randSeedPositionLeft, randomSeedResource){
+        let seed = document.createElement("img");
+        seed.setAttribute('id', this.seedId(id));
+        seed.classList.add("img-seed");
+        seed.style.top =  randSeedPositionTop;
+        seed.style.left = randSeedPositionLeft;
+        seed.src = randomSeedResource;
+        cavityElement.appendChild(seed);
+    }
+
+    createHoverQuantity(cavityOrStorageElement){
+        var seedQuan = document.createElement("p");
+        seedQuan.classList.add("p-seed-quantitie");
+        seedQuan.innerHTML += cavityOrStorageElement.childElementCount;
+        cavityOrStorageElement.appendChild(seedQuan);
+    }
+
+    deleteHoverQuantities(){
+        const seedQuantities = document.getElementsByClassName("p-seed-quantitie");
+
+        //removing all seed quantities
+        while(seedQuantities[0]){
+            seedQuantities[0].remove();
+        }
+    }
+
+    updateHoverQuantities(){
+
+    }
+
+
+    seedId(id){
+        return 'seed-' + id;
+    }
+
+    deleteCavities(){
+        const backgroundCavities = document.getElementsByClassName("d-game-background-cavity");
+        const gameplayCavities = document.getElementsByClassName("d-gameplay-cavity");
+
+        while(backgroundCavities[0]){
+          backgroundCavities[0].remove();
+          gameplayCavities[0].remove();
+        }
+    }
 
     deleteSeed(){}
 
     //Update DOM Component
-    updateCavity(){}
 
-    updateStorage(){}
+    emptyStorages(){
+        const gameplayCavities = document.getElementsByClassName("d-gameplay-storage");
+
+        while (gameplayCavities[0].firstChild) {
+            gameplayCavities[0].removeChild(gameplayCavities[0].firstChild);
+        }
+
+        while (gameplayCavities[1].firstChild) {
+            gameplayCavities[1].removeChild(gameplayCavities[1].firstChild);
+        }
+    }
 
     updateTurnMessage(){}
 
     updateSysMessage(){}
 
     //Listeners
-    listenConfigs(){}
+    listenConfigs(){
+        const configsButton = document.getElementById("button-settings-info--config");
+        //console.log(this.presenter);
+        configsButton.addEventListener("click", this.presenter.handleConfigs.bind(this.presenter));
+
+    }
+
+    listenResetConfigs(){
+        var resetElement = document.getElementById("button-settings-info--reset");
+        resetElement.addEventListener("click", this.presenter.resetConfigs.bind(this.presenter));
+    }
 
     listenCommands(){}
 
     listenCavities(){}
+
+    listenAll(){
+        this.listenConfigs();
+        this.listenResetConfigs();
+    }
 }
 
 /**
@@ -283,9 +371,63 @@ class GamePresenter{
         return this.viewer;
     }
 
-    handleConfigs(){}
+    handleConfigs(){
+        //get current quantities
+        const quantities = document.getElementsByClassName("input-settings-info--quantities");
+        const nCavs = quantities[0].value;
+        const nSeeds = quantities[1].value;
 
-    handleCommands(){}
+        this.config(nCavs, nSeeds);
+    }
+
+    config(nCavs, nSeeds){
+        //deleting cavities and empty storages in Model
+        this.model.deleteCavities();
+        this.model.emptyStorages();
+
+        //deleting cavities and empty storages in Viewer
+        this.viewer.deleteCavities();  //TODO:
+        this.viewer.emptyStorages(); //update to zero seeds
+
+        //create cavities and seeds in Model
+        this.model.config(nCavs, nSeeds);
+
+        //create cavities and seeds in Viewer
+        this.createCavitiesAndSeeds(nCavs, nSeeds);
+    }
+
+    resetConfigs(){
+        this.model.resetConfigs();
+        this.config(configDefaultValues.N_CAVITIES, configDefaultValues.N_SEEDS);
+    }
+
+    createCavitiesAndSeeds(nCavs, nSeeds){  //also create seed quantities in cavities and storages
+        for(let i = 0; i < nCavs; i++){
+            this.viewer.createCavity();
+        }
+
+        let cavs = document.getElementsByClassName("d-gameplay-cavity");
+
+        for(let j = 0; j < nCavs * 2; j++){
+            for(let k = 0; k < nSeeds; k++){
+                this.viewer.createSeed(this.model.cavities[j][k].getId(), cavs[j], this.model.cavities[j][k].position.getY(), this.model.cavities[j][k].position.getX(), this.model.cavities[j][k].seedRes);
+            }
+        }
+
+        for(let i = 0; i < nCavs * 2; i++){
+            this.viewer.createHoverQuantity(cavs[i]);
+        }
+
+        const storages = document.getElementsByClassName("d-gameplay-storage");
+
+        for(let i = 0; i < 2; i++){
+            this.viewer.createHoverQuantity(storages[i]);
+        }
+    }
+
+    handleCommands(){
+        //TODO:
+    }
 
     handleCavities(){}
 }
@@ -293,6 +435,16 @@ class GamePresenter{
 /**
  * Game Configuration
  */
+
+//temporary
+document.getElementById("d-game-area-background").style.display = "grid";
+
+const gameModel = new GameModel();
+const gameViewer = new GameViewer();
+const gamePresenter = new GamePresenter(gameModel, gameViewer);
+gameViewer.registerWith(gamePresenter);
+gameViewer.listenAll();
+
 
 /**
  * Game Loop

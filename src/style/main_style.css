@@ -471,7 +471,7 @@ header{
     cursor: pointer;
 }
 
-/* TEMPORARY REPEAT FOR TOP LAYER */
+/* Partial repeat for top layer */
 #d-game-area-gameplay{
     grid-area: gamegameplay;
     /*display: none; */ /* UNCOMMENT HERE */
