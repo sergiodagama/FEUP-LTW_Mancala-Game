@@ -27,7 +27,7 @@ h2{
     padding-bottom: 0.4em;
     padding-left: 0.5em;
     color:#242331;
-    background-color: powderblue; 
+    background-color: powderblue;
     font-size: 1.4em;
     font-family: 'Encode Sans', sans-serif;
     border-radius: 0.5em;
@@ -96,7 +96,7 @@ header{
     color: white;
     text-align: left;
     font-size: 3em;
-    font-family: 'Encode Sans', sans-serif;   
+    font-family: 'Encode Sans', sans-serif;
 }
 
 /* || Navigation Bar */
@@ -120,7 +120,7 @@ header{
 /* || Main */
 #d-main{
 	display: grid;
-	grid-template-areas: 
+	grid-template-areas:
     'auth game game configs'
     'commands game game configs'
     'system_messages game game configs'
@@ -215,94 +215,8 @@ header{
     cursor: pointer;
 }
 
-#button-forgot-recover{
-    text-align: left;
-    display:block;
-    border-radius: 0.6em;
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
-    padding-right: 5em;
-	padding-left: 1em;
-    margin-top: 1em;
-	padding-right: 1em;
-	font-size: 0.9em;
-    background-color: #2EC4B6;
-    border: none;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-
-}
-
-#button-forgot-recover:hover{
-    background-color: #242331;
-}
-
 #a-login-forgotpass:hover{
     color: #242331;
-}
-
-#h3-forgot-titles-recover{
-    
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 1.4em;
-    color: #242331;
-    border-bottom: solid #242331;
-}
-
-#a-forgot-goback{
-    float:right;
-    border-radius: 0.6em;
-    border-bottom :10em;
-	padding-top: 0.5em;
-    padding-left:1em;
-    padding-bottom:0.5em;
-    margin-bottom: 1.5em;
-	padding-right: 1em;
-	font-size: 0.8em;
-    background-color: #2EC4B6;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-#a-forgot-goback:hover{
-    background-color: #242331;
-}
-
-#d-forgot-goback{
-
-    display:flex;
-    justify-content: flex-end;
-    
-}
-
-
-.label-forgot-info{
-	display: block;
-	font-size: 1.1em;
-	color: white;
-	font-weight: bold;
-	padding-top: 0.3em;
-}
-
-.input-forgot-info{
-	border-radius: 0.4em;
-	border:none;
-	padding: 0.5em;
-    max-width:80%;
-}
-
-
-#form-authentication-forgot{
-    display: none;
-    border-radius: 1em;
-    border:solid;
-    border-color: white;
-    padding-right: 4em;
-    padding-bottom: 1em;
 }
 
 #form-authentication-signup{
@@ -356,6 +270,54 @@ header{
     border: none;
     border-radius: 0.6em;
     cursor: pointer;
+}
+
+#form-authentication-forgot{
+    display: none;
+    padding-bottom: 1.5em;
+    padding-right: 4em;
+    border-radius: 1em;
+    border:solid;
+    border-color: white;
+}
+
+#p-forgot-info-description{
+    margin-bottom: 0.5em;
+}
+
+#button-forgot-recover{
+	margin-top: 1em;
+	margin-bottom: 1em;
+    padding-top: 0.5em;
+	padding-bottom: 0.5em;
+    padding-right: 3.5em;
+	padding-left: 3.5em;
+    color: white;
+    background-color: #2EC4B6;
+    border: none;
+    border-radius: 0.6em;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#button-forgot-recover:hover{
+    background-color: #242331;
+}
+
+#h3-forgot-titles-recover{
+    color: #242331;
+    border-bottom: solid #242331;
+}
+
+#a-forgot-goback{
+    color: white;
+	font-size: 0.8em;
+    cursor: pointer;
+}
+
+#a-forgot-goback:hover{
+    color: #242331;
 }
 
 /* || System Messages */
@@ -442,7 +404,7 @@ header{
     padding-right: 4em;
     padding-left: 4em;
     background-color: #CBF3F0;
-    border-radius: 0.5em;  
+    border-radius: 0.5em;
 }
 
 #p-game-area-header-messages{
@@ -503,7 +465,7 @@ header{
 #d-game-area-background{
     grid-area: gamegameplay;
     display: none; /*changed to grid in js*/
-    grid-template-areas: 
+    grid-template-areas:
     'storage1 cavity1 storage2'
     'storage1 cavity2 storage2';
     grid-template-columns:  15% 70% 15%;
@@ -547,19 +509,19 @@ header{
     background-size: 100% 100%;
     box-shadow: inset 0 0 10px black;
     border-radius: 2em;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
-.d-game-background-cavity{ 
+.d-game-background-cavity{
     width: 20%;
-    margin: 0.2em;  
-    opacity: 0.5;   
-    background-color: transparent;  
+    margin: 0.2em;
+    opacity: 0.5;
+    background-color: transparent;
     background-image: url("../../res/wood/wood_backgroud.jpg") ;
     background-size: 100% 100%;
     box-shadow: inset 0 0 10px black;
     border-radius: 6em;
-    cursor: pointer;  
+    cursor: pointer;
 }
 
 /* TEMPORARY REPEAT FOR TOP LAYER */
@@ -568,7 +530,7 @@ header{
     /*display: none; */ /* UNCOMMENT HERE */
     z-index: 1;
     display: grid;
-    grid-template-areas: 
+    grid-template-areas:
     'storage1t cavity1t storage2t'
     'storage1t cavity2t storage2t';
     grid-template-columns:  15% 70% 15%;
@@ -604,24 +566,24 @@ header{
     background-size: 100% 100%;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
     border-radius: 2em;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
-.d-gameplay-cavity{ 
+.d-gameplay-cavity{
     position: relative;
     width: 20%;
-    margin: 0.2em;  
-    background-color: transparent;  
+    margin: 0.2em;
+    background-color: transparent;
     background-size: 100% 100%;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
     border-radius: 6em;
-    cursor: pointer;  
+    cursor: pointer;
 }
 /* END OF TEMP TOP LAYER */
 
 .d-gameplay-storage:hover{
     box-shadow: 0 0 1em #242331;
-    
+
 }
 .d-gameplay-cavity:hover{
     box-shadow: 0 0 1em #242331;
@@ -801,7 +763,7 @@ header{
     font-weight: bold;
     border: none;
     border-radius: 0.6em;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 .button-settings-info:hover{
@@ -842,7 +804,7 @@ header{
     height: 1em;
     padding-top: 1em;
 }
-   
+
 #img-settings-help--icon:hover{
    filter: invert(100%);
 }
@@ -867,7 +829,7 @@ header{
     text-align: center;
     border: none;
     border-radius: 0.6em;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 .button-command:hover{
@@ -943,7 +905,7 @@ header{
 #img-chat-controls-send-icon{
     width: 2em;
     height: 2em;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
 #img-chat-controls-send-icon:hover{
