@@ -39,6 +39,7 @@ function toggleChat(){
   toggleIcon(0, chat, "../res/icons/chat_icon.png", "../res/icons/chat_icon_active.png");
   toggleVisibility(isSectionOpen[0], "section-main-authentication", "section-main-chat", "block", "block");
   toggleSignIn();
+  toggleGoBackPass();
 }
 
 function toggleRules() {
