@@ -58,6 +58,13 @@ signUp.addEventListener("click", toggleSignUp);
 var signIn = document.getElementById("h3-login-titles-signin--up");
 signIn.addEventListener("click", toggleSignIn);
 
+var recoverPass =document.getElementById("a-login-forgotpass");
+recoverPass.addEventListener("click", toggleRecoverPass);
+
+var goBackPass = document.getElementById("a-forgot-goback");
+goBackPass.addEventListener("click", toggleGoBackPass);
+
+
 function toggleSignUp(){
   toggleVisibility(true, "form-authentication-login", "form-authentication-signup", "block", "block");
   document.getElementById("section-main-commands").style.display = "none";
@@ -66,6 +73,17 @@ function toggleSignUp(){
 function toggleSignIn(){
   toggleVisibility(false, "form-authentication-login", "form-authentication-signup", "block", "block");
   document.getElementById("section-main-commands").style.display = "flex";
+}
+
+function toggleRecoverPass(){
+  toggleVisibility(true, "form-authentication-login", "form-authentication-forgot", "block","block");
+  console.log("here");
+
+}
+function  toggleGoBackPass(){
+  toggleVisibility(true, "form-authentication-forgot", "form-authentication-login", "block","block");
+  console.log("here");
+
 }
 
 // Toggle Game modes in Configurations

@@ -212,6 +212,11 @@ header{
 	padding-right: 2em;
     color: white;
 	font-size: 0.8em;
+    cursor: pointer;
+}
+
+#a-login-forgotpass:hover{
+    color: #242331;
 }
 
 #form-authentication-signup{
@@ -265,6 +270,54 @@ header{
     border: none;
     border-radius: 0.6em;
     cursor: pointer;
+}
+
+#form-authentication-forgot{
+    display: none;
+    padding-bottom: 1.5em;
+    padding-right: 4em;
+    border-radius: 1em;
+    border:solid;
+    border-color: white;
+}
+
+#p-forgot-info-description{
+    margin-bottom: 0.5em;
+}
+
+#button-forgot-recover{
+	margin-top: 1em;
+	margin-bottom: 1em;
+    padding-top: 0.5em;
+	padding-bottom: 0.5em;
+    padding-right: 3.5em;
+	padding-left: 3.5em;
+    color: white;
+    background-color: #2EC4B6;
+    border: none;
+    border-radius: 0.6em;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#button-forgot-recover:hover{
+    background-color: #242331;
+}
+
+#h3-forgot-titles-recover{
+    color: #242331;
+    border-bottom: solid #242331;
+}
+
+#a-forgot-goback{
+    color: white;
+	font-size: 0.8em;
+    cursor: pointer;
+}
+
+#a-forgot-goback:hover{
+    color: #242331;
 }
 
 /* || System Messages */

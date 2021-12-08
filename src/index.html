@@ -100,10 +100,25 @@
                 <option value="Germany">Germany</option>
               </select>
             </div>
+
           </div>
 
           <input id="button-signup-register" type="submit" value="Register"/>
         </form>
+
+        <form id="form-authentication-forgot" action="recover" method="post">
+          <div class="d-forgot-titles">
+            <h3 id="h3-forgot-titles-recover">Recover your password</h3>
+          </div>
+          <div class="d-forgot-info">
+            <p id="p-forgot-info-description">We will send you a password recovery email shortly.</p>
+            <label class="label-login-info">Email</label>
+            <input class="input-login-info" type="email" placeholder="email"/>
+          </div>
+          <input id="button-forgot-recover" type="submit" value="Send email"/><br/>
+          <a id="a-forgot-goback">Go back</a>
+        </form>
+
       </section>
 
       <!--|| System Messages-->
