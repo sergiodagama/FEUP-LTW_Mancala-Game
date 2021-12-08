@@ -1,21 +1,21 @@
 // Toggle Chat, Rules and Score sections
 var chat = document.getElementById("img-header-navbar-chat-icon");
 chat.addEventListener("click", toggleChat);
-				  
+
 var rules = document.getElementById("img-header-navbar-rules-icon");
 rules.addEventListener("click", toggleRules);
-				  
+
 var score = document.getElementById("img-header-navbar-score-icon");
 score.addEventListener("click", toggleScore);
 
 var isSectionOpen = [false, false, false];
 
 function toggleIcon(index, imageElement, icon1, icon2) {
-  if(isSectionOpen[index]) { 
+  if(isSectionOpen[index]) {
 		imageElement.src = icon1;
 		isSectionOpen[index] = false;
 	}
-	else{ 
+	else{
 		imageElement.src = icon2;
 		isSectionOpen[index] = true;
 	}
@@ -24,7 +24,7 @@ function toggleIcon(index, imageElement, icon1, icon2) {
 function toggleVisibility(isOpen, primaryId, secondaryId, display1, display2) {
   var primaryElement = document.getElementById(primaryId);
   var secundayElement = document.getElementById(secondaryId);
-  
+
   if(isOpen) {
     primaryElement.style.display = "none";
     secundayElement.style.display = display2;
@@ -40,7 +40,7 @@ function toggleChat(){
   toggleVisibility(isSectionOpen[0], "section-main-authentication", "section-main-chat", "block", "block");
   toggleSignIn();
 }
-				  
+
 function toggleRules() {
   toggleIcon(1, rules, "../res/icons/rules_icon.png", "../res/icons/rules_icon_active.png");
   toggleVisibility(isSectionOpen[1], "section-main-game", "section-main-rules", "block", "block");
@@ -204,7 +204,7 @@ function seedsConfig(){
       cavs[i].appendChild(seed);
     }
 
-    //adding seed quantities (hover): one to each cavity 
+    //adding seed quantities (hover): one to each cavity
     var seedQuan = document.createElement("p");
     seedQuan.classList.add("p-seed-quantitie");
     seedQuan.innerHTML += cavs[i].childElementCount;
@@ -263,7 +263,7 @@ function displayModeComputer(){
 }
 
 
-
+/*
 //FROM THIS POINT THE CODE SHOULD BE IN OTHER FILE RELATED TO MVP PATTERN GAME DEV MILESTONE
 function listenToCavitiesAndSeeds(){
   var cavities = document.getElementsByClassName("d-gameplay-cavity");
@@ -311,13 +311,15 @@ function cavitiesClickHandler(index){
   removeAllSeeds(this);
 
   //var nSeeds = removeAllSeeds(cavities[2]);
-/*
+
   for(i = 1; i < nSeeds + 1; i++){
     addSeedToElement(cavities[index + i]);
   }
-  */
+
 }
 
 function storagesClickHandler(index){
   var storages = document.getElementsByClassName("d-gameplay-storage");
 }
+
+*/

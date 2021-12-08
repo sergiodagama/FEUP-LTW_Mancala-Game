@@ -4,7 +4,7 @@
     /* || Main */
     #d-main{
         display: grid;
-        grid-template-areas: 
+        grid-template-areas:
         'auth game'
         'commands game'
         'system_messages game'
@@ -17,8 +17,8 @@
 
     /* || Configurations */
     #section-main-configurations{
-        display: none;
         grid-area: auth;
+        display: none;
     }
 }
 
@@ -33,11 +33,11 @@
     #img-header-navbar-menu-icon{
         display: block;
     }
-    
+
     /* || Main */
     #d-main{
         display: grid;
-        grid-template-areas: 
+        grid-template-areas:
         'game game'
         'commands system_messages';
         grid-template-rows:  34em 5em;
