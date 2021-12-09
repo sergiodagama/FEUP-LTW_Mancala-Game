@@ -3,7 +3,7 @@
  */
 export const GameState = {  //upper case because it's almost considered a class
     CONFIG: Symbol("CONFIG"),  //configurating the game
-    TURN_PLAYER1: Symbol("TURN_PLAYER1"),  //player one turn (by convention the main user)
+    TURN_PLAYER1: Symbol("TURN_PLAYER1"),  //player one turn
     TURN_PLAYER2: Symbol("TURN_PLAYER2"),  //player two turn
     QUIT: Symbol("QUIT"),  //when player wants to give up, show winner
  };

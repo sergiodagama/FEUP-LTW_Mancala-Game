@@ -14,6 +14,14 @@ const configDefaultValues = {
     N_CAVITIES: 6,
  };
 
+ //Game states
+const gameState = {
+    CONFIG: Symbol("CONFIG"),  //configurating the game
+    TURN_PLAYER1: Symbol("TURN_PLAYER1"),  //player one turn
+    TURN_PLAYER2: Symbol("TURN_PLAYER2"),  //player two turn
+    QUIT: Symbol("QUIT"),  //when player wants to give up, show winner
+ };
+
 /**
  * Models
  */
@@ -42,10 +50,12 @@ class Position{
     }
 }
 
+let testId = 0;
+
 class Player{
-    constructor(id){
-        this.id = 0;  //1 or 2  (identifies if it his left player or right player)
-        this.username = "Guest" + id;  //players are by default guests
+    constructor(username = "Guest"){
+        this.testId = testId++;  //1 or 2  (identifies if it his left player or right player)
+        this.username = username;  //players are by default guests
         this.countryRes = countryRes[0];
     }
 
@@ -146,7 +156,7 @@ class Seed{
 
 class GameModel{
     constructor(){
-        this.players = [];  //fixed to 2
+        this.players = [new Player(), new Player("Local")];  //fixed to 2
         this.storages = [];  //fixed to 2 nº storages [nº storages][nº Seeds] stores seeds objects
         /*
         player1 -> [1][2][3][4][5]
@@ -154,7 +164,7 @@ class GameModel{
         */
         this.cavities = [];  //array of arrays [nº Cavities * 2][nº Seeds] stores seeds objects
         this.turnMessage = "Default turn Message";
-        this.systemMessage = "Default system Message";
+        this.sysMessage = "Default system Message";
         this.score = []; //fixed to 2
     }
 
@@ -176,7 +186,7 @@ class GameModel{
     }
 
     getSysMessage(){
-        return this.systemMessage;
+        return this.sysMessage;
     }
 
     getScore(){
@@ -233,6 +243,8 @@ class GameModel{
 class GameViewer{
     constructor(){
         this.presenter = null;
+        this.sysMessage = document.getElementById("p-system-messages-message");
+        this.turnMessage = document.getElementById("p-game-area-header-messages");
     }
 
     registerWith(presenter){
@@ -247,20 +259,20 @@ class GameViewer{
     //Create and delete DOM Components
     createCavity(){
         //Game Background
-        var cavitie = document.createElement("div");
+        let cavitie = document.createElement("div");
         cavitie.classList.add("d-game-background-cavity");
         document.getElementById("d-game-background-cavities-p1").appendChild(cavitie);
 
-        var cavitie2 = document.createElement("div");
+        let cavitie2 = document.createElement("div");
         cavitie2.classList.add("d-game-background-cavity");
         document.getElementById("d-game-background-cavities-p2").appendChild(cavitie2);
 
         //Gameplay Area (Top of background)
-        var cavitieTop = document.createElement("div");
+        let cavitieTop = document.createElement("div");
         cavitieTop.classList.add("d-gameplay-cavity");
         document.getElementById("d-gameplay-cavities-p1").appendChild(cavitieTop);
 
-        var cavitieTop2 = document.createElement("div");
+        let cavitieTop2 = document.createElement("div");
         cavitieTop2.classList.add("d-gameplay-cavity");
         document.getElementById("d-gameplay-cavities-p2").appendChild(cavitieTop2);
     }
@@ -326,30 +338,39 @@ class GameViewer{
         }
     }
 
-    updateTurnMessage(){}
+    updateTurnMessage(text){
+        this.turnMessage.innerHTML = text;
+    }
 
-    updateSysMessage(){}
+    updateSysMessage(text){
+        this.sysMessage.innerHTML = text;
+    }
 
     //Listeners
     listenConfigs(){
         const configsButton = document.getElementById("button-settings-info--config");
-        //console.log(this.presenter);
         configsButton.addEventListener("click", this.presenter.handleConfigs.bind(this.presenter));
-
     }
 
     listenResetConfigs(){
-        var resetElement = document.getElementById("button-settings-info--reset");
+        const resetElement = document.getElementById("button-settings-info--reset");
         resetElement.addEventListener("click", this.presenter.resetConfigs.bind(this.presenter));
     }
 
-    listenCommands(){}
+    listenCommands(){
+        const startCommand = document.getElementById("button-command-start");
+        startCommand.addEventListener("click", this.presenter.handleStartCommand.bind(this.presenter));
+
+        const quitCommand = document.getElementById("button-command-quit");
+        quitCommand.addEventListener("click", this.presenter.handleQuitCommand.bind(this.presenter));
+    }
 
     listenCavities(){}
 
     listenAll(){
         this.listenConfigs();
         this.listenResetConfigs();
+        this.listenCommands();
     }
 }
 
@@ -360,6 +381,7 @@ class GamePresenter{
     constructor(model, viewer){
         this.model = model;
         this.viewer = viewer;
+        this.state = gameState.CONFIG;  //game starts in CONFIG mode
     }
 
     //Getters
@@ -381,19 +403,24 @@ class GamePresenter{
     }
 
     config(nCavs, nSeeds){
-        //deleting cavities and empty storages in Model
-        this.model.deleteCavities();
-        this.model.emptyStorages();
+        if(this.state == gameState.CONFIG || this.state == gameState.QUIT){
+            //deleting cavities and empty storages in Model
+            this.model.deleteCavities();
+            this.model.emptyStorages();
 
-        //deleting cavities and empty storages in Viewer
-        this.viewer.deleteCavities();  //TODO:
-        this.viewer.emptyStorages(); //update to zero seeds
+            //deleting cavities and empty storages in Viewer
+            this.viewer.deleteCavities();
+            this.viewer.emptyStorages();
 
-        //create cavities and seeds in Model
-        this.model.config(nCavs, nSeeds);
+            //create cavities and seeds in Model
+            this.model.config(nCavs, nSeeds);
 
-        //create cavities and seeds in Viewer
-        this.createCavitiesAndSeeds(nCavs, nSeeds);
+            //create cavities and seeds in Viewer
+            this.createCavitiesAndSeeds(nCavs, nSeeds);
+        }
+        else{
+            this.updateSysMessage("You can't configure the game after it started!");
+        }
     }
 
     resetConfigs(){
@@ -401,7 +428,7 @@ class GamePresenter{
         this.config(configDefaultValues.N_CAVITIES, configDefaultValues.N_SEEDS);
     }
 
-    createCavitiesAndSeeds(nCavs, nSeeds){  //also create seed quantities in cavities and storages
+    createCavitiesAndSeeds(nCavs, nSeeds){  //also creates seeds quantities in cavities and storages
         for(let i = 0; i < nCavs; i++){
             this.viewer.createCavity();
         }
@@ -425,11 +452,65 @@ class GamePresenter{
         }
     }
 
-    handleCommands(){
-        //TODO:
+    updateSysMessage(text){
+        this.model.sysMessage = text;
+        this.viewer.updateSysMessage(this.model.sysMessage);
     }
 
-    handleCavities(){}
+    updateTurnMessage(text){
+        this.model.turnMessage = text;
+        this.viewer.updateTurnMessage(this.model.turnMessage);
+    }
+
+    generateInitPlayer(){
+        //returns a random integer from 0 to 1 ->  2 players available
+        const randPlayer = Math.ceil(Math.random()*2) - 1;
+
+        switch(randPlayer){
+            case 0:
+                this.state = gameState.TURN_PLAYER1;
+                this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn");
+                break;
+            case 1:
+                this.state = gameState.TURN_PLAYER2;
+                this.updateTurnMessage("It's " + this.model.players[1].getUsername() + " turn");
+                break;
+            default:
+                console.log("Error -> generateInitPlayer() <- invalid randPlayer number!");
+
+        }
+    }
+
+    handleStartCommand(){
+        if(this.state == gameState.QUIT || this.state == gameState.CONFIG){
+            this.updateSysMessage("You started a game :)");
+
+            this.generateInitPlayer();
+        }
+        else{
+            this.updateSysMessage("You are already playing a game!");
+        }
+    }
+
+    handleQuitCommand(){
+        if(this.state == gameState.TURN_PLAYER1 || this.state == gameState.TURN_PLAYER2){
+            this.state = gameState.QUIT;
+
+            this.updateSysMessage("You quitted this game :(");
+            //display winner TODO:
+        }
+        else{
+            this.updateSysMessage("You are not playing a game yet!");
+        }
+    }
+
+    handleCavities(){
+        switch(this.state){
+            case gameState.CONFIG:
+                //display that user is still configuring
+                break;
+        }
+    }
 }
 
 /**
@@ -444,6 +525,7 @@ const gameViewer = new GameViewer();
 const gamePresenter = new GamePresenter(gameModel, gameViewer);
 gameViewer.registerWith(gamePresenter);
 gameViewer.listenAll();
+gamePresenter.resetConfigs();
 
 
 /**

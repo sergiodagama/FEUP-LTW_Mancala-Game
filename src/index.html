@@ -10,7 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@900&display=swap" rel="stylesheet">
     <!--<script defer src="pageDynamics.js"></script>-->
-    <script defer src="scripts.js"></script>
+    <script defer src="page.js"></script>
+    <script defer src="game.js"></script>
     <title>Mancala</title>
   </head>
   <body>
@@ -134,13 +135,13 @@
 
           <!--|| Game Header-->
           <div id="d-game-area-header">
-            <p id="p-game-area-header-p1-name" class="p-game-area-header-username">Player1</p>
+            <p id="p-game-area-header-p1-name" class="p-game-area-header-username">Guest</p>
             <img id="img-game-area-header-p1-country" class="img-game-area-header-country-icon" src="../res/flags/pt.png" alt="Player one Country">
-            <p id="p-game-area-header-score--1" class="p-game-area-header-score">20</p>
-            <p id="p-game-area-header-messages">It's player1 turn</p>
-            <p id="p-game-area-header-score--2" class="p-game-area-header-score">13</p>
+            <p id="p-game-area-header-score--1" class="p-game-area-header-score">0</p>
+            <p id="p-game-area-header-messages">Welcome to Mancala</p>
+            <p id="p-game-area-header-score--2" class="p-game-area-header-score">0</p>
             <img id="img-game-area-header-p2-country" class="img-game-area-header-country-icon game-user-icon" src="../res/flags/guest.png" alt="Player two Country">
-            <p id="p-game-area-header-p2-name" class="p-game-area-header-username">Guest</p>
+            <p id="p-game-area-header-p2-name" class="p-game-area-header-username">Local</p>
           </div>
 
           <!--|| Game Background-->
@@ -206,7 +207,7 @@
 
         <h2 id="h2-configurations-title">Configurations</h2>
 
-        <form id="form-configurations-settings" action="configurate" method="post">
+        <form id="form-configurations-settings" action="configure" method="post">
 
           <div class="d-settings-info--quantities">
             <label class="label-settings-info--quantities" for="input-settings-info--ncavities">Number of cavities:</label>
@@ -280,14 +281,14 @@
           </div>
 
           <div id="d-settings-buttons">
-            <input id="button-settings-info--config" class="button-settings-info" type="button" value="Configurate"/>
+            <input id="button-settings-info--config" class="button-settings-info" type="button" value="Configure"/>
             <input id="button-settings-info--reset" class="button-settings-info" type="button" value="Reset"/>
           </div>
 
           <div id="d-settings-help">
             <img id="img-settings-help--icon" src="../res/icons/info_icon.png" alt="Help settings information">
             <p id="p-settings-help--text">
-              To configurate the game, input the parameters values and check the
+              To configure the game, input the parameters values and check the
               desired options, followed by clicking on configurate button.<br />
               If you want to reset default configurations, click on the reset button.
             </p>
