@@ -365,12 +365,8 @@ class GameViewer{
         quitCommand.addEventListener("click", this.presenter.handleQuitCommand.bind(this.presenter));
     }
 
-    listenCavities(){
-        const cavities = document.getElementsByClassName("d-gameplay-cavity");
-
-        for (i = 0; i < cavities.length; i++) {
-          cavities[i].addEventListener('click', this.presenter.handleCavities.bind(this.presenter));
-        }
+    listenCavity(cavityElement, index){
+        cavityElement.addEventListener("click", this.presenter.handleCavities.bind(this.presenter, index));
     }
 
     listenAll(){
@@ -439,28 +435,29 @@ class GamePresenter{
             this.viewer.createCavity();
         }
 
-        let cavs = document.getElementsByClassName("d-gameplay-cavity");
+        let cavityElements = document.getElementsByClassName("d-gameplay-cavity");
 
         for(let j = 0; j < nCavs * 2; j++){
             for(let k = 0; k < this.model.cavities[j].length; k++){
-                this.viewer.createSeed(this.model.cavities[j][k].getId(), cavs[j], this.model.cavities[j][k].position.getY(), this.model.cavities[j][k].position.getX(), this.model.cavities[j][k].seedRes);
+                this.viewer.createSeed(this.model.cavities[j][k].getId(), cavityElements[j], this.model.cavities[j][k].position.getY(), this.model.cavities[j][k].position.getX(), this.model.cavities[j][k].seedRes);
             }
+            this.viewer.listenCavity(cavityElements[j], j);
         }
 
         for(let i = 0; i < nCavs * 2; i++){
-            this.viewer.createHoverQuantity(cavs[i]);
+            this.viewer.createHoverQuantity(cavityElements[i]);
         }
+
+        const storageElements = document.getElementsByClassName("d-gameplay-storage");
 
         for(let j = 0; j < 2; j++){
             for(let k = 0; k < this.model.storages[j].length; k++){
-                this.viewer.createSeed(this.model.storages[j][k].getId(), cavs[j], this.model.storages[j][k].position.getY(), this.model.storages[j][k].position.getX(), this.model.storages[j][k].seedRes);
+                this.viewer.createSeed(this.model.storages[j][k].getId(), storageElements[j], this.model.storages[j][k].position.getY(), this.model.storages[j][k].position.getX(), this.model.storages[j][k].seedRes);
             }
         }
 
-        const storages = document.getElementsByClassName("d-gameplay-storage");
-
         for(let i = 0; i < 2; i++){
-            this.viewer.createHoverQuantity(storages[i]);
+            this.viewer.createHoverQuantity(storageElements[i]);
         }
     }
 
@@ -480,8 +477,54 @@ class GamePresenter{
         this.createCavitiesAndSeeds(this.model.cavities.length / 2);
     }
 
-    handleCavities(){
+    handleCavities(cavityRealIndex){
+        const nCavs = this.model.cavities.length / 2;
 
+        switch(this.state){
+            case gameState.CONFIG:
+            case gameState.QUIT:
+                this.viewer.updateSysMessage("You haven't started a game yet!");
+                break;
+            case gameState.TURN_PLAYER1:
+                if(cavityRealIndex >= nCavs){
+                    this.viewer.updateTurnMessage("That cavitity belongs to " + this.model.players[1].getUsername());
+                    var that = this;
+                    setTimeout(function () {
+                        that.updateTurnMessage("It's " + that.model.players[0].getUsername() + " turn");
+                    }, 2000);
+                }
+                else{
+                    this.makePlay(cavityRealIndex);
+                    this.switchTurns();
+                }
+                break;
+            case gameState.TURN_PLAYER2:
+                if(cavityRealIndex < nCavs){
+                    this.viewer.updateTurnMessage("That cavitites belongs to " + this.model.players[0].getUsername());
+                    var that = this;
+                    setTimeout(function () {
+                        that.updateTurnMessage("It's " + that.model.players[1].getUsername() + " turn");
+                    }, 2000);
+                }
+                else{
+                    this.makePlay(cavityRealIndex);
+                    this.switchTurns();
+                }
+                break;
+            default:
+                console.log("Error -> handleCavities() <- state not recognized");
+        }
+    }
+
+    switchTurns(){
+        if(this.state == gameState.TURN_PLAYER1){
+            this.updateTurnMessage("It's " + this.model.players[1].getUsername() + " turn");
+            this.state = gameState.TURN_PLAYER2;
+        }
+        else{
+            this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn");
+            this.state = gameState.TURN_PLAYER1;
+        }
     }
 
     makePlay(cavityRealIndex){
@@ -492,40 +535,28 @@ class GamePresenter{
 
         const nCavs = this.model.cavities.length / 2;
 
-        let dest = 0;
+        let dest = cavityRealIndex;
 
-        if(cavityRealIndex == (nCavs * 2 - 1)){
-            dest = nCavs - 1;
-        }
-        else if(cavityRealIndex >= nCavs){
-            dest = cavityRealIndex + 1;
-        }
-        else if(cavityRealIndex == 0){
-            dest = nCavs;
-        }
-        else{  // < nCavs
-            dest = cavityRealIndex - 1;
-        }
-
-        this.moveSeedToCavity(cavityRealIndex, dest);
+        let i = 0;
 
         while(this.model.cavities[cavityRealIndex].length > 0){
-            if(dest == (nCavs * 2 - 1)){
-                this.moveSeedToStorage(cavityRealIndex, 1);
+            if(dest == (nCavs * 2)){
+                if(i > 0) this.moveSeedToStorage(cavityRealIndex, 1);
                 dest = nCavs - 1;
             }
             else if(dest >= nCavs){
+                if(i > 0) this.moveSeedToCavity(cavityRealIndex, dest);
                 dest++;
-                this.moveSeedToCavity(cavityRealIndex, dest);
             }
-            else if(dest == 0){
-                this.moveSeedToStorage(cavityRealIndex, 0);
+            else if(dest < 0){
+                if(i > 0) this.moveSeedToStorage(cavityRealIndex, 0);
                 dest = nCavs;
             }
             else{  // < nCavs
+                if(i > 0) this.moveSeedToCavity(cavityRealIndex, dest);
                 dest--;
-                this.moveSeedToCavity(cavityRealIndex, dest);
             }
+            i++;
         }
 
         this.updateCavitiesAndStorages();
@@ -573,14 +604,6 @@ class GamePresenter{
         }
     }
 
-    handleCavities(){
-        switch(this.state){
-            case gameState.CONFIG:
-                //display that user is still configuring
-                break;
-        }
-    }
-
     //moves the first seed in cavity
     moveSeedToCavity(origCavityRealIndex, destCavityRealIndex){
         const seed = this.model.cavities[origCavityRealIndex].shift();  //removes and retrieves first array element
@@ -620,14 +643,6 @@ gameViewer.registerWith(gamePresenter);
 gameViewer.listenAll();
 gamePresenter.resetConfigs();
 
-gamePresenter.moveSeedToStorage(2,1);
-gamePresenter.updateCavitiesAndStorages();
-//gamePresenter.makePlay(7);
-
-/**
- * Game Loop
- */
-
 /**
  * Authentication
  */
@@ -635,9 +650,4 @@ gamePresenter.updateCavitiesAndStorages();
 /**
  * Chat
  */
-
-/**
- * Score
- */
-
 

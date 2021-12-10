@@ -412,6 +412,7 @@ header{
     padding: 0em;
     color: #242331;
     font-weight: 600;
+    text-align: center;
     border-bottom: solid;
     border-width: medium;
     border-color: rgba(255, 255, 255, 0.459);
@@ -561,6 +562,7 @@ header{
 }
 
 .d-gameplay-storage{
+    position: relative;
     margin: 0.2em;
     background-color: transparent;
     background-size: 100% 100%;
