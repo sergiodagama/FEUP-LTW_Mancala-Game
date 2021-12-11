@@ -498,26 +498,34 @@ class GamePresenter{
                 this.viewer.updateSysMessage("You haven't started a game yet!");
                 break;
             case gameState.TURN_PLAYER1:
-                if(this.model.cavities[cavityRealIndex].length == 0){
-                    this.viewer.updateTurnMessage("That cavitity is empty, choose another one");
-
-                    setTimeout(function () {
-                        that.updateTurnMessage("It's " + that.model.players[0].getUsername() + " turn");
-                    }, 2000);
-
-                    return;
-                }
                 if(cavityRealIndex >= nCavs){
                     this.viewer.updateTurnMessage("That cavitity belongs to " + this.model.players[1].getUsername());
                     setTimeout(function () {
                         that.updateTurnMessage("It's " + that.model.players[0].getUsername() + " turn");
                     }, 2000);
+
+                    return;
                 }
-                else{
-                    if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
+                if(this.model.cavities[cavityRealIndex].length == 0){
+                    this.viewer.updateTurnMessage("That cavitity is empty, choose another one");
+
+                    setTimeout(function () {
+                        that.updateTurnMessage("It's " + that.model.players[0].getUsername() + " turn");
+                    }, 2000);
+
+                    return;
                 }
+                if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
                 break;
             case gameState.TURN_PLAYER2:
+                if(cavityRealIndex < nCavs){
+                    this.viewer.updateTurnMessage("That cavitites belongs to " + this.model.players[0].getUsername());
+                    setTimeout(function () {
+                        that.updateTurnMessage("It's " + that.model.players[1].getUsername() + " turn");
+                    }, 2000);
+
+                    return;
+                }
                 if(this.model.cavities[cavityRealIndex].length == 0){
                     this.viewer.updateTurnMessage("That cavitity is empty, choose another one");
 
@@ -527,16 +535,7 @@ class GamePresenter{
 
                     return;
                 }
-
-                if(cavityRealIndex < nCavs){
-                    this.viewer.updateTurnMessage("That cavitites belongs to " + this.model.players[0].getUsername());
-                    setTimeout(function () {
-                        that.updateTurnMessage("It's " + that.model.players[1].getUsername() + " turn");
-                    }, 2000);
-                }
-                else{
-                    if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
-                }
+                if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
                 break;
             default:
                 console.log("Error -> handleCavities() <- state not recognized");
