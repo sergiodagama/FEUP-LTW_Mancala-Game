@@ -562,10 +562,12 @@ class GamePresenter{
         const nCavs = this.model.cavities.length / 2;
 
         let dest = cavityRealIndex;
+        let prevDest;  //only used to check if final cavity is empty
 
         let i = 0; //to skip the first iteration
 
         while(this.model.cavities[cavityRealIndex].length > 0){
+            prevDest = dest;
             if(dest == (nCavs * 2)){
                 if(i > 0 && state == gameState.TURN_PLAYER2) this.moveSeedToStorage(cavityRealIndex, 1);
                 dest = nCavs - 1;
@@ -588,6 +590,21 @@ class GamePresenter{
         this.updateCavitiesAndStorages();
         this.updateScore();
 
+        //when last seed ends in player empty cavity
+        if(state == gameState.TURN_PLAYER1 && prevDest < nCavs){
+            if(this.model.cavities[prevDest].length == 0){
+                //TODO: remove seeds from opposite side and from prevDest and add to storage 1
+            }
+            return;
+        }
+        else if(state == gameState.TURN_PLAYER2 && prevDest >= nCavs){
+            if(this.model.cavities[prevDest].length == 0){
+                //TODO: remove seeds from opposite side and from prevDest and add to storage 2
+            }
+            return;
+        }
+
+        //set play again flag
         if((state == gameState.TURN_PLAYER1 && dest == nCavs) ||
            (state == gameState.TURN_PLAYER2 && dest == (nCavs - 1))){  //if true play again
             return true;
