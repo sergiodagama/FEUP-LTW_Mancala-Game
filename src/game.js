@@ -445,7 +445,7 @@ class GamePresenter{
             this.viewer.createCavity();
         }
 
-        let cavityElements = document.getElementsByClassName("d-gameplay-cavity");
+        const cavityElements = document.getElementsByClassName("d-gameplay-cavity");
 
         for(let j = 0; j < nCavs * 2; j++){
             for(let k = 0; k < this.model.cavities[j].length; k++){
@@ -547,11 +547,11 @@ class GamePresenter{
 
         let dest = cavityRealIndex;
 
-        let i = 0;
+        let i = 0; //to skip the first iteration
 
         while(this.model.cavities[cavityRealIndex].length > 0){
             if(dest == (nCavs * 2)){
-                if(i > 0) this.moveSeedToStorage(cavityRealIndex, 1);
+                if(i > 0 && cavityRealIndex >= nCavs) this.moveSeedToStorage(cavityRealIndex, 1);
                 dest = nCavs - 1;
             }
             else if(dest >= nCavs){
@@ -559,7 +559,7 @@ class GamePresenter{
                 dest++;
             }
             else if(dest < 0){
-                if(i > 0) this.moveSeedToStorage(cavityRealIndex, 0);
+                if(i > 0 && cavityRealIndex < nCavs) this.moveSeedToStorage(cavityRealIndex, 0);
                 dest = nCavs;
             }
             else{  // < nCavs
