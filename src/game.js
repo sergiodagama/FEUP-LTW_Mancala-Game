@@ -10,8 +10,12 @@ const countryRes = ["../res/flags/guest.png", "../res/flags/online.png", "../res
 
 //Default values for game configuration
 const configDefaultValues = {
-    N_SEEDS: 5,
-    N_CAVITIES: 6,
+    N_SEEDS: 5,     //seeds per cavity
+    N_CAVITIES: 6,  //cavities per side
+    MAX_SEEDS: 10,
+    MIN_SEEDS: 1,
+    MAX_CAVITIES: 8,
+    MIN_CAVITIES: 2,
  };
 
  //Game states
@@ -165,7 +169,6 @@ class GameModel{
         this.cavities = [];  //array of arrays [nº Cavities * 2][nº Seeds] stores seeds objects
         this.turnMessage = "Default turn Message";
         this.sysMessage = "Default system Message";
-        this.score = []; //fixed to 2
     }
 
     //Getters
@@ -189,10 +192,6 @@ class GameModel{
         return this.sysMessage;
     }
 
-    getScore(){
-        return this.score;
-    }
-
     //GameModel Main Methods
     deletePlayers(){
         this.players = [];
@@ -211,11 +210,6 @@ class GameModel{
     emptyStorages(){
         this.storages[0] = [];
         this.storages[1] = [];
-    }
-
-    zeroScore(){
-        this.score[0] = 0;
-        this.score[1] = 0;
     }
 
     config(nCavities, nSeeds){
@@ -322,8 +316,6 @@ class GameViewer{
         }
     }
 
-    deleteSeed(){}
-
     //Update DOM Component
 
     emptyStorages(){
@@ -344,6 +336,14 @@ class GameViewer{
 
     updateSysMessage(text){
         this.sysMessage.innerHTML = text;
+    }
+
+    updateScore(score1, score2){
+        let scoreElem1 = document.getElementById("p-game-area-header-score--1");
+        scoreElem1.innerHTML = score1;
+
+        let scoreElem2 = document.getElementById("p-game-area-header-score--2");
+        scoreElem2.innerHTML = score2;
     }
 
     //Listeners
@@ -400,6 +400,16 @@ class GamePresenter{
         const quantities = document.getElementsByClassName("input-settings-info--quantities");
         const nCavs = quantities[0].value;
         const nSeeds = quantities[1].value;
+
+        if(nCavs > configDefaultValues.MAX_CAVITIES || nCavs < configDefaultValues.MIN_CAVITIES){
+            console.log("Warning: -> handleConfigs() <- Tried to input value of cavities not accepted in configurations");
+            return;
+        }
+
+        if(nSeeds > configDefaultValues.MAX_SEEDS || nSeeds < configDefaultValues.MIN_SEEDS){
+            console.log("Warning: -> handleConfigs() <- Tried to input value of seeds not accepted in configurations");
+            return;
+        }
 
         this.config(nCavs, nSeeds);
     }
@@ -560,6 +570,13 @@ class GamePresenter{
         }
 
         this.updateCavitiesAndStorages();
+        this.updateScore();
+    }
+
+    updateScore(){
+        const score1 = this.model.storages[0].length;
+        const score2 = this.model.storages[1].length;
+        this.viewer.updateScore(score1, score2);
     }
 
     generateInitPlayer(){
@@ -595,7 +612,9 @@ class GamePresenter{
     handleQuitCommand(){
         if(this.state == gameState.TURN_PLAYER1 || this.state == gameState.TURN_PLAYER2){
             this.state = gameState.QUIT;
-
+            //TODO: save results
+            this.resetConfigs();
+            this.updateScore();
             this.updateSysMessage("You quitted this game :(");
             //display winner TODO:
         }
@@ -636,12 +655,23 @@ class GamePresenter{
 //temporary
 document.getElementById("d-game-area-background").style.display = "grid";
 
-const gameModel = new GameModel();
-const gameViewer = new GameViewer();
-const gamePresenter = new GamePresenter(gameModel, gameViewer);
-gameViewer.registerWith(gamePresenter);
-gameViewer.listenAll();
-gamePresenter.resetConfigs();
+class GameMain{
+    constructor(){
+        this.gameModel = new GameModel();
+        this.gameViewer = new GameViewer();
+        this.gamePresenter = new GamePresenter(this.gameModel, this.gameViewer);
+        this.gameViewer.registerWith(this.gamePresenter);
+    }
+
+    run(){
+        this.gameViewer.listenAll();
+        this.gamePresenter.resetConfigs();
+    }
+}
+
+const game = new GameMain();
+
+game.run();
 
 /**
  * Authentication
