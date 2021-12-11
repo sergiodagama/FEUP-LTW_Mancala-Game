@@ -504,8 +504,7 @@ class GamePresenter{
                     }, 2000);
                 }
                 else{
-                    this.makePlay(cavityRealIndex);
-                    this.switchTurns();
+                    if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
                 }
                 break;
             case gameState.TURN_PLAYER2:
@@ -517,8 +516,7 @@ class GamePresenter{
                     }, 2000);
                 }
                 else{
-                    this.makePlay(cavityRealIndex);
-                    this.switchTurns();
+                    if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
                 }
                 break;
             default:
@@ -537,7 +535,7 @@ class GamePresenter{
         }
     }
 
-    makePlay(cavityRealIndex){
+    makePlay(state, cavityRealIndex){
         if(this.model.cavities[cavityRealIndex].lenght == 0){
             console.log("Error -> makePlay() <- no seeds in this cavity");
             return;
@@ -551,7 +549,7 @@ class GamePresenter{
 
         while(this.model.cavities[cavityRealIndex].length > 0){
             if(dest == (nCavs * 2)){
-                if(i > 0 && cavityRealIndex >= nCavs) this.moveSeedToStorage(cavityRealIndex, 1);
+                if(i > 0 && state == gameState.TURN_PLAYER2) this.moveSeedToStorage(cavityRealIndex, 1);
                 dest = nCavs - 1;
             }
             else if(dest >= nCavs){
@@ -559,7 +557,7 @@ class GamePresenter{
                 dest++;
             }
             else if(dest < 0){
-                if(i > 0 && cavityRealIndex < nCavs) this.moveSeedToStorage(cavityRealIndex, 0);
+                if(i > 0 && state == gameState.TURN_PLAYER1) this.moveSeedToStorage(cavityRealIndex, 0);
                 dest = nCavs;
             }
             else{  // < nCavs
@@ -571,6 +569,13 @@ class GamePresenter{
 
         this.updateCavitiesAndStorages();
         this.updateScore();
+
+        if((state == gameState.TURN_PLAYER1 && dest == nCavs) ||
+           (state == gameState.TURN_PLAYER2 && dest == (nCavs - 1))){  //if true play again
+            return true;
+        }else{
+            return false;
+        }
     }
 
     updateScore(){
