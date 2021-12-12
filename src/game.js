@@ -26,6 +26,13 @@ const gameState = {
     QUIT: Symbol("QUIT"),  //when player wants to give up, show winner
  };
 
+//Winning states
+const winningState = {
+    TIE: Symbol("TIE"),
+    PLAYER1_WON: Symbol("PLAYER1_WON"),
+    PLAYER2_WON: Symbol("PLAYER2_WON"),
+ };
+
 /**
  * Models
  */
@@ -297,11 +304,6 @@ class GameViewer{
         }
     }
 
-    updateHoverQuantities(){
-
-    }
-
-
     seedId(id){
         return 'seed-' + id;
     }
@@ -315,8 +317,6 @@ class GameViewer{
           gameplayCavities[0].remove();
         }
     }
-
-    //Update DOM Component
 
     emptyStorages(){
         const gameplayCavities = document.getElementsByClassName("d-gameplay-storage");
@@ -344,6 +344,19 @@ class GameViewer{
 
         let scoreElem2 = document.getElementById("p-game-area-header-score--2");
         scoreElem2.innerHTML = score2;
+    }
+
+    displayWinner(won){
+        switch(won){
+            case winningState.TIE:
+                break;
+            case winningState.PLAYER1_WON:
+                break;
+            case winningState.PLAYER2_WON:
+                break;
+            default:
+                console.log("Error -> displayWinner() <- no such winning state available");
+        }
     }
 
     //Listeners
@@ -588,7 +601,7 @@ class GamePresenter{
         }
 
         //when last seed ends in player empty cavity
-        if(prevDest != -1 && prevDest != 12){
+        if(prevDest != -1 && prevDest != (nCavs * 2)){
             if(state == gameState.TURN_PLAYER1 && prevDest < nCavs){
                 if(this.model.cavities[prevDest].length == 1){
                     //removes seeds from opposite side and from prevDest and add to storage 1
@@ -613,8 +626,13 @@ class GamePresenter{
             }
         }
 
+        //update cavities, storages and score
         this.updateCavitiesAndStorages();
         this.updateScore();
+
+        //checkers for end of game
+        if(this.checkNoPlays(0, nCavs)) this.gameEnd(0);
+        else if(this.checkNoPlays(1, nCavs)) this.gameEnd(1);
 
         //set play again flag
         if((state == gameState.TURN_PLAYER1 && dest == nCavs) ||
@@ -655,6 +673,66 @@ class GamePresenter{
         }
     }
 
+    checkNoPlays(playerNumb, nCavs){  //player 0 or 1
+        let end = true;
+
+        for(let i = playerNumb * nCavs; i < nCavs + (nCavs * playerNumb); i++){
+            if(this.model.cavities[i].length > 0){
+                end = false;
+            }
+        }
+        return end;
+    }
+
+    gameEnd(playerNumb){ //the playerNumb refers to the player with no plays
+        //retrieving all opponent seeds to his own storage
+        if(playerNumb == 0){
+            for(let i = this.model.cavities.length / 2; i < this.model.cavities.length; i++){
+                while(this.model.cavities[i].length > 0){
+                    this.moveSeedToStorage(i, 1);
+                }
+            }
+        }
+        else if(playerNumb == 1){
+            for(let i = 0; i < this.model.cavities.length / 2; i++){
+                while(this.model.cavities[i].length > 0){
+                    this.moveSeedToStorage(i, 0);
+                }
+            }
+        }
+        else{
+            console.log("Error -> gameEnd() <- wrong player number given.");
+        }
+
+        //show winner
+        this.winner();
+    }
+
+    winner(){
+        let won;
+
+        if(this.model.storages[0] == this.model.storages[1]){
+            //tie
+            won = winningState.TIE;
+        }
+        else if(this.model.storages[0] > this.model.storages[1]){
+            //player 1 won
+            won = winningState.PLAYER1_WON;
+        }
+        else{
+            //player 2 won
+            won = winningState.PLAYER2_WON;
+        }
+
+        const that = this;  //used for timeout function
+
+        //show winner after some timeout
+        setTimeout(function () {
+            that.viewer.deleteCavities();
+            that.viewer.displayWinner(won);
+        }, 2000);
+    }
+
     handleStartCommand(){
         if(this.state == gameState.QUIT || this.state == gameState.CONFIG){
             this.updateSysMessage("You started a game :)");
@@ -670,7 +748,7 @@ class GamePresenter{
         if(this.state == gameState.TURN_PLAYER1 || this.state == gameState.TURN_PLAYER2){
             this.state = gameState.QUIT;
             //TODO: save results
-            this.resetConfigs();
+            this.resetConfigs();  //TODO: change this to current configs, or maybe not needed after winner display
             this.updateScore();
             this.updateSysMessage("You quitted this game :(");
             //display winner TODO:
