@@ -347,16 +347,31 @@ class GameViewer{
     }
 
     displayWinner(won){
+        const winnerBanner = document.getElementById("d-game-area-winner-banner");
+        const primPhrase = document.getElementById("p-winner-banner-secundary");
+        const secunPhrase = document.getElementById("p-winner-banner-primary");
+
+        winnerBanner.style.display = "grid";
+
+        let primaryWinPhrase = "WINS", secundaryWinPhrase;
+
         switch(won){
             case winningState.TIE:
+                primaryWinPhrase = "TIE";
+                secundaryWinPhrase = "The game ended in a";
                 break;
             case winningState.PLAYER1_WON:
+                secundaryWinPhrase = this.model.players[0].getUsername();
                 break;
             case winningState.PLAYER2_WON:
+                secundaryWinPhrase = this.model.players[1].getUsername();
                 break;
             default:
                 console.log("Error -> displayWinner() <- no such winning state available");
         }
+
+        primPhrase.innerHTML = primaryWinPhrase;
+        secunPhrase.innerHTML = secundaryWinPhrase;
     }
 
     //Listeners
@@ -669,7 +684,6 @@ class GamePresenter{
                 break;
             default:
                 console.log("Error -> generateInitPlayer() <- invalid randPlayer number!");
-
         }
     }
 

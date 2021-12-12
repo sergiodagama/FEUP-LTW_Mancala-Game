@@ -115,7 +115,7 @@ function computerConfigs(){
 document.getElementById("d-game-area-background").style.display = "grid";  /* COMMENT HERE */
 /*
 setTimeout(function(){
-  document.getElementById("d-load-game-area").style.display = "none";
+  document.getElementById("d-game-area-load-banner").style.display = "none";
   document.getElementById("d-game-area-gameplay").style.display = "grid";
   document.getElementById("d-game-area-background").style.display = "grid";
 },2900);

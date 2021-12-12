@@ -357,43 +357,6 @@ header{
     max-height: 27.5em;  /* TO BE REVIEWED */
 }
 
-@keyframes fadeOut{
-    0% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0;
-    }
-}
-
-@keyframes rotation{
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(359deg);
-    }
-}
-
-#d-load-game-area{
-    display: none; /* flex UNCOMMENT*/
-    justify-content: center;
-    align-items: center;
-    margin-top: 1em;
-    padding: 1em;
-    background-color: #242331;
-    border-radius: 0.5em;
-    animation: fadeOut ease 1s;
-    animation-delay: 2s;
-}
-
-#img-load-game-logo{
-    width: 10em;
-    height: 10em;
-    animation: rotation 2s linear;
-    animation-iteration-count: 2;
-}
-
 #d-game-area-header{
     grid-area: gameheader;
     display: grid;
@@ -581,7 +544,6 @@ header{
     border-radius: 6em;
     cursor: pointer;
 }
-/* END OF TEMP TOP LAYER */
 
 .d-gameplay-storage:hover{
     box-shadow: 0 0 1em #242331;
@@ -625,6 +587,80 @@ header{
     font-size: 1.5em;
     font-weight: bold;
     text-align: center;
+}
+
+@keyframes fadeOut{
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+}
+
+@keyframes rotation{
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+}
+
+#d-game-area-load-banner{
+    display: none; /* flex UNCOMMENT*/
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
+    padding: 1em;
+    background-color: #242331;
+    border-radius: 0.5em;
+    animation: fadeOut ease 1s;
+    animation-delay: 2s;
+}
+
+#img-game-area-load-logo{
+    width: 10em;
+    height: 10em;
+    animation: rotation 2s linear;
+    animation-iteration-count: 2;
+}
+
+#d-game-area-winner-banner{
+    display: none;
+    grid-area: gamegameplay;
+    /*display: none; */ /* UNCOMMENT HERE */
+    z-index: 2;
+    grid-template-areas:
+    'winSecundary'
+    'winPrimary';
+    grid-template-rows: 33% 67%;
+    justify-items: center;
+    align-items: start;
+}
+
+#p-winner-banner-secundary{
+    grid-area: winSecundary;
+    align-self: end;
+    margin-bottom: 0em;
+    padding: 0.2em;
+    color: #242331;
+    background-color:#ffa01cce;
+    font-family: 'Encode Sans', sans-serif;
+    font-size: 2em;
+    font-weight: 600;
+    border-radius: 1em;
+}
+
+#p-winner-banner-primary{
+    grid-area: winPrimary;
+    align-self: start;
+    margin-top: 0em;
+    padding-top: 0em;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Encode Sans', sans-serif;
+    font-size: 7em;
+    font-weight: 600;
 }
 
 /* || Configurations */
