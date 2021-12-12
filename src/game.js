@@ -346,10 +346,10 @@ class GameViewer{
         scoreElem2.innerHTML = score2;
     }
 
-    displayWinner(won){
+    displayWinner(won, player1Name, player2Name){
         const winnerBanner = document.getElementById("d-game-area-winner-banner");
-        const primPhrase = document.getElementById("p-winner-banner-secundary");
-        const secunPhrase = document.getElementById("p-winner-banner-primary");
+        const primPhrase = document.getElementById("p-winner-banner-primary");
+        const secunPhrase = document.getElementById("p-winner-banner-secundary");
 
         winnerBanner.style.display = "grid";
 
@@ -361,10 +361,10 @@ class GameViewer{
                 secundaryWinPhrase = "The game ended in a";
                 break;
             case winningState.PLAYER1_WON:
-                secundaryWinPhrase = this.model.players[0].getUsername();
+                secundaryWinPhrase = player1Name;
                 break;
             case winningState.PLAYER2_WON:
-                secundaryWinPhrase = this.model.players[1].getUsername();
+                secundaryWinPhrase = player2Name;
                 break;
             default:
                 console.log("Error -> displayWinner() <- no such winning state available");
@@ -372,6 +372,11 @@ class GameViewer{
 
         primPhrase.innerHTML = primaryWinPhrase;
         secunPhrase.innerHTML = secundaryWinPhrase;
+    }
+
+    removeWinner(){
+        const winnerBanner = document.getElementById("d-game-area-winner-banner");
+        winnerBanner.style.display = "none";
     }
 
     //Listeners
@@ -424,6 +429,8 @@ class GamePresenter{
     }
 
     handleConfigs(){
+        this.viewer.removeWinner();
+
         //get current quantities
         const quantities = document.getElementsByClassName("input-settings-info--quantities");
         const nCavs = quantities[0].value;
@@ -719,38 +726,43 @@ class GamePresenter{
         }
 
         //show winner
-        this.winner();
+        this.winner(false);
     }
 
-    winner(){
+    winner(quitted){
         let won;
 
-        if(this.model.storages[0] == this.model.storages[1]){
-            //tie
-            won = winningState.TIE;
-        }
-        else if(this.model.storages[0] > this.model.storages[1]){
-            //player 1 won
-            won = winningState.PLAYER1_WON;
+        if(!quitted){
+            console.log("HERE");
+            if(this.model.storages[0] == this.model.storages[1]){
+                //tie
+                won = winningState.TIE;
+            }
+            else if(this.model.storages[0] > this.model.storages[1]){
+                //player 1 won
+                won = winningState.PLAYER1_WON;
+            }
+            else{
+                //player 2 won
+                won = winningState.PLAYER2_WON;
+            }
         }
         else{
-            //player 2 won
             won = winningState.PLAYER2_WON;
         }
 
         const that = this;  //used for timeout function
 
-        //show winner after some timeout
-        setTimeout(function () {
-            that.viewer.deleteCavities();
-            that.viewer.displayWinner(won);
-        }, 2000);
+        //show winner
+        //that.viewer.deleteCavities();
+        this.viewer.displayWinner(won, that.model.players[0].getUsername(), that.model.players[1].getUsername());
     }
 
     handleStartCommand(){
         if(this.state == gameState.QUIT || this.state == gameState.CONFIG){
+            this.updateCavitiesAndStorages();
             this.updateSysMessage("You started a game :)");
-
+            this.viewer.removeWinner();
             this.generateInitPlayer();
         }
         else{
@@ -762,10 +774,10 @@ class GamePresenter{
         if(this.state == gameState.TURN_PLAYER1 || this.state == gameState.TURN_PLAYER2){
             this.state = gameState.QUIT;
             //TODO: save results
-            this.resetConfigs();  //TODO: change this to current configs, or maybe not needed after winner display
             this.updateScore();
             this.updateSysMessage("You quitted this game :(");
-            //display winner TODO:
+            this.winner(true);
+            this.model.resetConfigs();  //TODO: change this to current configs, only in model to not appear in screen while winner banner
         }
         else{
             this.updateSysMessage("You are not playing a game yet!");
