@@ -10,8 +10,12 @@ const countryRes = ["../res/flags/guest.png", "../res/flags/online.png", "../res
 
 //Default values for game configuration
 const configDefaultValues = {
-    N_SEEDS: 5,
-    N_CAVITIES: 6,
+    N_SEEDS: 5,     //seeds per cavity
+    N_CAVITIES: 6,  //cavities per side
+    MAX_SEEDS: 10,
+    MIN_SEEDS: 1,
+    MAX_CAVITIES: 8,
+    MIN_CAVITIES: 2,
  };
 
  //Game states
@@ -159,13 +163,12 @@ class GameModel{
         this.players = [new Player(), new Player("Local")];  //fixed to 2
         this.storages = [];  //fixed to 2 nº storages [nº storages][nº Seeds] stores seeds objects
         /*
-        player1 -> [1][2][3][4][5]
-        player2 -> [6][7][8][9][10]
+        player1 -> [1 (5)]  [2 (4)]  [3 (3)]  [4 (2)]  [5 (1)]       [real index (virtual index)]
+        player2 -> [6 (1)]  [7 (2)]  [8 (3)]  [9 (4)]  [10 (5)]
         */
         this.cavities = [];  //array of arrays [nº Cavities * 2][nº Seeds] stores seeds objects
         this.turnMessage = "Default turn Message";
         this.sysMessage = "Default system Message";
-        this.score = []; //fixed to 2
     }
 
     //Getters
@@ -189,10 +192,6 @@ class GameModel{
         return this.sysMessage;
     }
 
-    getScore(){
-        return this.score;
-    }
-
     //GameModel Main Methods
     deletePlayers(){
         this.players = [];
@@ -211,11 +210,6 @@ class GameModel{
     emptyStorages(){
         this.storages[0] = [];
         this.storages[1] = [];
-    }
-
-    zeroScore(){
-        this.score[0] = 0;
-        this.score[1] = 0;
     }
 
     config(nCavities, nSeeds){
@@ -322,8 +316,6 @@ class GameViewer{
         }
     }
 
-    deleteSeed(){}
-
     //Update DOM Component
 
     emptyStorages(){
@@ -346,6 +338,14 @@ class GameViewer{
         this.sysMessage.innerHTML = text;
     }
 
+    updateScore(score1, score2){
+        let scoreElem1 = document.getElementById("p-game-area-header-score--1");
+        scoreElem1.innerHTML = score1;
+
+        let scoreElem2 = document.getElementById("p-game-area-header-score--2");
+        scoreElem2.innerHTML = score2;
+    }
+
     //Listeners
     listenConfigs(){
         const configsButton = document.getElementById("button-settings-info--config");
@@ -365,7 +365,9 @@ class GameViewer{
         quitCommand.addEventListener("click", this.presenter.handleQuitCommand.bind(this.presenter));
     }
 
-    listenCavities(){}
+    listenCavity(cavityElement, index){
+        cavityElement.addEventListener("click", this.presenter.handleCavities.bind(this.presenter, index));
+    }
 
     listenAll(){
         this.listenConfigs();
@@ -399,6 +401,16 @@ class GamePresenter{
         const nCavs = quantities[0].value;
         const nSeeds = quantities[1].value;
 
+        if(nCavs > configDefaultValues.MAX_CAVITIES || nCavs < configDefaultValues.MIN_CAVITIES){
+            console.log("Warning: -> handleConfigs() <- Tried to input value of cavities not accepted in configurations");
+            return;
+        }
+
+        if(nSeeds > configDefaultValues.MAX_SEEDS || nSeeds < configDefaultValues.MIN_SEEDS){
+            console.log("Warning: -> handleConfigs() <- Tried to input value of seeds not accepted in configurations");
+            return;
+        }
+
         this.config(nCavs, nSeeds);
     }
 
@@ -416,7 +428,7 @@ class GamePresenter{
             this.model.config(nCavs, nSeeds);
 
             //create cavities and seeds in Viewer
-            this.createCavitiesAndSeeds(nCavs, nSeeds);
+            this.createCavitiesAndSeeds(nCavs);
         }
         else{
             this.updateSysMessage("You can't configure the game after it started!");
@@ -428,27 +440,34 @@ class GamePresenter{
         this.config(configDefaultValues.N_CAVITIES, configDefaultValues.N_SEEDS);
     }
 
-    createCavitiesAndSeeds(nCavs, nSeeds){  //also creates seeds quantities in cavities and storages
+    createCavitiesAndSeeds(nCavs){  //also creates seeds quantities in cavities and storages
         for(let i = 0; i < nCavs; i++){
             this.viewer.createCavity();
         }
 
-        let cavs = document.getElementsByClassName("d-gameplay-cavity");
+        const cavityElements = document.getElementsByClassName("d-gameplay-cavity");
 
         for(let j = 0; j < nCavs * 2; j++){
-            for(let k = 0; k < nSeeds; k++){
-                this.viewer.createSeed(this.model.cavities[j][k].getId(), cavs[j], this.model.cavities[j][k].position.getY(), this.model.cavities[j][k].position.getX(), this.model.cavities[j][k].seedRes);
+            for(let k = 0; k < this.model.cavities[j].length; k++){
+                this.viewer.createSeed(this.model.cavities[j][k].getId(), cavityElements[j], this.model.cavities[j][k].position.getY(), this.model.cavities[j][k].position.getX(), this.model.cavities[j][k].seedRes);
             }
+            this.viewer.listenCavity(cavityElements[j], j);
         }
 
         for(let i = 0; i < nCavs * 2; i++){
-            this.viewer.createHoverQuantity(cavs[i]);
+            this.viewer.createHoverQuantity(cavityElements[i]);
         }
 
-        const storages = document.getElementsByClassName("d-gameplay-storage");
+        const storageElements = document.getElementsByClassName("d-gameplay-storage");
+
+        for(let j = 0; j < 2; j++){
+            for(let k = 0; k < this.model.storages[j].length; k++){
+                this.viewer.createSeed(this.model.storages[j][k].getId(), storageElements[j], this.model.storages[j][k].position.getY(), this.model.storages[j][k].position.getX(), this.model.storages[j][k].seedRes);
+            }
+        }
 
         for(let i = 0; i < 2; i++){
-            this.viewer.createHoverQuantity(storages[i]);
+            this.viewer.createHoverQuantity(storageElements[i]);
         }
     }
 
@@ -460,6 +479,161 @@ class GamePresenter{
     updateTurnMessage(text){
         this.model.turnMessage = text;
         this.viewer.updateTurnMessage(this.model.turnMessage);
+    }
+
+    updateCavitiesAndStorages(){
+        this.viewer.emptyStorages();
+        this.viewer.deleteCavities();
+        this.createCavitiesAndSeeds(this.model.cavities.length / 2);
+    }
+
+    handleCavities(cavityRealIndex){
+        const nCavs = this.model.cavities.length / 2;
+
+        const that = this;  //used for timeout function
+
+        switch(this.state){
+            case gameState.CONFIG:
+            case gameState.QUIT:
+                this.viewer.updateSysMessage("You haven't started a game yet!");
+                break;
+            case gameState.TURN_PLAYER1:
+                if(cavityRealIndex >= nCavs){
+                    this.viewer.updateTurnMessage("That cavitity belongs to " + this.model.players[1].getUsername());
+                    setTimeout(function () {
+                        that.updateTurnMessage("It's " + that.model.players[0].getUsername() + " turn");
+                    }, 2000);
+
+                    return;
+                }
+                if(this.model.cavities[cavityRealIndex].length == 0){
+                    this.viewer.updateTurnMessage("That cavitity is empty, choose another one");
+
+                    setTimeout(function () {
+                        that.updateTurnMessage("It's " + that.model.players[0].getUsername() + " turn");
+                    }, 2000);
+
+                    return;
+                }
+                if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
+                break;
+            case gameState.TURN_PLAYER2:
+                if(cavityRealIndex < nCavs){
+                    this.viewer.updateTurnMessage("That cavitites belongs to " + this.model.players[0].getUsername());
+                    setTimeout(function () {
+                        that.updateTurnMessage("It's " + that.model.players[1].getUsername() + " turn");
+                    }, 2000);
+
+                    return;
+                }
+                if(this.model.cavities[cavityRealIndex].length == 0){
+                    this.viewer.updateTurnMessage("That cavitity is empty, choose another one");
+
+                    setTimeout(function () {
+                        that.updateTurnMessage("It's " + that.model.players[1].getUsername() + " turn");
+                    }, 2000);
+
+                    return;
+                }
+                if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
+                break;
+            default:
+                console.log("Error -> handleCavities() <- state not recognized");
+        }
+    }
+
+    switchTurns(){
+        if(this.state == gameState.TURN_PLAYER1){
+            this.updateTurnMessage("It's " + this.model.players[1].getUsername() + " turn");
+            this.state = gameState.TURN_PLAYER2;
+        }
+        else{
+            this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn");
+            this.state = gameState.TURN_PLAYER1;
+        }
+    }
+
+    makePlay(state, cavityRealIndex){
+        if(this.model.cavities[cavityRealIndex].length == 0){
+            console.log("Error -> makePlay() <- no seeds in this cavity");
+            return;
+        }
+
+        const nCavs = this.model.cavities.length / 2;
+
+        let dest = cavityRealIndex;
+        let prevDest = dest;  //only used to check if final cavity is empty
+
+        let i = 0; //to skip the first iteration
+
+        while(this.model.cavities[cavityRealIndex].length > 0){
+            prevDest = dest;
+            if(dest == (nCavs * 2)){
+                if(i > 0 && state == gameState.TURN_PLAYER2) this.moveSeedToStorage(cavityRealIndex, 1);
+                dest = nCavs - 1;
+            }
+            else if(dest >= nCavs){
+                if(i > 0) this.moveSeedToCavity(cavityRealIndex, dest);
+                dest++;
+            }
+            else if(dest < 0){
+                if(i > 0 && state == gameState.TURN_PLAYER1) this.moveSeedToStorage(cavityRealIndex, 0);
+                dest = nCavs;
+            }
+            else{  // < nCavs
+                if(i > 0) this.moveSeedToCavity(cavityRealIndex, dest);
+                dest--;
+            }
+            i++;
+        }
+
+        //when last seed ends in player empty cavity
+        if(prevDest != -1 && prevDest != 12){
+            if(state == gameState.TURN_PLAYER1 && prevDest < nCavs){
+                if(this.model.cavities[prevDest].length == 1){
+                    //removes seeds from opposite side and from prevDest and add to storage 1
+                    const opposite = this.getOppositeIndex(prevDest, nCavs);
+
+                    while(this.model.cavities[opposite].length > 0){
+                        this.moveSeedToStorage(opposite, 0);
+                    }
+                    this.moveSeedToStorage(prevDest, 0);
+                }
+            }
+            else if(state == gameState.TURN_PLAYER2 && prevDest >= nCavs){
+                if(this.model.cavities[prevDest].length == 1){
+                    //removes seeds from opposite side and from prevDest and add to storage 2
+                    const opposite = this.getOppositeIndex(prevDest, nCavs);
+
+                    while(this.model.cavities[opposite].length > 0){
+                        this.moveSeedToStorage(opposite, 1);
+                    }
+                    this.moveSeedToStorage(prevDest, 1);
+                }
+            }
+        }
+
+        this.updateCavitiesAndStorages();
+        this.updateScore();
+
+        //set play again flag
+        if((state == gameState.TURN_PLAYER1 && dest == nCavs) ||
+           (state == gameState.TURN_PLAYER2 && dest == (nCavs - 1))){  //if true play again
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    getOppositeIndex(index, nCavs){
+        if(index >= nCavs) return index - nCavs;
+        else return index + nCavs;
+    }
+
+    updateScore(){
+        const score1 = this.model.storages[0].length;
+        const score2 = this.model.storages[1].length;
+        this.viewer.updateScore(score1, score2);
     }
 
     generateInitPlayer(){
@@ -495,7 +669,9 @@ class GamePresenter{
     handleQuitCommand(){
         if(this.state == gameState.TURN_PLAYER1 || this.state == gameState.TURN_PLAYER2){
             this.state = gameState.QUIT;
-
+            //TODO: save results
+            this.resetConfigs();
+            this.updateScore();
             this.updateSysMessage("You quitted this game :(");
             //display winner TODO:
         }
@@ -504,12 +680,28 @@ class GamePresenter{
         }
     }
 
-    handleCavities(){
-        switch(this.state){
-            case gameState.CONFIG:
-                //display that user is still configuring
-                break;
+    //moves the first seed in cavity
+    moveSeedToCavity(origCavityRealIndex, destCavityRealIndex){
+        const seed = this.model.cavities[origCavityRealIndex].shift();  //removes and retrieves first array element
+
+        if(seed == undefined){
+            console.log("Error -> moveSeedToCavity() <- no seeds in array.");
+            return;
         }
+
+        this.model.cavities[destCavityRealIndex].push(seed);
+    }
+
+    //moves the first seed in storage
+    moveSeedToStorage(origCavityRealIndex, destStorage){
+        const seed = this.model.cavities[origCavityRealIndex].shift();  //removes and retrieves first array element
+
+        if(seed == undefined){
+            console.log("Error -> moveSeedToStorage() <- no seeds in array.");
+            return;
+        }
+
+        this.model.storages[destStorage].push(seed);
     }
 }
 
@@ -520,17 +712,23 @@ class GamePresenter{
 //temporary
 document.getElementById("d-game-area-background").style.display = "grid";
 
-const gameModel = new GameModel();
-const gameViewer = new GameViewer();
-const gamePresenter = new GamePresenter(gameModel, gameViewer);
-gameViewer.registerWith(gamePresenter);
-gameViewer.listenAll();
-gamePresenter.resetConfigs();
+class GameMain{
+    constructor(){
+        this.gameModel = new GameModel();
+        this.gameViewer = new GameViewer();
+        this.gamePresenter = new GamePresenter(this.gameModel, this.gameViewer);
+        this.gameViewer.registerWith(this.gamePresenter);
+    }
 
+    run(){
+        this.gameViewer.listenAll();
+        this.gamePresenter.resetConfigs();
+    }
+}
 
-/**
- * Game Loop
- */
+const game = new GameMain();
+
+game.run();
 
 /**
  * Authentication
@@ -539,9 +737,4 @@ gamePresenter.resetConfigs();
 /**
  * Chat
  */
-
-/**
- * Score
- */
-
 
