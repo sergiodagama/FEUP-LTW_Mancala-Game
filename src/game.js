@@ -562,7 +562,7 @@ class GamePresenter{
         const nCavs = this.model.cavities.length / 2;
 
         let dest = cavityRealIndex;
-        let prevDest;  //only used to check if final cavity is empty
+        let prevDest = dest;  //only used to check if final cavity is empty
 
         let i = 0; //to skip the first iteration
 
@@ -587,22 +587,34 @@ class GamePresenter{
             i++;
         }
 
+        //when last seed ends in player empty cavity
+        if(prevDest != -1 && prevDest != 12){
+            if(state == gameState.TURN_PLAYER1 && prevDest < nCavs){
+                if(this.model.cavities[prevDest].length == 1){
+                    //removes seeds from opposite side and from prevDest and add to storage 1
+                    const opposite = this.getOppositeIndex(prevDest, nCavs);
+
+                    while(this.model.cavities[opposite].length > 0){
+                        this.moveSeedToStorage(opposite, 0);
+                    }
+                    this.moveSeedToStorage(prevDest, 0);
+                }
+            }
+            else if(state == gameState.TURN_PLAYER2 && prevDest >= nCavs){
+                if(this.model.cavities[prevDest].length == 1){
+                    //removes seeds from opposite side and from prevDest and add to storage 2
+                    const opposite = this.getOppositeIndex(prevDest, nCavs);
+
+                    while(this.model.cavities[opposite].length > 0){
+                        this.moveSeedToStorage(opposite, 1);
+                    }
+                    this.moveSeedToStorage(prevDest, 1);
+                }
+            }
+        }
+
         this.updateCavitiesAndStorages();
         this.updateScore();
-
-        //when last seed ends in player empty cavity
-        if(state == gameState.TURN_PLAYER1 && prevDest < nCavs){
-            if(this.model.cavities[prevDest].length == 0){
-                //TODO: remove seeds from opposite side and from prevDest and add to storage 1
-            }
-            return;
-        }
-        else if(state == gameState.TURN_PLAYER2 && prevDest >= nCavs){
-            if(this.model.cavities[prevDest].length == 0){
-                //TODO: remove seeds from opposite side and from prevDest and add to storage 2
-            }
-            return;
-        }
 
         //set play again flag
         if((state == gameState.TURN_PLAYER1 && dest == nCavs) ||
@@ -611,6 +623,11 @@ class GamePresenter{
         }else{
             return false;
         }
+    }
+
+    getOppositeIndex(index, nCavs){
+        if(index >= nCavs) return index - nCavs;
+        else return index + nCavs;
     }
 
     updateScore(){
