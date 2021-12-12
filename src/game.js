@@ -809,12 +809,8 @@ class GamePresenter{
     }
 }
 
-/**
- * Game Configuration
- */
-
 //temporary
-document.getElementById("d-game-area-background").style.display = "grid";
+//document.getElementById("d-game-area-background").style.display = "grid";
 
 class GameMain{
     constructor(){

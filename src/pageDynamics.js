@@ -112,14 +112,14 @@ function computerConfigs(){
 }
 
 // Game Loading Screen /*UNCOMMENT*/
-document.getElementById("d-game-area-background").style.display = "grid";  /* COMMENT HERE */
-/*
+//document.getElementById("d-game-area-background").style.display = "grid";  /* COMMENT HERE */
+
 setTimeout(function(){
   document.getElementById("d-game-area-load-banner").style.display = "none";
   document.getElementById("d-game-area-gameplay").style.display = "grid";
   document.getElementById("d-game-area-background").style.display = "grid";
 },2900);
-*/
+
 
 // Cavities and Seeds Settings
 var configsButton = document.getElementById("button-settings-info--config");

@@ -120,7 +120,20 @@ class Page{
     toggleGoBackPass(){
         this.toggleVisibility(false, "form-authentication-login", "form-authentication-forgot", "block","block");
     }
+
+    loadingScreen(){
+        document.getElementById("d-game-area-load-banner").style.display = "grid";
+        document.getElementById("d-game-area-background").style.display = "none";
+        document.getElementById("d-game-area-gameplay").style.display = "none";
+
+        setTimeout(function(){
+            document.getElementById("d-game-area-load-banner").style.display = "none";
+            document.getElementById("d-game-area-background").style.display = "grid";
+            document.getElementById("d-game-area-gameplay").style.display = "grid";
+            },2000);
+    }
 }
 
 const page = new Page();
 page.listenAll();
+//page.loadingScreen();

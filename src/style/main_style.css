@@ -428,7 +428,7 @@ header{
 
 #d-game-area-background{
     grid-area: gamegameplay;
-    display: none; /*changed to grid in js*/
+    display: grid;
     grid-template-areas:
     'storage1 cavity1 storage2'
     'storage1 cavity2 storage2';
@@ -608,7 +608,7 @@ header{
 }
 
 #d-game-area-load-banner{
-    display: none; /* flex UNCOMMENT*/
+    display: none;
     justify-content: center;
     align-items: center;
     margin-top: 1em;
@@ -629,7 +629,6 @@ header{
 #d-game-area-winner-banner{
     display: none;
     grid-area: gamegameplay;
-    /*display: none; */ /* UNCOMMENT HERE */
     z-index: 2;
     grid-template-areas:
     'winSecundary'
