@@ -865,33 +865,79 @@ class Authentication{
         this.formForgot = document.getElementById("form-authentication-forgot");
     }
 
-    //listeners
+    //listeners e handlers
     listenFormLogin(){
-        //this.formLogin.addEventListener("submit", this.handleFormLogin.bind(event, this));
         this.formLogin.addEventListener("submit", function (e){
             e.preventDefault();
 
             this.formLogin = document.getElementById("form-authentication-login");
 
-            fetch("http://twserver.alunos.dcc.fc.up.pt:8008/register",
-            {
-                   method: 'post',
-                   body: JSON.stringify({
-                    'nick': this.formLogin.elements[0].value,
-                    'password': this.formLogin.elements[1].value
-
-                   })
-            }).then(function (response){
-                return response.text();
-            }).then(function (text){
-                console.log(text);
-            }).catch(function (error){
-                console.error(error);
+            const requestData = JSON.stringify({
+                'nick': this.formLogin.elements["nick"].value,
+                'password': this.formLogin.elements["password"].value
             })
+
+            console.log("Before: ", requestData);
+
+            fetch('http://twserver.alunos.dcc.fc.up.pt:8008/register',
+                {
+                    method: 'post',
+                    body: requestData
+                }
+            )
+            .then(
+                function(response) {
+                    if (response.status !== 200) {
+                        console.log('Looks like there was a problem. Status Code: ', response.status);
+                    }
+                    // See server response data
+                    response.json().then(function(data) {
+                        console.log(data);
+                        //TODO: show user tab and hide login section
+                    });
+                }
+            )  // in case of fetch error
+            .catch(function(error) {
+                console.log('Fetch Error in Login: ', error);
+            });
         });
     }
 
     listenFormRegister(){
+        this.formRegister.addEventListener("submit", function (e){
+            e.preventDefault();
+
+            this.formRegister = document.getElementById("form-authentication-signup");
+
+            const requestData = JSON.stringify({
+                'nick': this.formRegister.elements["nick"].value,
+                'password': this.formRegister.elements["password"].value
+            })
+
+            console.log("Before: ", requestData);
+
+            fetch('http://twserver.alunos.dcc.fc.up.pt:8008/register',
+                {
+                    method: 'post',
+                    body: requestData
+                }
+            )
+            .then(
+                function(response) {
+                    if (response.status !== 200) {
+                        console.log('Looks like there was a problem. Status Code: ', response.status);
+                    }
+                    // See server response data
+                    response.json().then(function(data) {
+                        console.log(data);
+                        //TODO: show user tab and hide login section
+                    });
+                }
+            )  // in case of fetch error
+            .catch(function(error) {
+                console.log('Fetch Error in Register: ', error);
+            });
+        });
     }
 
     listenFormForgot(){
@@ -899,32 +945,7 @@ class Authentication{
 
     listenAll(){
         this.listenFormLogin();
-    }
-
-    //handlers
-    handleFormLogin(event){
-        event.preventDefault();
-
-        let formData = {  // create FormData object instead ?
-            'nick': this.formLogin.elements["nick"],
-            'password': this.formLogin.elements["password"]
-        };
-
-        const jsonLogin = JSON.stringify(formData);
-
-
-
-        fetch("http://twserver.alunos.dcc.fc.up.pt:8008/register",
-        {
-               method: 'post',
-               body: jsonLogin
-        }).then(function (response){
-            return response.text();
-        }).then(function (text){
-            console.log(text);
-        }).catch(function (error){
-            console.error(error);
-        })
+        this.listenFormRegister();
     }
 }
 
