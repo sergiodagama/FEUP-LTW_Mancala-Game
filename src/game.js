@@ -250,7 +250,6 @@ class GameViewer{
 
     registerWith(presenter){
         this.presenter = presenter;
-        console.log(this.getPresenter());
     }
 
     getPresenter(){
@@ -858,6 +857,80 @@ game.run();
 /**
  * Authentication
  */
+
+class Authentication{
+    constructor(){
+        this.formLogin = document.getElementById("form-authentication-login");
+        this.formRegister = document.getElementById("form-authentication-signup");
+        this.formForgot = document.getElementById("form-authentication-forgot");
+    }
+
+    //listeners
+    listenFormLogin(){
+        //this.formLogin.addEventListener("submit", this.handleFormLogin.bind(event, this));
+        this.formLogin.addEventListener("submit", function (e){
+            e.preventDefault();
+
+            this.formLogin = document.getElementById("form-authentication-login");
+
+            fetch("http://twserver.alunos.dcc.fc.up.pt:8008/register",
+            {
+                   method: 'post',
+                   body: JSON.stringify({
+                    'nick': this.formLogin.elements[0].value,
+                    'password': this.formLogin.elements[1].value
+
+                   })
+            }).then(function (response){
+                return response.text();
+            }).then(function (text){
+                console.log(text);
+            }).catch(function (error){
+                console.error(error);
+            })
+        });
+    }
+
+    listenFormRegister(){
+    }
+
+    listenFormForgot(){
+    }
+
+    listenAll(){
+        this.listenFormLogin();
+    }
+
+    //handlers
+    handleFormLogin(event){
+        event.preventDefault();
+
+        let formData = {  // create FormData object instead ?
+            'nick': this.formLogin.elements["nick"],
+            'password': this.formLogin.elements["password"]
+        };
+
+        const jsonLogin = JSON.stringify(formData);
+
+
+
+        fetch("http://twserver.alunos.dcc.fc.up.pt:8008/register",
+        {
+               method: 'post',
+               body: jsonLogin
+        }).then(function (response){
+            return response.text();
+        }).then(function (text){
+            console.log(text);
+        }).catch(function (error){
+            console.error(error);
+        })
+    }
+}
+
+const authentication = new Authentication();
+authentication.listenAll();
+
 
 /**
  * Chat
