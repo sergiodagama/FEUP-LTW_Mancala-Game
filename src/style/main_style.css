@@ -398,8 +398,8 @@ header{
 }
 
 .img-game-area-header-country-icon{
-    width: 2em;
-    height: 2em;
+    width: 1.5em;
+    height: 1.5em;
     padding-top: 0.2em;
 }
 
@@ -419,11 +419,6 @@ header{
 
 #img-game-area-header-p2-country{
     justify-self: end;
-}
-
-.game-user-icon{
-    width: 1.3em;
-    height: 1.3em;
 }
 
 #d-game-area-background{
@@ -660,6 +655,21 @@ header{
     font-family: 'Encode Sans', sans-serif;
     font-size: 7em;
     font-weight: 600;
+}
+
+#p-game-area-big-messages{
+    display: none;
+    grid-area: gamegameplay;
+    z-index: 2;
+    align-self: center;
+    text-align: center;
+    margin-top: 0em;
+    padding-top: 0em;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Encode Sans', sans-serif;
+    font-size: 4em;
+    font-weight: 400;
+    animation: fadeOut ease 2.5s;
 }
 
 /* || Configurations */

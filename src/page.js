@@ -1,14 +1,28 @@
 class Page{
     constructor(){
+        //Navbar icons
         this.chat = document.getElementById("img-header-navbar-chat-icon");
         this.rules = document.getElementById("img-header-navbar-rules-icon");
         this.score = document.getElementById("img-header-navbar-score-icon");
         this.isSectionOpen = [false, false, false];  //[chat | rules | score]
 
+        //Authentication
         this.signUp = document.getElementById("h3-login-titles-signup--in"); //in section sign in change to signUn
         this.signIn = document.getElementById("h3-login-titles-signin--up"); //in section sign up change to signIn
         this.recoverPass =document.getElementById("a-login-forgotpass");
         this.goBackPass = document.getElementById("a-forgot-goback");
+
+        //Update Game names based on Mode in configurations
+        this.modeLocal = document.getElementById("input-settings-info--local");
+        this.modeOnline = document.getElementById("input-settings-info--online");
+        this.modeComputer = document.getElementById("input-settings-info--computer");
+        this.p2Icon = document.getElementById("img-game-area-header-p2-country");
+        this.p2Name = document.getElementById("p-game-area-header-p2-name");
+
+        //Change Modes in configurations
+        this.local = document.getElementById("d-settings-mode--local");
+        this.online = document.getElementById("d-settings-mode--online");
+        this.computer = document.getElementById("d-settings-mode--computer");
     }
 
     /**
@@ -45,6 +59,12 @@ class Page{
         this.goBackPass.addEventListener("click", this.toggleGoBackPass.bind(this));
     }
 
+    listenChangingModes(){
+        this.modeLocal.addEventListener("click", this.displayModeLocal.bind(this));
+        this.modeOnline.addEventListener("click", this.displayModeOnline.bind(this));
+        this.modeComputer.addEventListener("click", this.displayModeComputer.bind(this));
+    }
+
     //Calls all listeners
     listenAll(){
         this.listenChat();
@@ -54,6 +74,7 @@ class Page{
         this.listenSigIn();
         this.listenRecoverPass();
         this.listenGoBackPass();
+        this.listenChangingModes();
     }
 
     /**
@@ -119,6 +140,33 @@ class Page{
 
     toggleGoBackPass(){
         this.toggleVisibility(false, "form-authentication-login", "form-authentication-forgot", "block","block");
+    }
+
+    displayModeLocal(){
+        this.p2Icon.src = "../res/default_players_icons/local.png";
+        this.p2Name.innerHTML = "Local";
+
+        this.local.style.display = "block";
+        this.online.style.display = "none";
+        this.computer.style.display = "none";
+    }
+
+    displayModeOnline(){
+        this.p2Icon.src = "../res/default_players_icons/online.png";
+        this.p2Name.innerHTML = "Online";
+
+        this.local.style.display = "none";
+        this.online.style.display = "block";
+        this.computer.style.display = "none";
+    }
+
+    displayModeComputer(){
+        this.p2Icon.src = "../res/default_players_icons/computer.png";
+        this.p2Name.innerHTML = "Computer";
+
+        this.local.style.display = "none";
+        this.online.style.display = "none";
+        this.computer.style.display = "block";
     }
 
     loadingScreen(){

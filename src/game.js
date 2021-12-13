@@ -374,6 +374,27 @@ class GameViewer{
         secunPhrase.innerHTML = secundaryWinPhrase;
     }
 
+    displayStartBigMessage(){
+        const bigMessage = document.getElementById("p-game-area-big-messages");
+
+        bigMessage.style.display = "block";
+        setTimeout(function () {
+            bigMessage.style.display = "none";
+        }, 2500);
+    }
+
+    disableModesCheckboxes(){
+        document.getElementById("input-settings-info--local").disabled = true;
+        document.getElementById("input-settings-info--online").disabled = true;
+        document.getElementById("input-settings-info--computer").disabled = true;
+    }
+
+    enableModesCheckboxes(){
+        document.getElementById("input-settings-info--local").disabled = false;
+        document.getElementById("input-settings-info--online").disabled = false;
+        document.getElementById("input-settings-info--computer").disabled = false;
+    }
+
     removeWinner(){
         const winnerBanner = document.getElementById("d-game-area-winner-banner");
         winnerBanner.style.display = "none";
@@ -755,15 +776,18 @@ class GamePresenter{
 
         //show winner
         //that.viewer.deleteCavities();
+        this.updateScore();
         this.viewer.displayWinner(won, that.model.players[0].getUsername(), that.model.players[1].getUsername());
     }
 
     handleStartCommand(){
         if(this.state == gameState.QUIT || this.state == gameState.CONFIG){
+            this.viewer.displayStartBigMessage();
             this.updateCavitiesAndStorages();
             this.updateSysMessage("You started a game :)");
             this.viewer.removeWinner();
             this.generateInitPlayer();
+            this.viewer.disableModesCheckboxes();
         }
         else{
             this.updateSysMessage("You are already playing a game!");
@@ -778,6 +802,7 @@ class GamePresenter{
             this.updateSysMessage("You quitted this game :(");
             this.winner(true);
             this.model.resetConfigs();  //TODO: change this to current configs, only in model to not appear in screen while winner banner
+            this.viewer.enableModesCheckboxes();
         }
         else{
             this.updateSysMessage("You are not playing a game yet!");
