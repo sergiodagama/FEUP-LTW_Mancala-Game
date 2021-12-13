@@ -26,6 +26,13 @@ const gameState = {
     QUIT: Symbol("QUIT"),  //when player wants to give up, show winner
  };
 
+//Winning states
+const winningState = {
+    TIE: Symbol("TIE"),
+    PLAYER1_WON: Symbol("PLAYER1_WON"),
+    PLAYER2_WON: Symbol("PLAYER2_WON"),
+ };
+
 /**
  * Models
  */
@@ -297,11 +304,6 @@ class GameViewer{
         }
     }
 
-    updateHoverQuantities(){
-
-    }
-
-
     seedId(id){
         return 'seed-' + id;
     }
@@ -315,8 +317,6 @@ class GameViewer{
           gameplayCavities[0].remove();
         }
     }
-
-    //Update DOM Component
 
     emptyStorages(){
         const gameplayCavities = document.getElementsByClassName("d-gameplay-storage");
@@ -344,6 +344,60 @@ class GameViewer{
 
         let scoreElem2 = document.getElementById("p-game-area-header-score--2");
         scoreElem2.innerHTML = score2;
+    }
+
+    displayWinner(won, player1Name, player2Name){
+        const winnerBanner = document.getElementById("d-game-area-winner-banner");
+        const primPhrase = document.getElementById("p-winner-banner-primary");
+        const secunPhrase = document.getElementById("p-winner-banner-secundary");
+
+        winnerBanner.style.display = "grid";
+
+        let primaryWinPhrase = "WINS", secundaryWinPhrase;
+
+        switch(won){
+            case winningState.TIE:
+                primaryWinPhrase = "TIE";
+                secundaryWinPhrase = "The game ended in a";
+                break;
+            case winningState.PLAYER1_WON:
+                secundaryWinPhrase = player1Name;
+                break;
+            case winningState.PLAYER2_WON:
+                secundaryWinPhrase = player2Name;
+                break;
+            default:
+                console.log("Error -> displayWinner() <- no such winning state available");
+        }
+
+        primPhrase.innerHTML = primaryWinPhrase;
+        secunPhrase.innerHTML = secundaryWinPhrase;
+    }
+
+    displayStartBigMessage(){
+        const bigMessage = document.getElementById("p-game-area-big-messages");
+
+        bigMessage.style.display = "block";
+        setTimeout(function () {
+            bigMessage.style.display = "none";
+        }, 2500);
+    }
+
+    disableModesCheckboxes(){
+        document.getElementById("input-settings-info--local").disabled = true;
+        document.getElementById("input-settings-info--online").disabled = true;
+        document.getElementById("input-settings-info--computer").disabled = true;
+    }
+
+    enableModesCheckboxes(){
+        document.getElementById("input-settings-info--local").disabled = false;
+        document.getElementById("input-settings-info--online").disabled = false;
+        document.getElementById("input-settings-info--computer").disabled = false;
+    }
+
+    removeWinner(){
+        const winnerBanner = document.getElementById("d-game-area-winner-banner");
+        winnerBanner.style.display = "none";
     }
 
     //Listeners
@@ -396,6 +450,8 @@ class GamePresenter{
     }
 
     handleConfigs(){
+        this.viewer.removeWinner();
+
         //get current quantities
         const quantities = document.getElementsByClassName("input-settings-info--quantities");
         const nCavs = quantities[0].value;
@@ -588,7 +644,7 @@ class GamePresenter{
         }
 
         //when last seed ends in player empty cavity
-        if(prevDest != -1 && prevDest != 12){
+        if(prevDest != -1 && prevDest != (nCavs * 2)){
             if(state == gameState.TURN_PLAYER1 && prevDest < nCavs){
                 if(this.model.cavities[prevDest].length == 1){
                     //removes seeds from opposite side and from prevDest and add to storage 1
@@ -613,8 +669,13 @@ class GamePresenter{
             }
         }
 
+        //update cavities, storages and score
         this.updateCavitiesAndStorages();
         this.updateScore();
+
+        //checkers for end of game
+        if(this.checkNoPlays(0, nCavs)) this.gameEnd(0);
+        else if(this.checkNoPlays(1, nCavs)) this.gameEnd(1);
 
         //set play again flag
         if((state == gameState.TURN_PLAYER1 && dest == nCavs) ||
@@ -651,15 +712,82 @@ class GamePresenter{
                 break;
             default:
                 console.log("Error -> generateInitPlayer() <- invalid randPlayer number!");
-
         }
+    }
+
+    checkNoPlays(playerNumb, nCavs){  //player 0 or 1
+        let end = true;
+
+        for(let i = playerNumb * nCavs; i < nCavs + (nCavs * playerNumb); i++){
+            if(this.model.cavities[i].length > 0){
+                end = false;
+            }
+        }
+        return end;
+    }
+
+    gameEnd(playerNumb){ //the playerNumb refers to the player with no plays
+        //retrieving all opponent seeds to his own storage
+        if(playerNumb == 0){
+            for(let i = this.model.cavities.length / 2; i < this.model.cavities.length; i++){
+                while(this.model.cavities[i].length > 0){
+                    this.moveSeedToStorage(i, 1);
+                }
+            }
+        }
+        else if(playerNumb == 1){
+            for(let i = 0; i < this.model.cavities.length / 2; i++){
+                while(this.model.cavities[i].length > 0){
+                    this.moveSeedToStorage(i, 0);
+                }
+            }
+        }
+        else{
+            console.log("Error -> gameEnd() <- wrong player number given.");
+        }
+
+        //show winner
+        this.winner(false);
+    }
+
+    winner(quitted){
+        let won;
+
+        if(!quitted){
+            console.log("HERE");
+            if(this.model.storages[0] == this.model.storages[1]){
+                //tie
+                won = winningState.TIE;
+            }
+            else if(this.model.storages[0] > this.model.storages[1]){
+                //player 1 won
+                won = winningState.PLAYER1_WON;
+            }
+            else{
+                //player 2 won
+                won = winningState.PLAYER2_WON;
+            }
+        }
+        else{
+            won = winningState.PLAYER2_WON;
+        }
+
+        const that = this;  //used for timeout function
+
+        //show winner
+        //that.viewer.deleteCavities();
+        this.updateScore();
+        this.viewer.displayWinner(won, that.model.players[0].getUsername(), that.model.players[1].getUsername());
     }
 
     handleStartCommand(){
         if(this.state == gameState.QUIT || this.state == gameState.CONFIG){
+            this.viewer.displayStartBigMessage();
+            this.updateCavitiesAndStorages();
             this.updateSysMessage("You started a game :)");
-
+            this.viewer.removeWinner();
             this.generateInitPlayer();
+            this.viewer.disableModesCheckboxes();
         }
         else{
             this.updateSysMessage("You are already playing a game!");
@@ -670,10 +798,11 @@ class GamePresenter{
         if(this.state == gameState.TURN_PLAYER1 || this.state == gameState.TURN_PLAYER2){
             this.state = gameState.QUIT;
             //TODO: save results
-            this.resetConfigs();
             this.updateScore();
             this.updateSysMessage("You quitted this game :(");
-            //display winner TODO:
+            this.winner(true);
+            this.model.resetConfigs();  //TODO: change this to current configs, only in model to not appear in screen while winner banner
+            this.viewer.enableModesCheckboxes();
         }
         else{
             this.updateSysMessage("You are not playing a game yet!");
@@ -705,12 +834,8 @@ class GamePresenter{
     }
 }
 
-/**
- * Game Configuration
- */
-
 //temporary
-document.getElementById("d-game-area-background").style.display = "grid";
+//document.getElementById("d-game-area-background").style.display = "grid";
 
 class GameMain{
     constructor(){
