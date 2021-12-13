@@ -236,6 +236,14 @@ class GameModel{
     resetConfigs(){
         this.config(configDefaultValues.N_CAVITIES, configDefaultValues.N_SEEDS);
     }
+
+    updatePlayer1(player){
+        this.players[0] = player;
+    }
+
+    updatePlayer2(player){
+        this.players[1] = player;
+    }
 }
 
 /**
@@ -246,6 +254,8 @@ class GameViewer{
         this.presenter = null;
         this.sysMessage = document.getElementById("p-system-messages-message");
         this.turnMessage = document.getElementById("p-game-area-header-messages");
+        this.player1Name = document.getElementById("p-game-area-header-p1-name");
+        this.player2Name = document.getElementById("p-game-area-header-p2-name");
     }
 
     registerWith(presenter){
@@ -335,6 +345,14 @@ class GameViewer{
 
     updateSysMessage(text){
         this.sysMessage.innerHTML = text;
+    }
+
+    updatePlayer1Name(name){
+        this.player1Name.innerHTML = name;
+    }
+
+    updatePlayer2Name(name){
+        this.player2Name.innerHTML = name;
     }
 
     updateScore(score1, score2){
@@ -534,6 +552,14 @@ class GamePresenter{
     updateTurnMessage(text){
         this.model.turnMessage = text;
         this.viewer.updateTurnMessage(this.model.turnMessage);
+    }
+
+    updatePlayer1Name(){
+        this.viewer.updatePlayer1Name(this.model.players[0].getUsername());
+    }
+
+    updatePlayer2Name(){
+        this.viewer.updatePlayer2Name(this.model.players[1].getUsername());
     }
 
     updateCavitiesAndStorages(){
@@ -872,9 +898,12 @@ class Authentication{
 
             this.formLogin = document.getElementById("form-authentication-login");
 
+            const nick = this.formLogin.elements["nick"].value;
+            const password = this.formLogin.elements["password"].value;
+
             const requestData = JSON.stringify({
-                'nick': this.formLogin.elements["nick"].value,
-                'password': this.formLogin.elements["password"].value
+                'nick': nick,
+                'password': password
             })
 
             console.log("Before: ", requestData);
@@ -887,13 +916,18 @@ class Authentication{
             )
             .then(
                 function(response) {
-                    if (response.status !== 200) {
-                        console.log('Looks like there was a problem. Status Code: ', response.status);
-                    }
                     // See server response data
                     response.json().then(function(data) {
+                        if (response.status !== 200) {
+                            console.log('Looks like there was a problem. Status Code: ', response.status);
+                        }
+                        else{
+                            //TODO: show user tab and hide login section
+
+                            game.gameModel.updatePlayer1(new Player(nick));
+                            game.gamePresenter.updatePlayer1Name();
+                        }
                         console.log(data);
-                        //TODO: show user tab and hide login section
                     });
                 }
             )  // in case of fetch error
