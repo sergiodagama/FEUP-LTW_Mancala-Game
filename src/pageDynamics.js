@@ -113,14 +113,14 @@ function computerConfigs(){
 }
 
 // Game Loading Screen /*UNCOMMENT*/
-document.getElementById("d-game-area-background").style.display = "grid";  /* COMMENT HERE */
-/*
+//document.getElementById("d-game-area-background").style.display = "grid";  /* COMMENT HERE */
+
 setTimeout(function(){
-  document.getElementById("d-load-game-area").style.display = "none";
+  document.getElementById("d-game-area-load-banner").style.display = "none";
   document.getElementById("d-game-area-gameplay").style.display = "grid";
   document.getElementById("d-game-area-background").style.display = "grid";
 },2900);
-*/
+
 
 // Cavities and Seeds Settings
 var configsButton = document.getElementById("button-settings-info--config");
@@ -282,7 +282,7 @@ function displayModeComputer(){
 }
 
 
-
+/*
 //FROM THIS POINT THE CODE SHOULD BE IN OTHER FILE RELATED TO MVP PATTERN GAME DEV MILESTONE
 function listenToCavitiesAndSeeds(){
   var cavities = document.getElementsByClassName("d-gameplay-cavity");
@@ -330,13 +330,15 @@ function cavitiesClickHandler(index){
   removeAllSeeds(this);
 
   //var nSeeds = removeAllSeeds(cavities[2]);
-/*
+
   for(i = 1; i < nSeeds + 1; i++){
     addSeedToElement(cavities[index + i]);
   }
-  */
+
 }
 
 function storagesClickHandler(index){
   var storages = document.getElementsByClassName("d-gameplay-storage");
 }
+
+*/

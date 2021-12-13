@@ -1,7 +1,11 @@
 import {SeedModel} from "./SeedModel.js"
 
+let nextSeedId = 0;
+
 export class CavityModel {
-    constructor(nSeeds){
+    constructor(nSeeds, boardId){
+        this.id = nextSeedId++;
+        this.boardId = boardId;
         this.seeds = [];
         init(nSeeds);
     }
@@ -17,6 +21,10 @@ export class CavityModel {
 
     empty(){
         this.seeds = [];
+    }
+
+    isEmpty(){
+        return this.seeds.isEmpty();
     }
 
     addSeed(seed){
