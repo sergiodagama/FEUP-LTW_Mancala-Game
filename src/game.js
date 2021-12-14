@@ -863,3 +863,180 @@ game.run();
  * Chat
  */
 
+/**
+ * Minimax
+ */
+
+class PlayCommand {
+    constructor(state, cavityRealIndex, seeds) {
+        this.execute = makePlay(state, cavityRealIndex);
+        this.undo = undoPlay(state, cavityRealIndex, seeds);
+        this.state = state;
+        this.seeds = seeds;
+    }
+}
+
+EXAMPLE: shadowGame.execute(new PlayCommand(turn1, 0, this.cavities[0].length));
+
+/*
+class Command {
+    constructor(execute, undo, value) {
+        this.execute = execute;
+        this.undo = undo;
+        this.value = value;
+    }
+}
+*/
+
+class ShadowGame {
+    constructor(){
+        this.cavities = [];
+        this.storages = [];
+
+        this.commandsStack = []; //stack of commands done
+    }
+
+    executeCommand(command){
+        command.execute();
+        this.commandsStack.push(command);
+    }
+
+    undoCommand(){
+        poppedCommand = this.commandsStack.pop();
+        poppedCommand.undo();
+    }
+
+    fillCavities(nCavs, nSeeds){
+        //delete existing seeds and cavities
+        this.emptyCavitiesAndStorages();
+
+        //add cavites and create seeds
+        for(let i = 0; i < nCavs * 2; i++){
+            let seeds = [];
+            for(let k = 0; k < nSeeds; k++){
+                seeds.push(1);
+            }
+            this.cavities.push(seeds);
+        }
+    }
+
+    emptyCavitiesAndStorages(){
+        this.cavities = [];
+        this.storages = [];
+    }
+
+    moveSeedToCavity(origCavityRealIndex, destCavityRealIndex){
+        const seed = this.cavities[origCavityRealIndex].shift();  //removes and retrieves first array element
+
+        if(seed == undefined){
+            console.log("Error -> shadow - moveSeedToCavity() <- no seeds in array.");
+            return;
+        }
+
+        this.cavities[destCavityRealIndex].push(seed);
+    }
+
+    moveSeedToStorage(origCavityRealIndex, destStorage){
+        const seed = this.cavities[origCavityRealIndex].shift();  //removes and retrieves first array element
+
+        if(seed == undefined){
+            console.log("Error -> shadow - moveSeedToStorage() <- no seeds in array.");
+            return;
+        }
+
+        this.storages[destStorage].push(seed);
+    }
+
+    moveSeedFromStorage(origStorage, destCavityRealIndex){  //0 or 1
+        const seed = this.storages[origStorage].shift();  //removes and retrieves first array element
+
+        if(seed == undefined){
+            console.log("Error -> shadow - moveSeedFromStorage() <- no seeds in array.");
+            return;
+        }
+
+        this.cavity[destCavityRealIndex].push(seed);
+    }
+
+    makePlay(state, cavityRealIndex){
+        if(this.cavities[cavityRealIndex].length == 0){
+            console.log("Error -> shadow - makePlay() <- no seeds in this cavity");
+            return;
+        }
+
+        const nCavs = this.cavities.length / 2;
+
+        let dest = cavityRealIndex;
+        let prevDest = dest;  //only used to check if final cavity is empty
+
+        let i = 0; //to skip the first iteration
+
+        while(this.cavities[cavityRealIndex].length > 0){
+            prevDest = dest;
+            if(dest == (nCavs * 2)){
+                if(i > 0 && state == gameState.TURN_PLAYER2) this.moveSeedToStorage(cavityRealIndex, 1);
+                dest = nCavs - 1;
+            }
+            else if(dest >= nCavs){
+                if(i > 0) this.moveSeedToCavity(cavityRealIndex, dest);
+                dest++;
+            }
+            else if(dest < 0){
+                if(i > 0 && state == gameState.TURN_PLAYER1) this.moveSeedToStorage(cavityRealIndex, 0);
+                dest = nCavs;
+            }
+            else{  // < nCavs
+                if(i > 0) this.moveSeedToCavity(cavityRealIndex, dest);
+                dest--;
+            }
+            i++;
+        }
+    }
+
+    fillCavity(cavityRealIndex, seeds){
+        for(let i = 0; i < seeds; i++){
+            this.cavities[cavityRealIndex].push(1);
+        }
+    }
+
+    removeSeedsFromCavity(cavityRealIndex, seeds){
+        for(let i = 0; i < seeds; i++){
+            this.cavities[cavityRealIndex].pop();
+        }
+    }
+
+    undoPlay(state, cavityRealIndex, seeds){
+        this.fillCavity(cavityRealIndex, seeds);
+
+        const nCavs = this.cavities.length / 2;
+
+        let dest = cavityRealIndex;
+        let prevDest = dest;  //only used to check if final cavity is empty
+
+        for(let i = 0; i < seeds + 1; i++){
+            prevDest = dest;
+            if(dest == (nCavs * 2)){
+                if(i > 0 && state == gameState.TURN_PLAYER2) this.moveSeedFromStorage(1, cavityRealIndex);
+                dest = nCavs - 1;
+            }
+            else if(dest >= nCavs){
+                if(i > 0) this.moveSeedToCavity(dest, cavityRealIndex);
+                dest++;
+            }
+            else if(dest < 0){
+                if(i > 0 && state == gameState.TURN_PLAYER1) this.moveSeedFromStorage(0, cavityRealIndex);
+                dest = nCavs;
+            }
+            else{  // < nCavs
+                if(i > 0) this.moveSeedToCavity(dest, cavityRealIndex);
+                dest--;
+            }
+        }
+
+        this.removeSeedsFromCavity(cavityRealIndex, seeds);
+    }
+
+    minimax(){
+        //TODO:
+    }
+}
