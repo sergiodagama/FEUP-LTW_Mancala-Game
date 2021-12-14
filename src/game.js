@@ -923,7 +923,6 @@ class Authentication{
                         }
                         else{
                             //TODO: show user tab and hide login section
-
                             game.gameModel.updatePlayer1(new Player(nick));
                             game.gamePresenter.updatePlayer1Name();
                         }
@@ -989,5 +988,9 @@ authentication.listenAll();
 
 /**
  * Chat
+ */
+
+/**
+ * Minimax
  */
 
