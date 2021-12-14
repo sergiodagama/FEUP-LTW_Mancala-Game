@@ -222,6 +222,7 @@ class GameModel{
     config(nCavities, nSeeds){
         //delete existing seeds and cavities
         this.deleteCavities();
+        this.emptyStorages();
 
         //add cavites and create seeds
         for(let i = 0; i < nCavities * 2; i++){
@@ -784,6 +785,7 @@ class GamePresenter{
         if(this.state == gameState.QUIT || this.state == gameState.CONFIG){
             this.viewer.displayStartBigMessage();
             this.updateCavitiesAndStorages();
+            this.updateScore();
             this.updateSysMessage("You started a game :)");
             this.viewer.removeWinner();
             this.generateInitPlayer();
@@ -877,16 +879,6 @@ class PlayCommand {
 }
 
 EXAMPLE: shadowGame.execute(new PlayCommand(turn1, 0, this.cavities[0].length));
-
-/*
-class Command {
-    constructor(execute, undo, value) {
-        this.execute = execute;
-        this.undo = undo;
-        this.value = value;
-    }
-}
-*/
 
 class ShadowGame {
     constructor(){
@@ -1044,7 +1036,52 @@ class ShadowGame {
         this.removeSeedsFromCavity(cavityRealIndex, seeds);
     }
 
+    createTree(ShadowGame){
+        //TODO: create tree
+    }
+
     minimax(){
-        //TODO:
+        //TODO: minimax
+    }
+
+    //TODO:
+    getBestPlay(){
+        //build the commands tree
+
+        //apply minimax hover the tree
+
+        //retrieve the best command based on minimax
+
+        //return the command
+    }
+}
+
+class TreeNode{
+    constructor(value){
+        this.value = value;
+        this.edges = [];
+    }
+
+    getValue(){
+        return this.value;
+    }
+
+    addEdge(edge){
+        this.edges.push(edge);
+    }
+}
+
+class TreeEdge{
+    constructor(playCommand, destNode){
+        this.playCommand = playCommand;
+        this.destNode = destNode;
+    }
+
+    getPlayCommand(){
+        return this.playCommand;
+    }
+
+    getDestNode(){
+        return this.destNode;
     }
 }
