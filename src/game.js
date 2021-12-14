@@ -896,6 +896,14 @@ class ShadowGame {
         this.commandsStack = []; //stack of commands done
     }
 
+    getPlayer1Score(){
+        return this.storages[0].length;
+    }
+
+    getPlayer2Score(){
+        return this.storages[1].length;
+    }
+
     executeCommand(command){
         command.execute();
         this.commandsStack.push(command);
