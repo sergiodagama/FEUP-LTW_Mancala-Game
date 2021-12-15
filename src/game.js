@@ -870,31 +870,21 @@ game.run();
  */
 
 class PlayCommand {
-    constructor(state, cavityRealIndex, seeds) {
-        this.execute = makePlay(state, cavityRealIndex);
-        this.undo = undoPlay(state, cavityRealIndex, seeds);
-        this.state = state;
+    constructor(shadowGame, state, cavityRealIndex, seeds) {
+        this.state = state;  //may be redundant
         this.seeds = seeds;
+        this.execute = shadowGame.makePlay(state, cavityRealIndex);
+        this.undo = shadowGame.undoPlay(state, cavityRealIndex, this.seeds);
     }
 }
 
 class ShadowGame {
-    constructor(){
+    constructor(state, nCavs, nSeeds){
         this.cavities = [];
         this.storages = [];
         this.commandsStack = []; //stack of commands done
-    }
-
-    getPlayerScore(state){
-        switch (state) {
-            case TURN_PLAYER1:
-                return this.storages[0];
-            case TURN_PLAYER2:
-                return this.storages[1];
-            default:
-                console.log("Error -> getPlayerScore() <- no such state accepted");
-                return;
-        }
+        this.state = state;
+        this.configCavitiesAndStorages(nCavs, nSeeds);
     }
 
     executeCommand(command){
@@ -907,27 +897,7 @@ class ShadowGame {
         poppedCommand.undo();
     }
 
-    cavitiesNotEmpty(state){
-        this.notEmpty = [];  //indexes of empty cavities
-
-        if(state == TURN_PLAYER1){
-            for(let i = 0; i < this.cavities.length; i++){
-                if(this.cavities[i] == 0){
-                    this.emptyCavities.push(i);
-                }
-            }
-        }
-        else if(state == TURN_PLAYER2){
-            for(let i = this.cavities.length; i < this.cavities.length * 2; i++){
-                if(this.cavities[i] == 0){
-                    this.emptyCavities.push(i);
-                }
-            }
-        }
-        return this.notEmpty;
-    }
-
-    fillCavities(nCavs, nSeeds){
+    configCavitiesAndStorages(nCavs, nSeeds){
         //delete existing seeds and cavities
         this.emptyCavitiesAndStorages();
 
@@ -938,11 +908,33 @@ class ShadowGame {
                 this.cavities[i]++;
             }
         }
+        this.storages[0] = 0;
+        this.storages[1] = 0;
     }
 
     emptyCavitiesAndStorages(){
         this.cavities = [];
         this.storages = [];
+    }
+
+    printShadowBoard(){
+        const nCavs = this.cavities.length / 2;
+
+        console.log(this.storages[0] + " " + this.cavities.slice(0, nCavs));
+        console.log("  " + this.cavities.slice(nCavs, nCavs * 2) + " " +  this.storages[1] + "\n");
+        console.log("---------------");
+    }
+
+    getPlayerScore(state){
+        switch (state) {
+            case gameState.TURN_PLAYER1:
+                return this.storages[0];
+            case gameState.TURN_PLAYER2:
+                return this.storages[1];
+            default:
+                console.log("Error -> getPlayerScore() <- no such state accepted");
+                return;
+        }
     }
 
     moveSeedToCavity(origCavityRealIndex, destCavityRealIndex){
@@ -961,6 +953,18 @@ class ShadowGame {
         this.storages[origStorage]--;
 
         this.cavity[destCavityRealIndex]++;
+    }
+
+    fillCavity(cavityRealIndex, seeds){
+        for(let i = 0; i < seeds; i++){
+            this.cavities[cavityRealIndex]++;
+        }
+    }
+
+    removeSeedsFromCavity(cavityRealIndex, seeds){
+        for(let i = 0; i < seeds; i++){
+            this.cavities[cavityRealIndex]--;
+        }
     }
 
     makePlay(state, cavityRealIndex){
@@ -998,18 +1002,6 @@ class ShadowGame {
         }
     }
 
-    fillCavity(cavityRealIndex, seeds){
-        for(let i = 0; i < seeds; i++){
-            this.cavities[cavityRealIndex]++;
-        }
-    }
-
-    removeSeedsFromCavity(cavityRealIndex, seeds){
-        for(let i = 0; i < seeds; i++){
-            this.cavities[cavityRealIndex]--;
-        }
-    }
-
     undoPlay(state, cavityRealIndex, seeds){
         this.fillCavity(cavityRealIndex, seeds);
 
@@ -1038,6 +1030,26 @@ class ShadowGame {
             }
         }
         this.removeSeedsFromCavity(cavityRealIndex, seeds);
+    }
+
+    cavitiesNotEmpty(state){
+        this.notEmpty = [];  //indexes of empty cavities
+
+        if(state == gameState.TURN_PLAYER1){
+            for(let i = 0; i < this.cavities.length; i++){
+                if(this.cavities[i] == 0){
+                    this.emptyCavities.push(i);
+                }
+            }
+        }
+        else if(state == gameState.TURN_PLAYER2){
+            for(let i = this.cavities.length; i < this.cavities.length * 2; i++){
+                if(this.cavities[i] == 0){
+                    this.emptyCavities.push(i);
+                }
+            }
+        }
+        return this.notEmpty;
     }
 
     getBestPlay(depth){
@@ -1095,10 +1107,10 @@ function createTree(shadowGame, state, root, depth){
 
 function switchTurnState(state){
     switch (state) {
-        case TURN_PLAYER1:
-            return TURN_PLAYER2;
-        case TURN_PLAYER2:
-            return TURN_PLAYER1;
+        case gameState.TURN_PLAYER1:
+            return gameState.TURN_PLAYER2;
+        case gameState.TURN_PLAYER2:
+            return gameState.TURN_PLAYER1;
         default:
             console.log("Error -> switchTurnState() <- no such state accepted");
             return;
@@ -1138,3 +1150,14 @@ class TreeEdge{
         return this.destNode;
     }
 }
+
+/**
+ * TESTS FOR DEBUGGING
+ */
+
+let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, 6, 5);
+shadowGame.printShadowBoard();
+shadowGame.makePlay(gameState.TURN_PLAYER1, 6);
+shadowGame.printShadowBoard();
+shadowGame.makePlay(gameState.TURN_PLAYER2, 7);
+shadowGame.printShadowBoard();
