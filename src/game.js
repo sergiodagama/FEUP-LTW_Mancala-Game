@@ -878,8 +878,6 @@ class PlayCommand {
     }
 }
 
-EXAMPLE: shadowGame.execute(new PlayCommand(turn1, 0, this.cavities[0].length));
-
 class ShadowGame {
     constructor(){
         this.cavities = [];
@@ -888,12 +886,16 @@ class ShadowGame {
         this.commandsStack = []; //stack of commands done
     }
 
-    getPlayer1Score(){
-        return this.storages[0].length;
-    }
-
-    getPlayer2Score(){
-        return this.storages[1].length;
+    getPlayerScore(state){
+        switch (state) {
+            case TURN_PLAYER1:
+                return this.storages[0].length;
+            case TURN_PLAYER2:
+                return this.storages[1].length;;
+            default:
+                console.log("Error -> getPlayerScore() <- no such state accepted");
+                return;
+        }
     }
 
     executeCommand(command){
@@ -904,6 +906,26 @@ class ShadowGame {
     undoCommand(){
         poppedCommand = this.commandsStack.pop();
         poppedCommand.undo();
+    }
+
+    cavitiesNotEmpty(state){
+        this.notEmpty = [];  //indexes of empty cavities
+
+        if(state == TURN_PLAYER1){
+            for(let i = 0; i < this.cavities.length; i++){
+                if(this.cavities[i].length == 0){
+                    this.emptyCavities.push(i);
+                }
+            }
+        }
+        else if(state == TURN_PLAYER2){
+            for(let i = this.cavities.length; i < this.cavities.length * 2; i++){
+                if(this.cavities[i].length == 0){
+                    this.emptyCavities.push(i);
+                }
+            }
+        }
+        return this.notEmpty;
     }
 
     fillCavities(nCavs, nSeeds){
@@ -1036,23 +1058,69 @@ class ShadowGame {
         this.removeSeedsFromCavity(cavityRealIndex, seeds);
     }
 
-    createTree(ShadowGame){
-        //TODO: create tree
+    getBestPlay(depth){
+        //build the commands tree
+
+        let tree = new TreeNode(-1);
+
+        createTree(this, state, tree, depth);
+
+        //apply minimax hover the tree
+        const optimalScore = this.minimax();
+
+        //retrieve the best command based on minimax
+        //const bestPlay;
+
+        //TODO: loop to get bestplay from edges in depth = 1
+
+        //return the command
+        //return bestPlay;
     }
 
     minimax(){
-        //TODO: minimax
+        //TODO: implement the minimax algorithm
     }
+}
 
-    //TODO:
-    getBestPlay(){
-        //build the commands tree
+function createTree(shadowGame, state, root, depth){
+    //loop the not empty cavities and create edges from prev node to a new node
+    const notEmpty = shadowGame.cavitiesNotEmpty();
 
-        //apply minimax hover the tree
+    for(let i = 0; i < notEmpty.length; i++){
 
-        //retrieve the best command based on minimax
+        const cavityRealIndex = notEmpty[i];
+        const move = new PlayCommand(state, cavityRealIndex, shadowGame.cavities[cavityRealIndex].length);
 
-        //return the command
+        let node = new TreeNode(-1);
+        let edge = new TreeEdge(move, node);
+        root.addEdge(edge);
+
+        //execute possible move on shadowGame
+        if(i != 0){
+            shadowGame.undoCommand();
+        }
+        shadowGame.executeCommand(move);
+
+        //recursively call createTree with each new node created
+        if(depth != 0){
+           createTree(shadowGame, switchTurnState(state), node, depth-1);
+        }
+        else{
+            //only set game score on tree terminal values
+            node.setValue(shadowGame.getPlayerScore(state));
+        }
+    }
+}
+
+function switchTurnState(state){
+    switch (state) {
+        case TURN_PLAYER1:
+            return TURN_PLAYER2;
+        case TURN_PLAYER2:
+            return TURN_PLAYER1;
+        default:
+            console.log("Error -> switchTurnState() <- no such state accepted");
+            return;
     }
 }
 
@@ -1064,6 +1132,10 @@ class TreeNode{
 
     getValue(){
         return this.value;
+    }
+
+    setValue(value){
+        this.value = value;
     }
 
     addEdge(edge){
