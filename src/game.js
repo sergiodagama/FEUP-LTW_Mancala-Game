@@ -882,16 +882,15 @@ class ShadowGame {
     constructor(){
         this.cavities = [];
         this.storages = [];
-
         this.commandsStack = []; //stack of commands done
     }
 
     getPlayerScore(state){
         switch (state) {
             case TURN_PLAYER1:
-                return this.storages[0].length;
+                return this.storages[0];
             case TURN_PLAYER2:
-                return this.storages[1].length;;
+                return this.storages[1];
             default:
                 console.log("Error -> getPlayerScore() <- no such state accepted");
                 return;
@@ -913,14 +912,14 @@ class ShadowGame {
 
         if(state == TURN_PLAYER1){
             for(let i = 0; i < this.cavities.length; i++){
-                if(this.cavities[i].length == 0){
+                if(this.cavities[i] == 0){
                     this.emptyCavities.push(i);
                 }
             }
         }
         else if(state == TURN_PLAYER2){
             for(let i = this.cavities.length; i < this.cavities.length * 2; i++){
-                if(this.cavities[i].length == 0){
+                if(this.cavities[i] == 0){
                     this.emptyCavities.push(i);
                 }
             }
@@ -934,11 +933,10 @@ class ShadowGame {
 
         //add cavites and create seeds
         for(let i = 0; i < nCavs * 2; i++){
-            let seeds = [];
+            this.cavities[i] = 0;
             for(let k = 0; k < nSeeds; k++){
-                seeds.push(1);
+                this.cavities[i]++;
             }
-            this.cavities.push(seeds);
         }
     }
 
@@ -948,40 +946,25 @@ class ShadowGame {
     }
 
     moveSeedToCavity(origCavityRealIndex, destCavityRealIndex){
-        const seed = this.cavities[origCavityRealIndex].shift();  //removes and retrieves first array element
+        this.cavities[origCavityRealIndex]--;
 
-        if(seed == undefined){
-            console.log("Error -> shadow - moveSeedToCavity() <- no seeds in array.");
-            return;
-        }
-
-        this.cavities[destCavityRealIndex].push(seed);
+        this.cavities[destCavityRealIndex]++;
     }
 
     moveSeedToStorage(origCavityRealIndex, destStorage){
-        const seed = this.cavities[origCavityRealIndex].shift();  //removes and retrieves first array element
+        this.cavities[origCavityRealIndex]--;
 
-        if(seed == undefined){
-            console.log("Error -> shadow - moveSeedToStorage() <- no seeds in array.");
-            return;
-        }
-
-        this.storages[destStorage].push(seed);
+        this.storages[destStorage]++;
     }
 
     moveSeedFromStorage(origStorage, destCavityRealIndex){  //0 or 1
-        const seed = this.storages[origStorage].shift();  //removes and retrieves first array element
+        this.storages[origStorage]--;
 
-        if(seed == undefined){
-            console.log("Error -> shadow - moveSeedFromStorage() <- no seeds in array.");
-            return;
-        }
-
-        this.cavity[destCavityRealIndex].push(seed);
+        this.cavity[destCavityRealIndex]++;
     }
 
     makePlay(state, cavityRealIndex){
-        if(this.cavities[cavityRealIndex].length == 0){
+        if(this.cavities[cavityRealIndex] == 0){
             console.log("Error -> shadow - makePlay() <- no seeds in this cavity");
             return;
         }
@@ -993,7 +976,7 @@ class ShadowGame {
 
         let i = 0; //to skip the first iteration
 
-        while(this.cavities[cavityRealIndex].length > 0){
+        while(this.cavities[cavityRealIndex] > 0){
             prevDest = dest;
             if(dest == (nCavs * 2)){
                 if(i > 0 && state == gameState.TURN_PLAYER2) this.moveSeedToStorage(cavityRealIndex, 1);
@@ -1017,13 +1000,13 @@ class ShadowGame {
 
     fillCavity(cavityRealIndex, seeds){
         for(let i = 0; i < seeds; i++){
-            this.cavities[cavityRealIndex].push(1);
+            this.cavities[cavityRealIndex]++;
         }
     }
 
     removeSeedsFromCavity(cavityRealIndex, seeds){
         for(let i = 0; i < seeds; i++){
-            this.cavities[cavityRealIndex].pop();
+            this.cavities[cavityRealIndex]--;
         }
     }
 
@@ -1054,13 +1037,11 @@ class ShadowGame {
                 dest--;
             }
         }
-
         this.removeSeedsFromCavity(cavityRealIndex, seeds);
     }
 
     getBestPlay(depth){
         //build the commands tree
-
         let tree = new TreeNode(-1);
 
         createTree(this, state, tree, depth);
@@ -1089,7 +1070,7 @@ function createTree(shadowGame, state, root, depth){
     for(let i = 0; i < notEmpty.length; i++){
 
         const cavityRealIndex = notEmpty[i];
-        const move = new PlayCommand(state, cavityRealIndex, shadowGame.cavities[cavityRealIndex].length);
+        const move = new PlayCommand(state, cavityRealIndex, shadowGame.cavities[cavityRealIndex]);
 
         let node = new TreeNode(-1);
         let edge = new TreeEdge(move, node);
