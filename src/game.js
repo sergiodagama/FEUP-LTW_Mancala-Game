@@ -251,7 +251,6 @@ class GameViewer{
 
     registerWith(presenter){
         this.presenter = presenter;
-        console.log(this.getPresenter());
     }
 
     getPresenter(){
@@ -870,21 +869,35 @@ game.run();
  */
 
 class PlayCommand {
-    constructor(shadowGame, state, cavityRealIndex, seeds) {
+    constructor(game, state, cavityRealIndex) {
         this.state = state;  //may be redundant
-        this.seeds = seeds;
-        this.execute = shadowGame.makePlay(state, cavityRealIndex);
-        this.undo = shadowGame.undoPlay(state, cavityRealIndex, this.seeds);
+        this.index = cavityRealIndex;
+        this.seeds = game.cavities[cavityRealIndex];
+        this.game = game;
     }
+
+    execute(){ this.game.makePlay(this.state, this.index);}
+
+    undo() { this.game.undoPlay(this.state, this.index, this.seeds);}
+}
+
+function cloneShadowGame(shadowGame){
+    let clone = new ShadowGame(shadowGame.state);
+
+    clone.cavities = shadowGame.cavities;
+    clone.storages = shadowGame.storages;
+    clone.setCommandsStack(shadowGame.commandsStack);
+
+    return clone;
 }
 
 class ShadowGame {
-    constructor(state, nCavs, nSeeds){
+    constructor(state, nCavs, nSeeds, init){
         this.cavities = [];
         this.storages = [];
         this.commandsStack = []; //stack of commands done
         this.state = state;
-        this.configCavitiesAndStorages(nCavs, nSeeds);
+        if(init) this.configCavitiesAndStorages(nCavs, nSeeds);
     }
 
     executeCommand(command){
@@ -893,8 +906,13 @@ class ShadowGame {
     }
 
     undoCommand(){
-        poppedCommand = this.commandsStack.pop();
-        poppedCommand.undo();
+        let poppedCommand = this.commandsStack.pop();
+        if(poppedCommand == undefined) console.log("Error -> shadow - undoCommand() <- no commands left in the stack");
+        else poppedCommand.undo();
+    }
+
+    setCommandsStack(stack){
+        this.commandsStack = stack;
     }
 
     configCavitiesAndStorages(nCavs, nSeeds){
@@ -938,21 +956,24 @@ class ShadowGame {
     }
 
     moveSeedToCavity(origCavityRealIndex, destCavityRealIndex){
-        this.cavities[origCavityRealIndex]--;
+        if(this.cavities[origCavityRealIndex] == 0) console.log("Error -> moveSeedToCavity() <- cavity has no seeds");
+        else this.cavities[origCavityRealIndex]--;
 
         this.cavities[destCavityRealIndex]++;
     }
 
     moveSeedToStorage(origCavityRealIndex, destStorage){
-        this.cavities[origCavityRealIndex]--;
+        if(this.cavities[origCavityRealIndex] == 0) console.log("Error -> moveSeedToStorage() <- cavity has no seeds");
+        else this.cavities[origCavityRealIndex]--;
 
         this.storages[destStorage]++;
     }
 
     moveSeedFromStorage(origStorage, destCavityRealIndex){  //0 or 1
-        this.storages[origStorage]--;
+        if(this.storages[origStorage] == 0) console.log("Error -> moveSeedFromStorage() <- storage has no seeds");
+        else this.storages[origStorage]--;
 
-        this.cavity[destCavityRealIndex]++;
+        this.cavities[destCavityRealIndex]++;
     }
 
     fillCavity(cavityRealIndex, seeds){
@@ -962,6 +983,7 @@ class ShadowGame {
     }
 
     removeSeedsFromCavity(cavityRealIndex, seeds){
+        if(this.cavities[cavityRealIndex] < seeds) console.log("Error -> removeSeedsFromCavity() <- cavity has not that much seeds");
         for(let i = 0; i < seeds; i++){
             this.cavities[cavityRealIndex]--;
         }
@@ -1033,23 +1055,25 @@ class ShadowGame {
     }
 
     cavitiesNotEmpty(state){
-        this.notEmpty = [];  //indexes of empty cavities
+        let notEmpty = [];  //indexes of empty cavities
+
+        const nCavs = this.cavities.length / 2;
 
         if(state == gameState.TURN_PLAYER1){
-            for(let i = 0; i < this.cavities.length; i++){
-                if(this.cavities[i] == 0){
-                    this.emptyCavities.push(i);
+            for(let i = 0; i < nCavs; i++){
+                if(this.cavities[i] != 0){
+                    notEmpty.push(i);
                 }
             }
         }
         else if(state == gameState.TURN_PLAYER2){
-            for(let i = this.cavities.length; i < this.cavities.length * 2; i++){
-                if(this.cavities[i] == 0){
-                    this.emptyCavities.push(i);
+            for(let i = nCavs; i < nCavs * 2; i++){
+                if(this.cavities[i] != 0){
+                    notEmpty.push(i);
                 }
             }
         }
-        return this.notEmpty;
+        return notEmpty;
     }
 
     getBestPlay(depth){
@@ -1077,32 +1101,49 @@ class ShadowGame {
 
 function createTree(shadowGame, state, root, depth){
     //loop the not empty cavities and create edges from prev node to a new node
-    const notEmpty = shadowGame.cavitiesNotEmpty();
+    const notEmpty = shadowGame.cavitiesNotEmpty(state);
 
+    console.log("Turn: " + state.toString() + " Cavities not empty: " + notEmpty);
+
+    //console.log("before loop");
+    console.log("===============================");
     for(let i = 0; i < notEmpty.length; i++){
+        console.log("DEPTH " + depth);
 
         const cavityRealIndex = notEmpty[i];
-        const move = new PlayCommand(state, cavityRealIndex, shadowGame.cavities[cavityRealIndex]);
+        const move = new PlayCommand(shadowGame, state, cavityRealIndex);
 
         let node = new TreeNode(-1);
         let edge = new TreeEdge(move, node);
         root.addEdge(edge);
 
+
+
         //execute possible move on shadowGame
         if(i != 0){
             shadowGame.undoCommand();
         }
+
+        console.log("I: " + i + " Board BEFORE " + notEmpty[i] + " command: ");
+        shadowGame.printShadowBoard();
+
         shadowGame.executeCommand(move);
 
+        console.log("I: " + i + " Board AFTER " + notEmpty[i] + " command: ");
+        shadowGame.printShadowBoard();
+
         //recursively call createTree with each new node created
-        if(depth != 0){
-           createTree(shadowGame, switchTurnState(state), node, depth-1);
+        if((depth-1) != 0){
+            //const clone = cloneShadowGame(shadowGame);
+            createTree(shadowGame, switchTurnState(state), node, depth-1);
         }
         else{
             //only set game score on tree terminal values
             node.setValue(shadowGame.getPlayerScore(state));
         }
     }
+    shadowGame.undoCommand();
+    console.log("############################");
 }
 
 function switchTurnState(state){
@@ -1155,9 +1196,34 @@ class TreeEdge{
  * TESTS FOR DEBUGGING
  */
 
-let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, 6, 5);
-shadowGame.printShadowBoard();
+
+let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, 6, 5, true);
+/*
+//ShadowGame methods test
 shadowGame.makePlay(gameState.TURN_PLAYER1, 6);
 shadowGame.printShadowBoard();
 shadowGame.makePlay(gameState.TURN_PLAYER2, 7);
 shadowGame.printShadowBoard();
+shadowGame.undoPlay(gameState.TURN_PLAYER2, 7, 6);
+shadowGame.printShadowBoard();
+shadowGame.undoPlay(gameState.TURN_PLAYER2, 6, 5);
+shadowGame.printShadowBoard();
+
+//Commands tests
+const play1 = new PlayCommand(shadowGame, gameState.TURN_PLAYER1, 2);
+shadowGame.executeCommand(play1);
+shadowGame.printShadowBoard();
+shadowGame.undoCommand();
+shadowGame.printShadowBoard();
+shadowGame.executeCommand(new PlayCommand(shadowGame, gameState.TURN_PLAYER1, 0));
+shadowGame.printShadowBoard();
+shadowGame.executeCommand(new PlayCommand(shadowGame, gameState.TURN_PLAYER2, 6));
+shadowGame.printShadowBoard();
+shadowGame.undoCommand();
+shadowGame.printShadowBoard();
+console.log(shadowGame.cavitiesNotEmpty(gameState.TURN_PLAYER2));
+*/
+
+//Tree tests
+let tree = new TreeNode(-1);
+createTree(shadowGame, gameState.TURN_PLAYER1, tree, 2);

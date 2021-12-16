@@ -8,6 +8,13 @@ body{
     margin: 0;
     background-color: #2EC4B6;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -ms-overflow-style: none; /* to hide scroll bar in Internet Explorer, Edge */
+    scrollbar-width: none; /* to hide scroll bar in for Firefox */
+    overflow-y: scroll;
+}
+
+body::-webkit-scrollbar {
+    display: none; /* to hide scroll bar in Chrome, Safari, and Opera */
 }
 
 section{
