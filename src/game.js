@@ -674,8 +674,14 @@ class GamePresenter{
         this.updateScore();
 
         //checkers for end of game
-        if(this.checkNoPlays(0, nCavs)) this.gameEnd(0);
-        else if(this.checkNoPlays(1, nCavs)) this.gameEnd(1);
+        if(this.checkNoPlays(0, nCavs)){
+            this.gameEnd(0);
+            return true;
+        }
+        else if(this.checkNoPlays(1, nCavs)){
+            this.gameEnd(1);
+            return true;
+        }
 
         //set play again flag
         if((state == gameState.TURN_PLAYER1 && dest == nCavs) ||
@@ -772,12 +778,13 @@ class GamePresenter{
             won = winningState.PLAYER2_WON;
         }
 
-        const that = this;  //used for timeout function
-
         //show winner
-        //that.viewer.deleteCavities();
         this.updateScore();
-        this.viewer.displayWinner(won, that.model.players[0].getUsername(), that.model.players[1].getUsername());
+        this.updateSysMessage("The game has finished!");
+        this.viewer.displayWinner(won, this.model.players[0].getUsername(), this.model.players[1].getUsername());
+        this.model.resetConfigs();  //TODO: change this to current configs, only in model to not appear in screen while winner banner
+        this.viewer.enableModesCheckboxes();
+        this.state = gameState.CONFIG;
     }
 
     handleStartCommand(){
@@ -799,11 +806,8 @@ class GamePresenter{
         if(this.state == gameState.TURN_PLAYER1 || this.state == gameState.TURN_PLAYER2){
             this.state = gameState.QUIT;
             //TODO: save results
-            this.updateScore();
-            this.updateSysMessage("You quitted this game :(");
             this.winner(true);
-            this.model.resetConfigs();  //TODO: change this to current configs, only in model to not appear in screen while winner banner
-            this.viewer.enableModesCheckboxes();
+            this.updateSysMessage("You quitted this game :(");
         }
         else{
             this.updateSysMessage("You are not playing a game yet!");
