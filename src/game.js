@@ -1107,12 +1107,12 @@ class ShadowGame {
 
         //retrieve the best command based on minimax
         //(loop edges in depth = 1 and retrieve first command that gives the optimal score)
-        const bestPlay;
+        const bestPlay = null;
 
         tree.edges.forEach(edge => {
             if(edge.destNode.value == optimalScore){
                 bestPlay = edge.playCommand;
-                break;
+                return bestPlay;
             }
         });
         return bestPlay;
@@ -1183,6 +1183,22 @@ function switchTurnState(state){
     }
 }
 
+
+function printTree(tree) {
+    let i = 1;
+
+    function innerPrint(tree, i) {
+        console.log(Array(i).join('■■■■■■■'), tree.value);
+
+        tree.edges.forEach(function(edge) {
+            let j = i + 1;
+            innerPrint(edge.destNode, j);
+        })
+    }
+
+    innerPrint(tree, i);
+  }
+
 class TreeNode{
     constructor(value){
         this.value = value;
@@ -1251,9 +1267,10 @@ console.log(shadowGame.cavitiesNotEmpty(gameState.TURN_PLAYER2));
 
 //Tree tests
 let tree = new TreeNode(-1);
-createTree(shadowGame, gameState.TURN_PLAYER2, tree, 4);
-debugger;
+createTree(shadowGame, gameState.TURN_PLAYER2, tree, 3);
+//debugger;
 
+printTree(tree);
 
 //Clone tests
 /*
