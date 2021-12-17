@@ -1100,18 +1100,22 @@ class ShadowGame {
         //build the commands tree
         let tree = new TreeNode(-1);
 
-        createTree(this, state, tree, depth);
+        createTree(this, gameState.TURN_PLAYER2, tree, depth);  //assuming the computer will be always the second player
 
         //apply minimax hover the tree
         const optimalScore = this.minimax();
 
         //retrieve the best command based on minimax
-        //const bestPlay;
+        //(loop edges in depth = 1 and retrieve first command that gives the optimal score)
+        const bestPlay;
 
-        //TODO: loop to get bestplay from edges in depth = 1
-
-        //return the command
-        //return bestPlay;
+        tree.edges.forEach(edge => {
+            if(edge.destNode.value == optimalScore){
+                bestPlay = edge.playCommand;
+                break;
+            }
+        });
+        return bestPlay;
     }
 
     minimax(){
@@ -1140,8 +1144,6 @@ function createTree(shadowGame, state, root, depth){
         let node = new TreeNode(-1);
         let edge = new TreeEdge(move, node);
         root.addEdge(edge);
-
-
 
         //debugger;
         console.log("i: " + i + " Board BEFORE command in cavityIndex: " + notEmpty[i]);
