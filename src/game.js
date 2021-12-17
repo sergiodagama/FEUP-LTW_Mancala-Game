@@ -970,27 +970,27 @@ class ShadowGame {
             case gameState.TURN_PLAYER2:
                 return this.storages[1];
             default:
-                console.log("Error -> getPlayerScore() <- no such state accepted");
+                console.log("Error -> shadow - getPlayerScore() <- no such state accepted");
                 return;
         }
     }
 
     moveSeedToCavity(origCavityRealIndex, destCavityRealIndex){
-        if(this.cavities[origCavityRealIndex] == 0) console.log("Error -> moveSeedToCavity() <- cavity has no seeds");
+        if(this.cavities[origCavityRealIndex] == 0) console.log("Error -> shadow - moveSeedToCavity() <- orig cavity has no seeds");
         else this.cavities[origCavityRealIndex]--;
 
         this.cavities[destCavityRealIndex]++;
     }
 
     moveSeedToStorage(origCavityRealIndex, destStorage){
-        if(this.cavities[origCavityRealIndex] == 0) console.log("Error -> moveSeedToStorage() <- cavity has no seeds");
+        if(this.cavities[origCavityRealIndex] == 0) console.log("Error -> shadow - moveSeedToStorage() <- cavity has no seeds");
         else this.cavities[origCavityRealIndex]--;
 
         this.storages[destStorage]++;
     }
 
     moveSeedFromStorage(origStorage, destCavityRealIndex){  //0 or 1
-        if(this.storages[origStorage] == 0) console.log("Error -> moveSeedFromStorage() <- storage has no seeds");
+        if(this.storages[origStorage] == 0) console.log("Error -> shadow - moveSeedFromStorage() <- storage has no seeds");
         else this.storages[origStorage]--;
 
         this.cavities[destCavityRealIndex]++;
@@ -1003,7 +1003,7 @@ class ShadowGame {
     }
 
     removeSeedsFromCavity(cavityRealIndex, seeds){
-        if(this.cavities[cavityRealIndex] < seeds) console.log("Error -> removeSeedsFromCavity() <- cavity has not that much seeds");
+        if(this.cavities[cavityRealIndex] < seeds) console.log("Error -> shadow - removeSeedsFromCavity() <- cavity has not that much seeds");
         for(let i = 0; i < seeds; i++){
             this.cavities[cavityRealIndex]--;
         }
@@ -1042,20 +1042,76 @@ class ShadowGame {
             }
             i++;
         }
+
+        //when last seed ends in player empty cavity
+        if(prevDest != -1 && prevDest != (nCavs * 2)){
+            if(state == gameState.TURN_PLAYER1 && prevDest < nCavs){
+                if(this.cavities[prevDest] == 1){
+                    //removes seeds from opposite side and from prevDest and add to storage 1
+                    const opposite = this.getOppositeIndex(prevDest, nCavs);
+
+                    while(this.cavities[opposite] > 0){
+                        this.moveSeedToStorage(opposite, 0);
+                    }
+                    this.moveSeedToStorage(prevDest, 0);
+                }
+            }
+            else if(state == gameState.TURN_PLAYER2 && prevDest >= nCavs){
+                if(this.cavities[prevDest] == 1){
+                    //removes seeds from opposite side and from prevDest and add to storage 2
+                    const opposite = this.getOppositeIndex(prevDest, nCavs);
+
+                    while(this.cavities[opposite] > 0){
+                        this.moveSeedToStorage(opposite, 1);
+                    }
+                    this.moveSeedToStorage(prevDest, 1);
+                }
+            }
+        }
+    }
+
+    getOppositeIndex(index, nCavs){
+        if(index >= nCavs) return index - nCavs;
+        else return index + nCavs;
     }
 
     undoPlay(state, cavityRealIndex, seeds){
-        this.fillCavity(cavityRealIndex, seeds);
 
         const nCavs = this.cavities.length / 2;
 
         let dest = cavityRealIndex;
         let prevDest = dest;  //only used to check if final cavity is empty
 
+        //check for last seed in empty cavity play
         for(let i = 0; i < seeds + 1; i++){
             prevDest = dest;
             if(dest == (nCavs * 2)){
-                if(i > 0 && state == gameState.TURN_PLAYER2) this.moveSeedFromStorage(1, cavityRealIndex);
+                dest = nCavs - 1;
+            }
+            else if(dest >= nCavs){
+                dest++;
+            }
+            else if(dest < 0){
+                dest = nCavs;
+            }
+            else{
+                dest--;
+            }
+        }
+        console.log("LAST: " + prevDest);
+
+
+        this.fillCavity(cavityRealIndex, seeds);
+
+        dest = cavityRealIndex;
+        prevDest = dest;  //only used to check if final cavity is empty
+
+        for(let i = 0; i < seeds + 1; i++){
+            prevDest = dest;
+            if(dest == (nCavs * 2)){
+                if(i > 0 && state == gameState.TURN_PLAYER2){
+                    this.moveSeedFromStorage(1, cavityRealIndex);
+                }
                 dest = nCavs - 1;
             }
             else if(dest >= nCavs){
@@ -1072,6 +1128,34 @@ class ShadowGame {
             }
         }
         this.removeSeedsFromCavity(cavityRealIndex, seeds);
+/*
+        //last seed in empty cavity
+        if(prevDest != -1 && prevDest != (nCavs * 2)){
+
+            if(state == gameState.TURN_PLAYER1 && prevDest < nCavs){
+                if(this.cavities[prevDest] == 0){
+                    //removes seeds from opposite side and from prevDest and add to storage 1
+                    const opposite = this.getOppositeIndex(prevDest, nCavs);
+
+                    for(let h = 0; h < seeds; h++){
+                        this.moveSeedFromStorage(0, opposite);
+                    }
+                    this.storages[0]--;
+                }
+            }
+            else if(state == gameState.TURN_PLAYER2 && prevDest >= nCavs){
+                if(this.cavities[prevDest] == 0){
+                    //removes seeds from opposite side and from prevDest and add to storage 2
+                    const opposite = this.getOppositeIndex(prevDest, nCavs);
+
+                    for(let h = 0; h < seeds; h++){
+                        this.moveSeedToStorage(1, opposite);
+                    }
+                    this.storages[1]--;
+                }
+            }
+        }
+        */
     }
 
     cavitiesNotEmpty(state){
@@ -1238,7 +1322,15 @@ class TreeEdge{
  */
 
 
-let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, 6, 5, true);
+//let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, 6, 5, true);
+let shadowGame2 = new ShadowGame(gameState.TURN_PLAYER1, 3, 2, true);
+
+shadowGame2.makePlay(gameState.TURN_PLAYER1, 0);
+shadowGame2.printShadowBoard();
+shadowGame2.makePlay(gameState.TURN_PLAYER1, 2);
+shadowGame2.printShadowBoard();
+shadowGame2.undoPlay(gameState.TURN_PLAYER1, 2, 2);
+shadowGame2.printShadowBoard();
 /*
 //ShadowGame methods test
 shadowGame.makePlay(gameState.TURN_PLAYER1, 6);
@@ -1249,7 +1341,7 @@ shadowGame.undoPlay(gameState.TURN_PLAYER2, 7, 6);
 shadowGame.printShadowBoard();
 shadowGame.undoPlay(gameState.TURN_PLAYER2, 6, 5);
 shadowGame.printShadowBoard();
-
+/*
 //Commands tests
 const play1 = new PlayCommand(shadowGame, gameState.TURN_PLAYER1, 2);
 shadowGame.executeCommand(play1);
@@ -1266,18 +1358,18 @@ console.log(shadowGame.cavitiesNotEmpty(gameState.TURN_PLAYER2));
 */
 
 //Tree tests
+/*
 let tree = new TreeNode(-1);
 createTree(shadowGame, gameState.TURN_PLAYER2, tree, 3);
-//debugger;
-
+debugger;
 printTree(tree);
+*/
 
-//Clone tests
+//Clone tests [DEPRECATED]
 /*
 let clone = cloneShadowGame(shadowGame);
 shadowGame.makePlay(gameState.TURN_PLAYER1, 6);
 shadowGame.printShadowBoard();
 clone.printShadowBoard();
-
 console.log(clone.state == shadowGame.state);
 */
