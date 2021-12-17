@@ -881,12 +881,32 @@ class PlayCommand {
     undo() { this.game.undoPlay(this.state, this.index, this.seeds);}
 }
 
+const deepCopyFunction = (inObject) => {
+    let outObject, value, key
+
+    if (typeof inObject !== "object" || inObject === null) {
+      return inObject // Return the value if inObject is not an object
+    }
+
+    // Create an array or object to hold the values
+    outObject = Array.isArray(inObject) ? [] : {}
+
+    for (key in inObject) {
+      value = inObject[key]
+
+      // Recursively (deep) copy for nested objects, including arrays
+      outObject[key] = deepCopyFunction(value)
+    }
+
+    return outObject
+  }
+
 function cloneShadowGame(shadowGame){
     let clone = new ShadowGame(shadowGame.state);
 
-    clone.cavities = shadowGame.cavities;
-    clone.storages = shadowGame.storages;
-    clone.setCommandsStack(shadowGame.commandsStack);
+    clone.cavities = JSON.parse(JSON.stringify(shadowGame.cavities));
+    clone.storages = JSON.parse(JSON.stringify(shadowGame.storages));
+    clone.commandsStack = shadowGame.commandsStack;//JSON.parse(JSON.stringify(shadowGame.commandsStack));
 
     return clone;
 }
@@ -1103,12 +1123,16 @@ function createTree(shadowGame, state, root, depth){
     //loop the not empty cavities and create edges from prev node to a new node
     const notEmpty = shadowGame.cavitiesNotEmpty(state);
 
-    console.log("Turn: " + state.toString() + " Cavities not empty: " + notEmpty);
-
-    //console.log("before loop");
-    console.log("===============================");
+    console.log("Turn: " + state.toString() + "    notEmpty[]: " + notEmpty);
+    console.log("#############################################");
+    //debugger;
     for(let i = 0; i < notEmpty.length; i++){
-        console.log("DEPTH " + depth);
+        //execute possible move on shadowGame
+        if(i != 0){
+            shadowGame.undoCommand();
+        }
+
+        console.log("DEPTH: " + depth + "    i: " + i);
 
         const cavityRealIndex = notEmpty[i];
         const move = new PlayCommand(shadowGame, state, cavityRealIndex);
@@ -1119,32 +1143,31 @@ function createTree(shadowGame, state, root, depth){
 
 
 
-        //execute possible move on shadowGame
-        if(i != 0){
-            shadowGame.undoCommand();
-        }
-
-        console.log("I: " + i + " Board BEFORE " + notEmpty[i] + " command: ");
+        //debugger;
+        console.log("i: " + i + " Board BEFORE command in cavityIndex: " + notEmpty[i]);
         shadowGame.printShadowBoard();
 
         shadowGame.executeCommand(move);
 
-        console.log("I: " + i + " Board AFTER " + notEmpty[i] + " command: ");
+        console.log("I: " + i + " Board AFTER command in cavityIndex: " + notEmpty[i]);
         shadowGame.printShadowBoard();
 
         //recursively call createTree with each new node created
         if((depth-1) != 0){
+            //debugger;
             //const clone = cloneShadowGame(shadowGame);
             createTree(shadowGame, switchTurnState(state), node, depth-1);
         }
         else{
             //only set game score on tree terminal values
-            node.setValue(shadowGame.getPlayerScore(state));
+            node.setValue(shadowGame.getPlayerScore(gameState.TURN_PLAYER2));
         }
+        //debugger;
     }
     shadowGame.undoCommand();
-    console.log("############################");
+    console.log("=============================================");
 }
+
 
 function switchTurnState(state){
     switch (state) {
@@ -1226,4 +1249,16 @@ console.log(shadowGame.cavitiesNotEmpty(gameState.TURN_PLAYER2));
 
 //Tree tests
 let tree = new TreeNode(-1);
-createTree(shadowGame, gameState.TURN_PLAYER1, tree, 2);
+createTree(shadowGame, gameState.TURN_PLAYER2, tree, 4);
+debugger;
+
+
+//Clone tests
+/*
+let clone = cloneShadowGame(shadowGame);
+shadowGame.makePlay(gameState.TURN_PLAYER1, 6);
+shadowGame.printShadowBoard();
+clone.printShadowBoard();
+
+console.log(clone.state == shadowGame.state);
+*/
