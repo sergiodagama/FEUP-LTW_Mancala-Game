@@ -1195,11 +1195,17 @@ class ShadowGame {
         createTree(this, gameState.TURN_PLAYER2, tree, depth);  //assuming the computer will be always the second player
 
         //apply minimax hover the tree
-        const optimalScore = this.minimax();
+        const optimalScore = this.minimax(tree, depth, true);
+
+        console.log("OPTIMAL VALUE: ", optimalScore);
+
+        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!PRINTING TREE AFTER MINIMAX!!!!!!!!!!!!!!!!!!!!!!!!");
+
+        printTree(tree);
 
         //retrieve the best command based on minimax
         //(loop edges in depth = 1 and retrieve first command that gives the optimal score)
-        const bestPlay = null;
+        let bestPlay = null;
 
         tree.edges.forEach(edge => {
             if(edge.destNode.value == optimalScore){
@@ -1210,8 +1216,35 @@ class ShadowGame {
         return bestPlay;
     }
 
-    minimax(){
-        //TODO: implement the minimax algorithm
+    minimax(tree, depth, maximizingPlayer){
+        if(depth == 0) return tree.value;
+
+        if(maximizingPlayer){
+            let maxEval = -Infinity
+
+            if(tree.edges == undefined) return -1;
+
+            tree.edges.forEach(edge => {
+                let val = this.minimax(edge.destNode, depth - 1, false);
+                maxEval = Math.max(maxEval, val);
+            });
+            tree.setValue(maxEval);
+
+            return maxEval;
+        }
+        else{
+            let minEval = Infinity
+
+            if(tree.edges == undefined) return -1;
+
+            tree.edges.forEach(edge => {
+                let val = this.minimax(edge.destNode, depth - 1, true);
+                minEval = Math.min(minEval, val);
+            });
+            tree.setValue(minEval);
+
+            return minEval;
+        }
     }
 }
 
@@ -1389,10 +1422,12 @@ console.log(shadowGame.cavitiesNotEmpty(gameState.TURN_PLAYER2));
 */
 
 //Tree tests
+/*
 let tree = new TreeNode(-1);
-createTree(shadowGame, gameState.TURN_PLAYER2, tree, 6);
+createTree(shadowGame, gameState.TURN_PLAYER2, tree, 4);
 debugger;
 printTree(tree);
+*/
 
 
 //Clone tests [DEPRECATED]
@@ -1403,3 +1438,6 @@ shadowGame.printShadowBoard();
 clone.printShadowBoard();
 console.log(clone.state == shadowGame.state);
 */
+
+//MINIMAX tests
+console.log(shadowGame2.getBestPlay(3));
