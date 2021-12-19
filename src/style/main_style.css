@@ -4,6 +4,10 @@
     display: none;
 }
 
+#s-menu{
+    display: none;
+}
+
 body{
     margin: 0;
     background-color: #2EC4B6;

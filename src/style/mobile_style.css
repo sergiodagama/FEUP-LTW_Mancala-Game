@@ -1,1 +1,58 @@
-@media only screen and (orientation: landscape) {}
+/*@media only screen and (orientation: landscape) {}*/
+
+/* small tablets */
+@media screen and (max-width: 850px){
+
+    /* || Navigation Bar */
+    .img-header-navbar-icon{
+        display: none;
+    }
+
+    #img-header-navbar-menu-icon{
+        display: block;
+    }
+
+    /* || Main */
+    #d-main{
+        display: grid;
+        grid-template-areas:
+        'game game'
+        'commands system_messages';
+        grid-template-rows:  34em 5em;
+        grid-template-columns: 50% 50%;
+        min-height: 82.3vh;
+    }
+
+    #section-main-authentication{
+        grid-area: auth;
+        display: none;
+    }
+
+    /* || Footer */
+    footer{
+        display: none;
+    }
+
+    /* MENU  TO MOVE UP IN FILE*/
+    #s-menu{
+        display: grid;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 1.5em;
+        padding-bottom: 0em;
+        padding-top: 0em;
+        font-size: 1.3em;
+        font-weight: 600;
+        color: white;
+        background-color: #242331;
+    }
+
+    .p-menu{
+        width: 850px;
+        margin: 0em;
+        padding: 1.5em;
+        border: solid;
+        border-color: white;
+    }
+}
