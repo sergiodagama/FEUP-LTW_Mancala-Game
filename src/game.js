@@ -33,6 +33,9 @@ const winningState = {
     PLAYER2_WON: Symbol("PLAYER2_WON"),
  };
 
+ //Development Macros
+const DEBUGGING = false;
+
 /**
  * Models
  */
@@ -871,45 +874,10 @@ game.run();
 /**
  * Minimax
  */
-
-
-/*
-const deepCopyFunction = (inObject) => {
-    let outObject, value, key
-
-    if (typeof inObject !== "object" || inObject === null) {
-      return inObject // Return the value if inObject is not an object
-    }
-
-    // Create an array or object to hold the values
-    outObject = Array.isArray(inObject) ? [] : {}
-
-    for (key in inObject) {
-      value = inObject[key]
-
-      // Recursively (deep) copy for nested objects, including arrays
-      outObject[key] = deepCopyFunction(value)
-    }
-
-    return outObject
-  }
-
-function cloneShadowGame(shadowGame){
-    let clone = new ShadowGame(shadowGame.state);
-
-    clone.cavities = JSON.parse(JSON.stringify(shadowGame.cavities));
-    clone.storages = JSON.parse(JSON.stringify(shadowGame.storages));
-    clone.commandsStack = shadowGame.commandsStack;//JSON.parse(JSON.stringify(shadowGame.commandsStack));
-
-    return clone;
-}
-*/
-
 class PlayCommand {
     constructor(game, state, cavityRealIndex) {
         this.state = state;  //may be redundant
         this.index = cavityRealIndex;
-        //this.seeds = game.cavities[cavityRealIndex];
         this.cavs = JSON.parse(JSON.stringify(game.cavities));
         this.scores = JSON.parse(JSON.stringify(game.storages));
         this.game = game;
@@ -917,7 +885,7 @@ class PlayCommand {
 
     execute(){ this.game.makePlay(this.state, this.index);}
 
-    undo() { this.game.undoPlay(this.state, this.index, this.cavs, this.scores);}
+    undo() { this.game.undoPlay(this.cavs, this.scores);}
 }
 
 class ShadowGame {
@@ -1084,84 +1052,7 @@ class ShadowGame {
         else return index + nCavs;
     }
 
-    undoPlay(state, cavityRealIndex, cavs, scores){
-        /*
-
-        const nCavs = this.cavities.length / 2;
-
-        let dest = cavityRealIndex;
-        let prevDest = dest;  //only used to check if final cavity is empty
-
-        //check for last seed in empty cavity play
-        for(let i = 0; i < seeds + 1; i++){
-            prevDest = dest;
-            if(dest == (nCavs * 2)){
-                dest = nCavs - 1;
-            }
-            else if(dest >= nCavs){
-                dest++;
-            }
-            else if(dest < 0){
-                dest = nCavs;
-            }
-            else{
-                dest--;
-            }
-        }
-        //console.log("LAST CAVITY: " + prevDest);
-        //console.log("SCORES: " + scores)
-
-        if(this.cavities[prevDest] == 0 && prevDest != -1 && prevDest != (nCavs * 2)){
-            //console.log("inside");
-            const opposite = this.getOppositeIndex(prevDest, nCavs);
-
-            if(state == gameState.TURN_PLAYER1 && prevDest < nCavs){
-                const oppSeeds = this.storages[0] - scores[0] -  1;
-                for(let h = 0; h < oppSeeds; h++){
-                    this.moveSeedFromStorage(0, opposite);
-                }
-                this.moveSeedFromStorage(0, prevDest);
-
-            }
-            else if(state == gameState.TURN_PLAYER2 && prevDest >= nCavs){
-                const oppSeeds = this.storages[1] - scores[1] -  1;
-
-                for(let h = 0; h < oppSeeds; h++){
-                    this.moveSeedToStorage(1, opposite);
-                }
-                this.moveSeedFromStorage(1, prevDest);
-            }
-        }
-
-        this.fillCavity(cavityRealIndex, seeds);
-
-        dest = cavityRealIndex;
-        prevDest = dest;  //only used to check if final cavity is empty
-
-        for(let i = 0; i < seeds + 1; i++){
-            prevDest = dest;
-            if(dest == (nCavs * 2)){
-                if(i > 0 && state == gameState.TURN_PLAYER2){
-                    this.moveSeedFromStorage(1, cavityRealIndex);
-                }
-                dest = nCavs - 1;
-            }
-            else if(dest >= nCavs){
-                if(i > 0) this.moveSeedToCavity(dest, cavityRealIndex);
-                dest++;
-            }
-            else if(dest < 0){
-                if(i > 0 && state == gameState.TURN_PLAYER1) this.moveSeedFromStorage(0, cavityRealIndex);
-                dest = nCavs;
-            }
-            else{  // < nCavs
-                if(i > 0) this.moveSeedToCavity(dest, cavityRealIndex);
-                dest--;
-            }
-        }
-        this.removeSeedsFromCavity(cavityRealIndex, seeds);
-        */
-
+    undoPlay(cavs, scores){
         this.cavities = cavs;
         this.storages = scores;
     }
@@ -1252,16 +1143,19 @@ function createTree(shadowGame, state, root, depth){
     //loop the not empty cavities and create edges from prev node to a new node
     const notEmpty = shadowGame.cavitiesNotEmpty(state);
 
-    console.log("Turn: " + state.toString() + "    notEmpty[]: " + notEmpty);
-    console.log("#############################################");
-    //debugger;
+    if(DEBUGGING){
+        console.log("Turn: " + state.toString() + "    notEmpty[]: " + notEmpty);
+        console.log("#############################################");
+        //debugger;
+    }
+
     for(let i = 0; i < notEmpty.length; i++){
         //execute possible move on shadowGame
         if(i != 0){
             shadowGame.undoCommand();
         }
 
-        console.log("DEPTH: " + depth + "    i: " + i);
+        if(DEBUGGING) console.log("DEPTH: " + depth + "    i: " + i);
 
         const cavityRealIndex = notEmpty[i];
         const move = new PlayCommand(shadowGame, state, cavityRealIndex);
@@ -1270,19 +1164,22 @@ function createTree(shadowGame, state, root, depth){
         let edge = new TreeEdge(move, node);
         root.addEdge(edge);
 
-        //debugger;
-        console.log("i: " + i + " Board BEFORE command in cavityIndex: " + notEmpty[i]);
-        shadowGame.printShadowBoard();
+        if(DEBUGGING){
+            //debugger;
+            console.log("i: " + i + " Board BEFORE command in cavityIndex: " + notEmpty[i]);
+            shadowGame.printShadowBoard();
+        }
 
         shadowGame.executeCommand(move);
 
-        console.log("I: " + i + " Board AFTER command in cavityIndex: " + notEmpty[i]);
-        shadowGame.printShadowBoard();
+        if(DEBUGGING){
+            console.log("I: " + i + " Board AFTER command in cavityIndex: " + notEmpty[i]);
+            shadowGame.printShadowBoard();
+        }
 
         //recursively call createTree with each new node created
         if((depth-1) != 0){
             //debugger;
-            //const clone = cloneShadowGame(shadowGame);
             createTree(shadowGame, switchTurnState(state), node, depth-1);
         }
         else{
@@ -1292,9 +1189,8 @@ function createTree(shadowGame, state, root, depth){
         //debugger;
     }
     shadowGame.undoCommand();
-    console.log("=============================================");
+    if(DEBUGGING) console.log("=============================================");
 }
-
 
 function switchTurnState(state){
     switch (state) {
@@ -1308,7 +1204,6 @@ function switchTurnState(state){
     }
 }
 
-
 function printTree(tree) {
     let i = 1;
 
@@ -1320,7 +1215,6 @@ function printTree(tree) {
             innerPrint(edge.destNode, j);
         })
     }
-
     innerPrint(tree, i);
   }
 
@@ -1361,8 +1255,6 @@ class TreeEdge{
 /**
  * TESTS FOR DEBUGGING
  */
-
-
 let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, 6, 5, true);
 let shadowGame2 = new ShadowGame(gameState.TURN_PLAYER1, 3, 2, true);
 /*
@@ -1380,8 +1272,7 @@ shadowGame2.printShadowBoard();
 shadowGame2.undoPlay(gameState.TURN_PLAYER2, 3, 3, [1, 0]);
 shadowGame2.printShadowBoard();
 
-
-console.log("COMMANDS");
+console.log("Commands Tests");
 //undoPlay Commands test
 shadowGame3.printShadowBoard();
 shadowGame3.executeCommand(new PlayCommand(shadowGame3, gameState.TURN_PLAYER1, 0));
@@ -1394,7 +1285,6 @@ shadowGame3.executeCommand(new PlayCommand(shadowGame3, gameState.TURN_PLAYER2, 
 shadowGame3.printShadowBoard();
 shadowGame3.undoCommand();
 shadowGame3.printShadowBoard();
-
 
 //ShadowGame methods test
 shadowGame.makePlay(gameState.TURN_PLAYER1, 6);
@@ -1429,15 +1319,5 @@ debugger;
 printTree(tree);
 */
 
-
-//Clone tests [DEPRECATED]
-/*
-let clone = cloneShadowGame(shadowGame);
-shadowGame.makePlay(gameState.TURN_PLAYER1, 6);
-shadowGame.printShadowBoard();
-clone.printShadowBoard();
-console.log(clone.state == shadowGame.state);
-*/
-
-//MINIMAX tests
+//Minimax tests
 console.log(shadowGame2.getBestPlay(3));
