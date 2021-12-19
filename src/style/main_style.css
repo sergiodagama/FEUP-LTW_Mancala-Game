@@ -18,6 +18,7 @@ body::-webkit-scrollbar {
 }
 
 section{
+    display: block;
     margin-right: 1em;
     margin-left: 1em;
 }

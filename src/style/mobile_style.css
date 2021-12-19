@@ -54,6 +54,7 @@
         padding: 1.5em;
         border-bottom: solid;
         border-color: white;
+        cursor: pointer;
     }
 
     .p-menu:first-child{

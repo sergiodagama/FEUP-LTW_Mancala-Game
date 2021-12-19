@@ -13,10 +13,25 @@ class Page{
         //Sections for menu display
         this.authSection = document.getElementById("section-main-authentication");
         this.gameSection = document.getElementById("section-main-game");
+        this.commandsSection = document.getElementById("section-main-commands");
         this.configsSection = document.getElementById("section-main-configurations");
         this.chatSection = document.getElementById("section-main-chat");
         this.rulesSection = document.getElementById("section-main-rules");
         this.scoreSection = document.getElementById("section-main-score");
+
+        this.sections = [
+            this.gameSection,
+            this.authSection,
+            this.configsSection,
+            this.chatSection,
+            this.rulesSection,
+            this.scoreSection,
+            this.commandsSection
+                        ];
+
+        console.log(this.sections);
+
+        this.menuButtons = document.getElementsByClassName("p-menu");
 
         //Authentication
         this.signUp = document.getElementById("h3-login-titles-signup--in"); //in section sign in change to signUn
@@ -81,6 +96,12 @@ class Page{
         this.menu.addEventListener("click", this.toggleMenu.bind(this))
     }
 
+    listenMenuButtons(){
+        for(let i = 0; i < this.menuButtons.length; i++){
+            this.menuButtons[i].addEventListener("click", this.displaySections.bind(this, i));
+        }
+    }
+
     //Calls all listeners
     listenAll(){
         this.listenChat();
@@ -92,6 +113,7 @@ class Page{
         this.listenGoBackPass();
         this.listenChangingModes();
         this.listenMenu();
+        this.listenMenuButtons();
     }
 
     /**
@@ -161,7 +183,7 @@ class Page{
 
     toggleMenu(){
         this.toggleVisibility(this.isSectionOpen[3], "d-main", "s-menu", "grid", "grid");
-        this.isSectionOpen[3] = !(this.isSectionOpen[3])
+        this.isSectionOpen[3] = !(this.isSectionOpen[3]);
     }
 
     displayModeLocal(){
@@ -189,6 +211,21 @@ class Page{
         this.local.style.display = "none";
         this.online.style.display = "none";
         this.computer.style.display = "block";
+    }
+
+    displaySections(index){
+
+        console.log("SECION: "+ this.sections);
+        for(let i = 0; i < this.sections.length; i++){
+            this.sections[i].style.display = "none";
+        }
+        this.sections[index].style.display = "block";
+
+        if(index == 0){
+            this.sections[6].style.display = "flex";
+        }
+
+        this.toggleMenu();
     }
 
     loadingScreen(){
