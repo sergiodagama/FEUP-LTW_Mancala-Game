@@ -910,7 +910,7 @@ class PlayCommand {
         this.state = state;  //may be redundant
         this.index = cavityRealIndex;
         this.seeds = game.cavities[cavityRealIndex];
-        this.scores = game.storages;
+        this.scores = JSON.parse(JSON.stringify(game.storages));
         this.game = game;
     }
 
@@ -1106,10 +1106,11 @@ class ShadowGame {
                 dest--;
             }
         }
-        console.log("LAST CAVITY: " + prevDest);
+        //console.log("LAST CAVITY: " + prevDest);
+        //console.log("SCORES: " + scores)
 
         if(this.cavities[prevDest] == 0 && prevDest != -1 && prevDest != (nCavs * 2)){
-            console.log("inside");
+            //console.log("inside");
             const opposite = this.getOppositeIndex(prevDest, nCavs);
 
             if(state == gameState.TURN_PLAYER1 && prevDest < nCavs){
@@ -1325,7 +1326,8 @@ class TreeEdge{
 
 //let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, 6, 5, true);
 let shadowGame2 = new ShadowGame(gameState.TURN_PLAYER1, 3, 2, true);
-/*
+let shadowGame3 = new ShadowGame(gameState.TURN_PLAYER1, 3, 2, true);
+
 //undoPlay tests with special play
 shadowGame2.makePlay(gameState.TURN_PLAYER1, 0);
 shadowGame2.printShadowBoard();
@@ -1338,6 +1340,22 @@ shadowGame2.printShadowBoard();
 shadowGame2.undoPlay(gameState.TURN_PLAYER2, 3, 3, [1, 0]);
 shadowGame2.printShadowBoard();
 
+
+console.log("COMMANDS");
+//undoPlay Commands test
+shadowGame3.printShadowBoard();
+shadowGame3.executeCommand(new PlayCommand(shadowGame3, gameState.TURN_PLAYER1, 0));
+shadowGame3.printShadowBoard();
+shadowGame3.executeCommand(new PlayCommand(shadowGame3, gameState.TURN_PLAYER1, 2));
+shadowGame3.printShadowBoard();
+shadowGame3.undoCommand();
+shadowGame3.printShadowBoard();
+shadowGame3.executeCommand(new PlayCommand(shadowGame3, gameState.TURN_PLAYER2, 3));
+shadowGame3.printShadowBoard();
+shadowGame3.undoCommand();
+shadowGame3.printShadowBoard();
+
+/*
 //ShadowGame methods test
 shadowGame.makePlay(gameState.TURN_PLAYER1, 6);
 shadowGame.printShadowBoard();
