@@ -872,19 +872,8 @@ game.run();
  * Minimax
  */
 
-class PlayCommand {
-    constructor(game, state, cavityRealIndex) {
-        this.state = state;  //may be redundant
-        this.index = cavityRealIndex;
-        this.seeds = game.cavities[cavityRealIndex];
-        this.game = game;
-    }
 
-    execute(){ this.game.makePlay(this.state, this.index);}
-
-    undo() { this.game.undoPlay(this.state, this.index, this.seeds);}
-}
-
+/*
 const deepCopyFunction = (inObject) => {
     let outObject, value, key
 
@@ -913,6 +902,21 @@ function cloneShadowGame(shadowGame){
     clone.commandsStack = shadowGame.commandsStack;//JSON.parse(JSON.stringify(shadowGame.commandsStack));
 
     return clone;
+}
+*/
+
+class PlayCommand {
+    constructor(game, state, cavityRealIndex) {
+        this.state = state;  //may be redundant
+        this.index = cavityRealIndex;
+        this.seeds = game.cavities[cavityRealIndex];
+        this.scores = game.storages;
+        this.game = game;
+    }
+
+    execute(){ this.game.makePlay(this.state, this.index);}
+
+    undo() { this.game.undoPlay(this.state, this.index, this.seeds, this.scores);}
 }
 
 class ShadowGame {
@@ -1079,7 +1083,7 @@ class ShadowGame {
         else return index + nCavs;
     }
 
-    undoPlay(state, cavityRealIndex, seeds){
+    undoPlay(state, cavityRealIndex, seeds, scores){
 
         const nCavs = this.cavities.length / 2;
 
@@ -1102,8 +1106,29 @@ class ShadowGame {
                 dest--;
             }
         }
-        console.log("LAST: " + prevDest);
+        console.log("LAST CAVITY: " + prevDest);
 
+        if(this.cavities[prevDest] == 0 && prevDest != -1 && prevDest != (nCavs * 2)){
+            console.log("inside");
+            const opposite = this.getOppositeIndex(prevDest, nCavs);
+
+            if(state == gameState.TURN_PLAYER1 && prevDest < nCavs){
+                const oppSeeds = this.storages[0] - scores[0] -  1;
+                for(let h = 0; h < oppSeeds; h++){
+                    this.moveSeedFromStorage(0, opposite);
+                }
+                this.moveSeedFromStorage(0, prevDest);
+
+            }
+            else if(state == gameState.TURN_PLAYER2 && prevDest >= nCavs){
+                const oppSeeds = this.storages[1] - scores[1] -  1;
+
+                for(let h = 0; h < oppSeeds; h++){
+                    this.moveSeedToStorage(1, opposite);
+                }
+                this.moveSeedFromStorage(1, prevDest);
+            }
+        }
 
         this.fillCavity(cavityRealIndex, seeds);
 
@@ -1132,34 +1157,6 @@ class ShadowGame {
             }
         }
         this.removeSeedsFromCavity(cavityRealIndex, seeds);
-/*
-        //last seed in empty cavity
-        if(prevDest != -1 && prevDest != (nCavs * 2)){
-
-            if(state == gameState.TURN_PLAYER1 && prevDest < nCavs){
-                if(this.cavities[prevDest] == 0){
-                    //removes seeds from opposite side and from prevDest and add to storage 1
-                    const opposite = this.getOppositeIndex(prevDest, nCavs);
-
-                    for(let h = 0; h < seeds; h++){
-                        this.moveSeedFromStorage(0, opposite);
-                    }
-                    this.storages[0]--;
-                }
-            }
-            else if(state == gameState.TURN_PLAYER2 && prevDest >= nCavs){
-                if(this.cavities[prevDest] == 0){
-                    //removes seeds from opposite side and from prevDest and add to storage 2
-                    const opposite = this.getOppositeIndex(prevDest, nCavs);
-
-                    for(let h = 0; h < seeds; h++){
-                        this.moveSeedToStorage(1, opposite);
-                    }
-                    this.storages[1]--;
-                }
-            }
-        }
-        */
     }
 
     cavitiesNotEmpty(state){
@@ -1328,14 +1325,19 @@ class TreeEdge{
 
 //let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, 6, 5, true);
 let shadowGame2 = new ShadowGame(gameState.TURN_PLAYER1, 3, 2, true);
-
+/*
+//undoPlay tests with special play
 shadowGame2.makePlay(gameState.TURN_PLAYER1, 0);
 shadowGame2.printShadowBoard();
 shadowGame2.makePlay(gameState.TURN_PLAYER1, 2);
 shadowGame2.printShadowBoard();
-shadowGame2.undoPlay(gameState.TURN_PLAYER1, 2, 2);
+shadowGame2.undoPlay(gameState.TURN_PLAYER1, 2, 2, [1, 0]);
 shadowGame2.printShadowBoard();
-/*
+shadowGame2.makePlay(gameState.TURN_PLAYER2, 3);
+shadowGame2.printShadowBoard();
+shadowGame2.undoPlay(gameState.TURN_PLAYER2, 3, 3, [1, 0]);
+shadowGame2.printShadowBoard();
+
 //ShadowGame methods test
 shadowGame.makePlay(gameState.TURN_PLAYER1, 6);
 shadowGame.printShadowBoard();
