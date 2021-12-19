@@ -909,14 +909,15 @@ class PlayCommand {
     constructor(game, state, cavityRealIndex) {
         this.state = state;  //may be redundant
         this.index = cavityRealIndex;
-        this.seeds = game.cavities[cavityRealIndex];
+        //this.seeds = game.cavities[cavityRealIndex];
+        this.cavs = JSON.parse(JSON.stringify(game.cavities));
         this.scores = JSON.parse(JSON.stringify(game.storages));
         this.game = game;
     }
 
     execute(){ this.game.makePlay(this.state, this.index);}
 
-    undo() { this.game.undoPlay(this.state, this.index, this.seeds, this.scores);}
+    undo() { this.game.undoPlay(this.state, this.index, this.cavs, this.scores);}
 }
 
 class ShadowGame {
@@ -1083,7 +1084,8 @@ class ShadowGame {
         else return index + nCavs;
     }
 
-    undoPlay(state, cavityRealIndex, seeds, scores){
+    undoPlay(state, cavityRealIndex, cavs, scores){
+        /*
 
         const nCavs = this.cavities.length / 2;
 
@@ -1158,6 +1160,10 @@ class ShadowGame {
             }
         }
         this.removeSeedsFromCavity(cavityRealIndex, seeds);
+        */
+
+        this.cavities = cavs;
+        this.storages = scores;
     }
 
     cavitiesNotEmpty(state){
@@ -1324,8 +1330,9 @@ class TreeEdge{
  */
 
 
-//let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, 6, 5, true);
+let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, 6, 5, true);
 let shadowGame2 = new ShadowGame(gameState.TURN_PLAYER1, 3, 2, true);
+/*
 let shadowGame3 = new ShadowGame(gameState.TURN_PLAYER1, 3, 2, true);
 
 //undoPlay tests with special play
@@ -1355,7 +1362,7 @@ shadowGame3.printShadowBoard();
 shadowGame3.undoCommand();
 shadowGame3.printShadowBoard();
 
-/*
+
 //ShadowGame methods test
 shadowGame.makePlay(gameState.TURN_PLAYER1, 6);
 shadowGame.printShadowBoard();
@@ -1382,12 +1389,11 @@ console.log(shadowGame.cavitiesNotEmpty(gameState.TURN_PLAYER2));
 */
 
 //Tree tests
-/*
 let tree = new TreeNode(-1);
-createTree(shadowGame, gameState.TURN_PLAYER2, tree, 3);
+createTree(shadowGame, gameState.TURN_PLAYER2, tree, 6);
 debugger;
 printTree(tree);
-*/
+
 
 //Clone tests [DEPRECATED]
 /*
