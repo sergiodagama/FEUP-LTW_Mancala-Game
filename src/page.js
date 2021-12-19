@@ -4,7 +4,19 @@ class Page{
         this.chat = document.getElementById("img-header-navbar-chat-icon");
         this.rules = document.getElementById("img-header-navbar-rules-icon");
         this.score = document.getElementById("img-header-navbar-score-icon");
-        this.isSectionOpen = [false, false, false];  //[chat | rules | score]
+        this.isSectionOpen = [false, false, false, true];  //[chat | rules | score | menu]
+
+        //Responsive Menu
+        this.menu = document.getElementById("img-header-navbar-menu-icon");
+        this.dMain = document.getElementById("d-main");
+
+        //Sections for menu display
+        this.authSection = document.getElementById("section-main-authentication");
+        this.gameSection = document.getElementById("section-main-game");
+        this.configsSection = document.getElementById("section-main-configurations");
+        this.chatSection = document.getElementById("section-main-chat");
+        this.rulesSection = document.getElementById("section-main-rules");
+        this.scoreSection = document.getElementById("section-main-score");
 
         //Authentication
         this.signUp = document.getElementById("h3-login-titles-signup--in"); //in section sign in change to signUn
@@ -65,6 +77,10 @@ class Page{
         this.modeComputer.addEventListener("click", this.displayModeComputer.bind(this));
     }
 
+    listenMenu(){
+        this.menu.addEventListener("click", this.toggleMenu.bind(this))
+    }
+
     //Calls all listeners
     listenAll(){
         this.listenChat();
@@ -75,6 +91,7 @@ class Page{
         this.listenRecoverPass();
         this.listenGoBackPass();
         this.listenChangingModes();
+        this.listenMenu();
     }
 
     /**
@@ -140,6 +157,11 @@ class Page{
 
     toggleGoBackPass(){
         this.toggleVisibility(false, "form-authentication-login", "form-authentication-forgot", "block","block");
+    }
+
+    toggleMenu(){
+        this.toggleVisibility(this.isSectionOpen[3], "d-main", "s-menu", "grid", "grid");
+        this.isSectionOpen[3] = !(this.isSectionOpen[3])
     }
 
     displayModeLocal(){

@@ -4,10 +4,6 @@
     display: none;
 }
 
-#s-menu{
-    display: none;
-}
-
 body{
     margin: 0;
     background-color: #2EC4B6;
@@ -126,6 +122,11 @@ header{
 
 .img-header-navbar-icon:hover{
     filter: invert(45%) sepia(85%) saturate(700%) hue-rotate(345deg) brightness(107%) contrast(101%) drop-shadow(2px 2px 20px white);
+}
+
+#img-header-navbar-menu-icon{
+    width: 2.2em;
+    height: 2.2em;
 }
 
 /* || Main */
