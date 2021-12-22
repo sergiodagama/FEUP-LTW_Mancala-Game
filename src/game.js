@@ -574,7 +574,24 @@ class GamePresenter{
 
                     return;
                 }
-                if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
+                if(!document.getElementById("input-settings-info--computer").checked){
+                    if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
+                }
+                else{
+                        //make player one play
+                        this.makePlay(this.state, cavityRealIndex); //TODO: if play again jump
+                        //switch here for dificulty
+
+                        this.makePlay(gameState.TURN_PLAYER2, 7);  //TODO: also make loop for play again
+
+                        //create shadow game equal to current game
+                        //let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, nCavs, nSeeds);  //TODO: Change shadow game to accept array in order to be easier to create
+
+                        //get the best play
+
+                        //making the best play
+                        //break;
+                }
                 break;
             case gameState.TURN_PLAYER2:
                 if(cavityRealIndex < nCavs){
@@ -799,6 +816,8 @@ class GamePresenter{
             this.viewer.removeWinner();
             this.generateInitPlayer();
             this.viewer.disableModesCheckboxes();
+
+            //TODO: update player 2 name
         }
         else{
             this.updateSysMessage("You are already playing a game!");
@@ -841,9 +860,6 @@ class GamePresenter{
         this.model.storages[destStorage].push(seed);
     }
 }
-
-//temporary
-//document.getElementById("d-game-area-background").style.display = "grid";
 
 class GameMain{
     constructor(){
@@ -1255,9 +1271,9 @@ class TreeEdge{
 /**
  * TESTS FOR DEBUGGING
  */
+/*
 let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, 6, 5, true);
 let shadowGame2 = new ShadowGame(gameState.TURN_PLAYER1, 3, 2, true);
-/*
 let shadowGame3 = new ShadowGame(gameState.TURN_PLAYER1, 3, 2, true);
 
 //undoPlay tests with special play
@@ -1320,4 +1336,4 @@ printTree(tree);
 */
 
 //Minimax tests
-console.log(shadowGame2.getBestPlay(3));
+//console.log(shadowGame2.getBestPlay(3));
