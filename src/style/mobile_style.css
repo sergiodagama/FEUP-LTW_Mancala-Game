@@ -12,6 +12,10 @@
         display: block;
     }
 
+    #sel-header-menu{
+        display: none;
+    }
+
     /* || Main */
     #d-main{
         display: grid;
@@ -21,11 +25,6 @@
         grid-template-rows:  34em 5em;
         grid-template-columns: 50% 50%;
         min-height: 82.3vh;
-    }
-
-    #section-main-authentication{
-        grid-area: auth;
-        display: none;
     }
 
     /* || Footer */
@@ -68,5 +67,42 @@
     .p-menu:hover{
         background-color: #FF9F1C;
         color: #242331;
+    }
+
+    #section-main-gam{
+        grid-area: game;
+    }
+
+    #section-main-authentication{
+        grid-area: game;
+        display: none;
+    }
+
+    #section-main-configurations{
+        grid-area: game;
+        display: none;
+    }
+
+    #section-main-chat{
+        grid-area: game;
+        display: none;
+    }
+
+    #section-main-rules{
+        grid-area: game;
+        display: none;
+    }
+
+    #section-main-score{
+        grid-area: game;
+        display: none;
+    }
+
+    #section-main-commands{
+        grid-area: commands;
+    }
+
+    #section-main-system-messages{
+        grid-area: system_messages;
     }
 }

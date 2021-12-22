@@ -147,6 +147,7 @@ header{
 /* || Authentication */
 #section-main-authentication{
 	grid-area: auth;
+    display: block;
 }
 
 #form-authentication-login{
@@ -359,6 +360,7 @@ header{
 /* || Game */
 #section-main-game{
     grid-area: game;
+    display: block;
     padding-left: 0em;
 }
 
@@ -688,6 +690,7 @@ header{
 /* || Configurations */
 #section-main-configurations{
 	grid-area: configs;
+    display: block;
 }
 
 #form-configurations-settings{

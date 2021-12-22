@@ -1,6 +1,10 @@
 /* big tablets or small pc's */
 @media screen and (max-width: 1200px) {
 
+    #img-header-navbar-score-icon{
+        display: none;
+    }
+
     /* || Main */
     #d-main{
         display: grid;
@@ -15,9 +19,21 @@
         min-height: 82.3vh;
     }
 
-    /* || Configurations */
+    #sel-header-menu{
+        display: block;
+    }
+
+    /*
+     || Configurations
     #section-main-configurations{
-        grid-area: auth;
+        grid-area: game;
         display: none;
     }
+    */
+
+    /* || Configurations
+    #section-main-score{
+        grid-area: auth;
+        display: none;
+    }*/
 }
