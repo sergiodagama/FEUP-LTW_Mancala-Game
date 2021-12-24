@@ -652,6 +652,9 @@ class GamePresenter{
                 }
                 break;
             case gameState.TURN_PLAYER2:
+                if(this.mode = gameMode.PC){
+                    return;
+                }
                 if(cavityRealIndex < nCavs){
                     this.viewer.updateTurnMessage("That cavitites belongs to " + this.model.players[0].getUsername());
                     setTimeout(function () {
