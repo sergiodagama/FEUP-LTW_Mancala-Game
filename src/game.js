@@ -33,8 +33,29 @@ const winningState = {
     PLAYER2_WON: Symbol("PLAYER2_WON"),
  };
 
+ //Game modes
+const gameMode = {
+    LOCAL: Symbol("LOCAL"),
+    PC: Symbol("PC"),
+    ONLINE: Symbol("ONLINE"),
+ };
+
+ //Computer Mode dificulty levels
+ const computerDificulty = {
+    EASY: Symbol("EASY"),
+    MEDIUM: Symbol("MEDIUM"),
+    HARD: Symbol("HARD"),
+ };
+
  //Development Macros
 const DEBUGGING = false;
+
+/**
+ * Utils
+ */
+ const sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+  }
 
 /**
  * Models
@@ -390,12 +411,20 @@ class GameViewer{
         document.getElementById("input-settings-info--local").disabled = true;
         document.getElementById("input-settings-info--online").disabled = true;
         document.getElementById("input-settings-info--computer").disabled = true;
+
+        document.getElementById("input-settings-info--easy").disabled = true;
+        document.getElementById("input-settings-info--medium").disabled = true;
+        document.getElementById("input-settings-info--hard").disabled = true;
     }
 
     enableModesCheckboxes(){
         document.getElementById("input-settings-info--local").disabled = false;
         document.getElementById("input-settings-info--online").disabled = false;
         document.getElementById("input-settings-info--computer").disabled = false;
+
+        document.getElementById("input-settings-info--easy").disabled = false;
+        document.getElementById("input-settings-info--medium").disabled = false;
+        document.getElementById("input-settings-info--hard").disabled = false;
     }
 
     removeWinner(){
@@ -440,7 +469,11 @@ class GamePresenter{
     constructor(model, viewer){
         this.model = model;
         this.viewer = viewer;
+
+        //game states
         this.state = gameState.CONFIG;  //game starts in CONFIG mode
+        this.mode = gameMode.LOCAL;
+        this.computerDificulty = undefined;
     }
 
     //Getters
@@ -574,23 +607,48 @@ class GamePresenter{
 
                     return;
                 }
-                if(!document.getElementById("input-settings-info--computer").checked){
+                if(this.mode == gameMode.LOCAL){
                     if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
                 }
                 else{
                         //make player one play
-                        this.makePlay(this.state, cavityRealIndex); //TODO: if play again jump
-                        //switch here for dificulty
+                        if(this.makePlay(this.state, cavityRealIndex)) break;
 
-                        this.makePlay(gameState.TURN_PLAYER2, 7);  //TODO: also make loop for play again
+                        this.switchTurns();
 
-                        //create shadow game equal to current game
-                        //let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, nCavs, nSeeds);  //TODO: Change shadow game to accept array in order to be easier to create
+                        sleep(2000).then(() => {
+                            let pcPlayAgain = true;
 
-                        //get the best play
+                            while(pcPlayAgain){
 
-                        //making the best play
-                        //break;
+                                //create shadow game equal to current game
+                                let shadowGame = new ShadowGame(gameState.TURN_PLAYER2, 0, 0);
+                                shadowGame.configWithArrays(this.model.cavities, this.model.storages);
+                                let depth;
+
+                                //changing depth of minimax, based on dificulty
+                                switch(this.computerDificulty){
+                                    case computerDificulty.EASY:
+                                        depth = 1;
+                                        break;
+                                    case computerDificulty.MEDIUM:
+                                        depth = 3;
+                                        break;
+                                    case computerDificulty.HARD:
+                                        depth = 5;
+                                        break;
+                                    default:
+                                        console.log("Error -> makePlay() <- no such dificulty exists");
+                                }
+
+                                //get the best play using shadow game
+                                const bestPlay = shadowGame.getBestPlay(depth);
+
+                                //making the best play
+                                pcPlayAgain = this.makePlay(this.state, bestPlay.index);
+                            }
+                            this.switchTurns();
+                        })
                 }
                 break;
             case gameState.TURN_PLAYER2:
@@ -807,17 +865,42 @@ class GamePresenter{
         this.state = gameState.CONFIG;
     }
 
+    configComputerDificulty(){
+        if(document.getElementById("input-settings-info--easy").checked){
+            this.computerDificulty = computerDificulty.EASY;
+        }
+        else if(document.getElementById("input-settings-info--medium").checked){
+            this.computerDificulty = computerDificulty.MEDIUM;
+        }
+        else{
+            this.computerDificulty = computerDificulty.HARD;
+        }
+    }
+
     handleStartCommand(){
         if(this.state == gameState.QUIT || this.state == gameState.CONFIG){
+            if(document.getElementById("input-settings-info--computer").checked){
+                this.mode = gameMode.PC;
+                this.model.players[1].setUsername("Computer");
+                this.state = gameState.TURN_PLAYER1;  //when it is against the computer the player one always starts first
+                this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn");
+                this.configComputerDificulty();
+            }
+            else if(document.getElementById("input-settings-info--online").checked){
+                this.mode = gameMode.ONLINE;
+                this.generateInitPlayer();
+            }
+            else{
+                this.mode = gameMode.LOCAL;
+                this.generateInitPlayer();
+            }
+
             this.viewer.displayStartBigMessage();
             this.updateCavitiesAndStorages();
             this.updateScore();
             this.updateSysMessage("You started a game :)");
             this.viewer.removeWinner();
-            this.generateInitPlayer();
             this.viewer.disableModesCheckboxes();
-
-            //TODO: update player 2 name
         }
         else{
             this.updateSysMessage("You are already playing a game!");
@@ -926,6 +1009,22 @@ class ShadowGame {
 
     setCommandsStack(stack){
         this.commandsStack = stack;
+    }
+
+    configWithArrays(cavities, storages){
+        for(let i = 0; i < cavities.length; i++){
+            this.cavities[i] = 0;
+            for(let k = 0; k < cavities[i].length; k++){
+                this.cavities[i]++;
+            }
+        }
+
+        for(let i = 0; i < 2; i++){
+            this.storages[i] = 0;
+            for(let k = 0; k < storages[i].length; k++){
+                this.storages[i]++;
+            }
+        }
     }
 
     configCavitiesAndStorages(nCavs, nSeeds){
