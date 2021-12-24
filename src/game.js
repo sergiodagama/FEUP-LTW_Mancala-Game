@@ -415,6 +415,9 @@ class GameViewer{
         document.getElementById("input-settings-info--easy").disabled = true;
         document.getElementById("input-settings-info--medium").disabled = true;
         document.getElementById("input-settings-info--hard").disabled = true;
+
+        document.getElementById("input-settings-info--ncavities").disabled = true;
+        document.getElementById("input-settings-info--nseeds").disabled = true;
     }
 
     enableModesCheckboxes(){
@@ -425,6 +428,9 @@ class GameViewer{
         document.getElementById("input-settings-info--easy").disabled = false;
         document.getElementById("input-settings-info--medium").disabled = false;
         document.getElementById("input-settings-info--hard").disabled = false;
+
+        document.getElementById("input-settings-info--ncavities").disabled = false;
+        document.getElementById("input-settings-info--nseeds").disabled = false;
     }
 
     removeWinner(){
@@ -486,8 +492,6 @@ class GamePresenter{
     }
 
     handleConfigs(){
-        this.viewer.removeWinner();
-
         //get current quantities
         const quantities = document.getElementsByClassName("input-settings-info--quantities");
         const nCavs = quantities[0].value;
@@ -507,6 +511,8 @@ class GamePresenter{
     }
 
     config(nCavs, nSeeds){
+        this.viewer.removeWinner();
+
         if(this.state == gameState.CONFIG || this.state == gameState.QUIT){
             //deleting cavities and empty storages in Model
             this.model.deleteCavities();
