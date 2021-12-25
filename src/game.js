@@ -905,6 +905,7 @@ class GamePresenter{
             }
             else{
                 this.mode = gameMode.LOCAL;
+                this.model.players[1].setUsername("Local");
                 this.generateInitPlayer();
             }
 
