@@ -635,13 +635,13 @@ class GamePresenter{
                                 //changing depth of minimax, based on dificulty
                                 switch(this.computerDificulty){
                                     case computerDificulty.EASY:
-                                        depth = 1;
+                                        depth = 2;
                                         break;
                                     case computerDificulty.MEDIUM:
-                                        depth = 3;
+                                        depth = 5;
                                         break;
                                     case computerDificulty.HARD:
-                                        depth = 5;
+                                        depth = 8;
                                         break;
                                     default:
                                         console.log("Error -> makePlay() <- no such dificulty exists");
@@ -658,7 +658,7 @@ class GamePresenter{
                 }
                 break;
             case gameState.TURN_PLAYER2:
-                if(this.mode = gameMode.PC){
+                if(this.mode == gameMode.PC){
                     return;
                 }
                 if(cavityRealIndex < nCavs){
@@ -763,11 +763,11 @@ class GamePresenter{
         //checkers for end of game
         if(this.checkNoPlays(0, nCavs)){
             this.gameEnd(0);
-            return true;
+            return;
         }
         else if(this.checkNoPlays(1, nCavs)){
             this.gameEnd(1);
-            return true;
+            return;
         }
 
         //set play again flag
@@ -820,6 +820,7 @@ class GamePresenter{
     }
 
     gameEnd(playerNumb){ //the playerNumb refers to the player with no plays
+
         //retrieving all opponent seeds to his own storage
         if(playerNumb == 0){
             for(let i = this.model.cavities.length / 2; i < this.model.cavities.length; i++){
@@ -871,7 +872,12 @@ class GamePresenter{
         this.viewer.displayWinner(won, this.model.players[0].getUsername(), this.model.players[1].getUsername());
         this.model.resetConfigs();  //TODO: change this to current configs, only in model to not appear in screen while winner banner
         this.viewer.enableModesCheckboxes();
-        this.state = gameState.CONFIG;
+
+        let that = this;
+
+        setTimeout(function () {
+            that.state = gameState.CONFIG;
+        }, 1000);
     }
 
     configComputerDificulty(){
@@ -1214,25 +1220,27 @@ class ShadowGame {
 
         console.log("OPTIMAL VALUE: ", optimalScore);
 
-        console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!PRINTING TREE AFTER MINIMAX!!!!!!!!!!!!!!!!!!!!!!!!");
+        //console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!PRINTING TREE AFTER MINIMAX!!!!!!!!!!!!!!!!!!!!!!!!");
 
-        printTree(tree);
+        //printTree(tree);
 
         //retrieve the best command based on minimax
         //(loop edges in depth = 1 and retrieve first command that gives the optimal score)
         let bestPlay = null;
+        let i = 1;
 
         tree.edges.forEach(edge => {
             if(edge.destNode.value == optimalScore){
+                console.log("I: " + i + " edge.destNode.value " + edge.destNode.value);
                 bestPlay = edge.playCommand;
-                return bestPlay;
+                i++;
             }
         });
         return bestPlay;
     }
 
     minimax(tree, depth, maximizingPlayer){
-        if(depth == 0) return tree.value;
+        if(depth == 0 || tree.value != -1) return tree.value;  //if value is different than -1, the game has ended
 
         if(maximizingPlayer){
             let maxEval = -Infinity
@@ -1268,7 +1276,7 @@ function createTree(shadowGame, state, root, depth){
     const notEmpty = shadowGame.cavitiesNotEmpty(state);
 
     if(DEBUGGING){
-        console.log("Turn: " + state.toString() + "    notEmpty[]: " + notEmpty);
+        console.log("DEPTH: " + depth + " Turn: " + state.toString() + "    notEmpty[]: " + notEmpty);
         console.log("#############################################");
         //debugger;
     }
@@ -1312,7 +1320,10 @@ function createTree(shadowGame, state, root, depth){
         }
         //debugger;
     }
-    shadowGame.undoCommand();
+    if(notEmpty.length != 0 ) shadowGame.undoCommand();
+    else{
+        root.setValue(shadowGame.getPlayerScore(gameState.TURN_PLAYER2));  //CHECK/TEST THIS LINE
+    }
     if(DEBUGGING) console.log("=============================================");
 }
 
@@ -1436,12 +1447,14 @@ console.log(shadowGame.cavitiesNotEmpty(gameState.TURN_PLAYER2));
 */
 
 //Tree tests
+
 /*
 let tree = new TreeNode(-1);
-createTree(shadowGame, gameState.TURN_PLAYER2, tree, 4);
+createTree(shadowGame3, gameState.TURN_PLAYER2, tree, 10);
 debugger;
 printTree(tree);
 */
 
+
 //Minimax tests
-//console.log(shadowGame2.getBestPlay(3));
+//console.log(shadowGame2.getBestPlay(9));
