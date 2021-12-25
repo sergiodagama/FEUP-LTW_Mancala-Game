@@ -48,7 +48,7 @@ const gameMode = {
  };
 
  //Development Macros
-const DEBUGGING = false;
+const DEBUGGING = true;
 
 /**
  * Utils
@@ -620,6 +620,8 @@ class GamePresenter{
                         //make player one play
                         if(this.makePlay(this.state, cavityRealIndex)) break;
 
+                        if(this.state == gameState.CONFIG) break;  //when guest wins prevents from making computer play
+
                         this.switchTurns();
 
                         sleep(2000).then(() => {
@@ -635,13 +637,13 @@ class GamePresenter{
                                 //changing depth of minimax, based on dificulty
                                 switch(this.computerDificulty){
                                     case computerDificulty.EASY:
-                                        depth = 2;
+                                        depth = 1;
                                         break;
                                     case computerDificulty.MEDIUM:
-                                        depth = 5;
+                                        depth = 3;
                                         break;
                                     case computerDificulty.HARD:
-                                        depth = 8;
+                                        depth = 5;
                                         break;
                                     default:
                                         console.log("Error -> makePlay() <- no such dificulty exists");
@@ -686,6 +688,7 @@ class GamePresenter{
     }
 
     switchTurns(){
+        if(this.state == gameState.CONFIG) return;
         if(this.state == gameState.TURN_PLAYER1){
             this.updateTurnMessage("It's " + this.model.players[1].getUsername() + " turn");
             this.state = gameState.TURN_PLAYER2;
@@ -872,12 +875,7 @@ class GamePresenter{
         this.viewer.displayWinner(won, this.model.players[0].getUsername(), this.model.players[1].getUsername());
         this.model.resetConfigs();  //TODO: change this to current configs, only in model to not appear in screen while winner banner
         this.viewer.enableModesCheckboxes();
-
-        let that = this;
-
-        setTimeout(function () {
-            that.state = gameState.CONFIG;
-        }, 1000);
+        this.state = gameState.CONFIG;
     }
 
     configComputerDificulty(){
