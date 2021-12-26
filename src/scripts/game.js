@@ -33,6 +33,47 @@ const winningState = {
     PLAYER2_WON: Symbol("PLAYER2_WON"),
  };
 
+ //Game modes
+const gameMode = {
+    LOCAL: Symbol("LOCAL"),
+    PC: Symbol("PC"),
+    ONLINE: Symbol("ONLINE"),
+ };
+
+ //Computer Mode dificulty levels
+ const computerDificulty = {
+    EASY: Symbol("EASY"),
+    MEDIUM: Symbol("MEDIUM"),
+    HARD: Symbol("HARD"),
+ };
+
+ //Development Macros
+const DEBUGGING = false;
+
+const dificultyDepth = {
+    EASY: 2,
+    MEDIUM: 5,
+    HARD: 7,
+}
+
+const colors  = {
+    turnHighlight: "#F0851B"
+}
+
+const timeouts = {
+    turnHighlights: 700,
+    turnWarnings: 1500,
+    startBigMessage: 2500,
+    pcModeDelay: 2000
+}
+
+/**
+ * Utils
+ */
+ const sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+  }
+
 /**
  * Models
  */
@@ -222,6 +263,7 @@ class GameModel{
     config(nCavities, nSeeds){
         //delete existing seeds and cavities
         this.deleteCavities();
+        this.emptyStorages();
 
         //add cavites and create seeds
         for(let i = 0; i < nCavities * 2; i++){
@@ -250,7 +292,6 @@ class GameViewer{
 
     registerWith(presenter){
         this.presenter = presenter;
-        console.log(this.getPresenter());
     }
 
     getPresenter(){
@@ -330,8 +371,20 @@ class GameViewer{
         }
     }
 
-    updateTurnMessage(text){
+    updateTurnMessage(text, highlight){
         this.turnMessage.innerHTML = text;
+
+        if(highlight){
+            const prevColor = this.turnMessage.style.color;
+
+            this.turnMessage.style.color = colors.turnHighlight;
+
+            const that = this;
+
+            setTimeout(function () {
+                that.turnMessage.style.color = prevColor;
+            }, timeouts.turnHighlights);
+        }
     }
 
     updateSysMessage(text){
@@ -380,19 +433,33 @@ class GameViewer{
         bigMessage.style.display = "block";
         setTimeout(function () {
             bigMessage.style.display = "none";
-        }, 2500);
+        }, timeouts.startBigMessage);
     }
 
     disableModesCheckboxes(){
         document.getElementById("input-settings-info--local").disabled = true;
         document.getElementById("input-settings-info--online").disabled = true;
         document.getElementById("input-settings-info--computer").disabled = true;
+
+        document.getElementById("input-settings-info--easy").disabled = true;
+        document.getElementById("input-settings-info--medium").disabled = true;
+        document.getElementById("input-settings-info--hard").disabled = true;
+
+        document.getElementById("input-settings-info--ncavities").disabled = true;
+        document.getElementById("input-settings-info--nseeds").disabled = true;
     }
 
     enableModesCheckboxes(){
         document.getElementById("input-settings-info--local").disabled = false;
         document.getElementById("input-settings-info--online").disabled = false;
         document.getElementById("input-settings-info--computer").disabled = false;
+
+        document.getElementById("input-settings-info--easy").disabled = false;
+        document.getElementById("input-settings-info--medium").disabled = false;
+        document.getElementById("input-settings-info--hard").disabled = false;
+
+        document.getElementById("input-settings-info--ncavities").disabled = false;
+        document.getElementById("input-settings-info--nseeds").disabled = false;
     }
 
     removeWinner(){
@@ -437,7 +504,11 @@ class GamePresenter{
     constructor(model, viewer){
         this.model = model;
         this.viewer = viewer;
+
+        //game states
         this.state = gameState.CONFIG;  //game starts in CONFIG mode
+        this.mode = gameMode.LOCAL;
+        this.computerDificulty = undefined;
     }
 
     //Getters
@@ -450,8 +521,6 @@ class GamePresenter{
     }
 
     handleConfigs(){
-        this.viewer.removeWinner();
-
         //get current quantities
         const quantities = document.getElementsByClassName("input-settings-info--quantities");
         const nCavs = quantities[0].value;
@@ -471,6 +540,8 @@ class GamePresenter{
     }
 
     config(nCavs, nSeeds){
+        this.viewer.removeWinner();
+
         if(this.state == gameState.CONFIG || this.state == gameState.QUIT){
             //deleting cavities and empty storages in Model
             this.model.deleteCavities();
@@ -532,9 +603,9 @@ class GamePresenter{
         this.viewer.updateSysMessage(this.model.sysMessage);
     }
 
-    updateTurnMessage(text){
+    updateTurnMessage(text, highlight){
         this.model.turnMessage = text;
-        this.viewer.updateTurnMessage(this.model.turnMessage);
+        this.viewer.updateTurnMessage(this.model.turnMessage, highlight);
     }
 
     updateCavitiesAndStorages(){
@@ -555,39 +626,86 @@ class GamePresenter{
                 break;
             case gameState.TURN_PLAYER1:
                 if(cavityRealIndex >= nCavs){
-                    this.viewer.updateTurnMessage("That cavitity belongs to " + this.model.players[1].getUsername());
+                    this.viewer.updateTurnMessage("That cavitity belongs to " + this.model.players[1].getUsername(), true);
                     setTimeout(function () {
                         that.updateTurnMessage("It's " + that.model.players[0].getUsername() + " turn");
-                    }, 2000);
+                    }, timeouts.turnWarnings);
 
                     return;
                 }
                 if(this.model.cavities[cavityRealIndex].length == 0){
-                    this.viewer.updateTurnMessage("That cavitity is empty, choose another one");
+                    this.viewer.updateTurnMessage("That cavitity is empty, choose another one", true);
 
                     setTimeout(function () {
                         that.updateTurnMessage("It's " + that.model.players[0].getUsername() + " turn");
-                    }, 2000);
+                    }, timeouts.turnWarnings);
 
                     return;
                 }
-                if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
+                if(this.mode == gameMode.LOCAL){
+                    if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
+                }
+                else{
+                        //make player one play
+                        if(this.makePlay(this.state, cavityRealIndex)) break;
+
+                        if(this.state == gameState.CONFIG) break;  //when guest wins prevents from making computer play
+
+                        this.switchTurns();
+
+                        sleep(timeouts.pcModeDelay).then(() => {
+                            let pcPlayAgain = true;
+
+                            while(pcPlayAgain){
+
+                                //create shadow game equal to current game
+                                let shadowGame = new ShadowGame(gameState.TURN_PLAYER2, 0, 0);
+                                shadowGame.configWithArrays(this.model.cavities, this.model.storages);
+                                let depth;
+
+                                //changing depth of minimax, based on dificulty
+                                switch(this.computerDificulty){
+                                    case computerDificulty.EASY:
+                                        depth = dificultyDepth.EASY;
+                                        break;
+                                    case computerDificulty.MEDIUM:
+                                        depth = dificultyDepth.MEDIUM;
+                                        break;
+                                    case computerDificulty.HARD:
+                                        depth = dificultyDepth.HARD;
+                                        break;
+                                    default:
+                                        console.log("Error -> makePlay() <- no such dificulty exists");
+                                }
+
+                                //get the best play using shadow game
+                                const bestPlay = shadowGame.getBestPlay(depth);
+
+                                //making the best play
+                                pcPlayAgain = this.makePlay(this.state, bestPlay.index);
+                            }
+                            this.switchTurns();
+                        })
+                }
                 break;
             case gameState.TURN_PLAYER2:
+                if(this.mode == gameMode.PC){
+                    return;
+                }
                 if(cavityRealIndex < nCavs){
-                    this.viewer.updateTurnMessage("That cavitites belongs to " + this.model.players[0].getUsername());
+                    this.viewer.updateTurnMessage("That cavitites belongs to " + this.model.players[0].getUsername(), true);
                     setTimeout(function () {
                         that.updateTurnMessage("It's " + that.model.players[1].getUsername() + " turn");
-                    }, 2000);
+                    }, timeouts.turnWarnings);
 
                     return;
                 }
                 if(this.model.cavities[cavityRealIndex].length == 0){
-                    this.viewer.updateTurnMessage("That cavitity is empty, choose another one");
+                    this.viewer.updateTurnMessage("That cavitity is empty, choose another one", true);
 
                     setTimeout(function () {
                         that.updateTurnMessage("It's " + that.model.players[1].getUsername() + " turn");
-                    }, 2000);
+                    }, timeouts.turnWarnings);
 
                     return;
                 }
@@ -599,12 +717,13 @@ class GamePresenter{
     }
 
     switchTurns(){
+        if(this.state == gameState.CONFIG) return;
         if(this.state == gameState.TURN_PLAYER1){
-            this.updateTurnMessage("It's " + this.model.players[1].getUsername() + " turn");
+            this.updateTurnMessage("It's " + this.model.players[1].getUsername() + " turn", true);
             this.state = gameState.TURN_PLAYER2;
         }
         else{
-            this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn");
+            this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn", true);
             this.state = gameState.TURN_PLAYER1;
         }
     }
@@ -674,8 +793,14 @@ class GamePresenter{
         this.updateScore();
 
         //checkers for end of game
-        if(this.checkNoPlays(0, nCavs)) this.gameEnd(0);
-        else if(this.checkNoPlays(1, nCavs)) this.gameEnd(1);
+        if(this.checkNoPlays(0, nCavs)){
+            this.gameEnd(0);
+            return;
+        }
+        else if(this.checkNoPlays(1, nCavs)){
+            this.gameEnd(1);
+            return;
+        }
 
         //set play again flag
         if((state == gameState.TURN_PLAYER1 && dest == nCavs) ||
@@ -704,11 +829,11 @@ class GamePresenter{
         switch(randPlayer){
             case 0:
                 this.state = gameState.TURN_PLAYER1;
-                this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn");
+                this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn", true);
                 break;
             case 1:
                 this.state = gameState.TURN_PLAYER2;
-                this.updateTurnMessage("It's " + this.model.players[1].getUsername() + " turn");
+                this.updateTurnMessage("It's " + this.model.players[1].getUsername() + " turn", true);
                 break;
             default:
                 console.log("Error -> generateInitPlayer() <- invalid randPlayer number!");
@@ -727,6 +852,7 @@ class GamePresenter{
     }
 
     gameEnd(playerNumb){ //the playerNumb refers to the player with no plays
+
         //retrieving all opponent seeds to his own storage
         if(playerNumb == 0){
             for(let i = this.model.cavities.length / 2; i < this.model.cavities.length; i++){
@@ -772,21 +898,51 @@ class GamePresenter{
             won = winningState.PLAYER2_WON;
         }
 
-        const that = this;  //used for timeout function
-
         //show winner
-        //that.viewer.deleteCavities();
         this.updateScore();
-        this.viewer.displayWinner(won, that.model.players[0].getUsername(), that.model.players[1].getUsername());
+        this.updateSysMessage("The game has finished!");
+        this.viewer.displayWinner(won, this.model.players[0].getUsername(), this.model.players[1].getUsername());
+        this.model.resetConfigs();  //TODO: change this to current configs, only in model to not appear in screen while winner banner
+        this.viewer.enableModesCheckboxes();
+        this.state = gameState.CONFIG;
+    }
+
+    configComputerDificulty(){
+        if(document.getElementById("input-settings-info--easy").checked){
+            this.computerDificulty = computerDificulty.EASY;
+        }
+        else if(document.getElementById("input-settings-info--medium").checked){
+            this.computerDificulty = computerDificulty.MEDIUM;
+        }
+        else{
+            this.computerDificulty = computerDificulty.HARD;
+        }
     }
 
     handleStartCommand(){
         if(this.state == gameState.QUIT || this.state == gameState.CONFIG){
+            if(document.getElementById("input-settings-info--computer").checked){
+                this.mode = gameMode.PC;
+                this.model.players[1].setUsername("Computer");
+                this.state = gameState.TURN_PLAYER1;  //when it is against the computer the player one always starts first
+                this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn", true);
+                this.configComputerDificulty();
+            }
+            else if(document.getElementById("input-settings-info--online").checked){
+                this.mode = gameMode.ONLINE;
+                this.generateInitPlayer();
+            }
+            else{
+                this.mode = gameMode.LOCAL;
+                this.model.players[1].setUsername("Local");
+                this.generateInitPlayer();
+            }
+
             this.viewer.displayStartBigMessage();
             this.updateCavitiesAndStorages();
+            this.updateScore();
             this.updateSysMessage("You started a game :)");
             this.viewer.removeWinner();
-            this.generateInitPlayer();
             this.viewer.disableModesCheckboxes();
         }
         else{
@@ -798,11 +954,8 @@ class GamePresenter{
         if(this.state == gameState.TURN_PLAYER1 || this.state == gameState.TURN_PLAYER2){
             this.state = gameState.QUIT;
             //TODO: save results
-            this.updateScore();
-            this.updateSysMessage("You quitted this game :(");
             this.winner(true);
-            this.model.resetConfigs();  //TODO: change this to current configs, only in model to not appear in screen while winner banner
-            this.viewer.enableModesCheckboxes();
+            this.updateSysMessage("You quitted this game :(");
         }
         else{
             this.updateSysMessage("You are not playing a game yet!");
@@ -834,9 +987,6 @@ class GamePresenter{
     }
 }
 
-//temporary
-//document.getElementById("d-game-area-background").style.display = "grid";
-
 class GameMain{
     constructor(){
         this.gameModel = new GameModel();
@@ -863,3 +1013,474 @@ game.run();
  * Chat
  */
 
+/**
+ * Minimax
+ */
+class PlayCommand {
+    constructor(game, state, cavityRealIndex) {
+        this.state = state;  //may be redundant
+        this.index = cavityRealIndex;
+        this.cavs = JSON.parse(JSON.stringify(game.cavities));
+        this.scores = JSON.parse(JSON.stringify(game.storages));
+        this.game = game;
+    }
+
+    execute(){ this.game.makePlay(this.state, this.index);}
+
+    undo() { this.game.undoPlay(this.cavs, this.scores);}
+}
+
+class ShadowGame {
+    constructor(state, nCavs, nSeeds, init){
+        this.cavities = [];
+        this.storages = [];
+        this.commandsStack = []; //stack of commands done
+        this.state = state;
+        if(init) this.configCavitiesAndStorages(nCavs, nSeeds);
+    }
+
+    executeCommand(command){
+        command.execute();
+        this.commandsStack.push(command);
+    }
+
+    undoCommand(){
+        let poppedCommand = this.commandsStack.pop();
+        if(poppedCommand == undefined) console.log("Error -> shadow - undoCommand() <- no commands left in the stack");
+        else poppedCommand.undo();
+    }
+
+    setCommandsStack(stack){
+        this.commandsStack = stack;
+    }
+
+    configWithArrays(cavities, storages){
+        for(let i = 0; i < cavities.length; i++){
+            this.cavities[i] = 0;
+            for(let k = 0; k < cavities[i].length; k++){
+                this.cavities[i]++;
+            }
+        }
+
+        for(let i = 0; i < 2; i++){
+            this.storages[i] = 0;
+            for(let k = 0; k < storages[i].length; k++){
+                this.storages[i]++;
+            }
+        }
+    }
+
+    configCavitiesAndStorages(nCavs, nSeeds){
+        //delete existing seeds and cavities
+        this.emptyCavitiesAndStorages();
+
+        //add cavites and create seeds
+        for(let i = 0; i < nCavs * 2; i++){
+            this.cavities[i] = 0;
+            for(let k = 0; k < nSeeds; k++){
+                this.cavities[i]++;
+            }
+        }
+        this.storages[0] = 0;
+        this.storages[1] = 0;
+    }
+
+    emptyCavitiesAndStorages(){
+        this.cavities = [];
+        this.storages = [];
+    }
+
+    printShadowBoard(){
+        const nCavs = this.cavities.length / 2;
+
+        console.log(this.storages[0] + " " + this.cavities.slice(0, nCavs));
+        console.log("  " + this.cavities.slice(nCavs, nCavs * 2) + " " +  this.storages[1] + "\n");
+        console.log("---------------");
+    }
+
+    getPlayerScore(state){
+        switch (state) {
+            case gameState.TURN_PLAYER1:
+                return this.storages[0];
+            case gameState.TURN_PLAYER2:
+                return this.storages[1];
+            default:
+                console.log("Error -> shadow - getPlayerScore() <- no such state accepted");
+                return;
+        }
+    }
+
+    moveSeedToCavity(origCavityRealIndex, destCavityRealIndex){
+        if(this.cavities[origCavityRealIndex] == 0) console.log("Error -> shadow - moveSeedToCavity() <- orig cavity has no seeds");
+        else this.cavities[origCavityRealIndex]--;
+
+        this.cavities[destCavityRealIndex]++;
+    }
+
+    moveSeedToStorage(origCavityRealIndex, destStorage){
+        if(this.cavities[origCavityRealIndex] == 0) console.log("Error -> shadow - moveSeedToStorage() <- cavity has no seeds");
+        else this.cavities[origCavityRealIndex]--;
+
+        this.storages[destStorage]++;
+    }
+
+    moveSeedFromStorage(origStorage, destCavityRealIndex){  //0 or 1
+        if(this.storages[origStorage] == 0) console.log("Error -> shadow - moveSeedFromStorage() <- storage has no seeds");
+        else this.storages[origStorage]--;
+
+        this.cavities[destCavityRealIndex]++;
+    }
+
+    fillCavity(cavityRealIndex, seeds){
+        for(let i = 0; i < seeds; i++){
+            this.cavities[cavityRealIndex]++;
+        }
+    }
+
+    removeSeedsFromCavity(cavityRealIndex, seeds){
+        if(this.cavities[cavityRealIndex] < seeds) console.log("Error -> shadow - removeSeedsFromCavity() <- cavity has not that much seeds");
+        for(let i = 0; i < seeds; i++){
+            this.cavities[cavityRealIndex]--;
+        }
+    }
+
+    makePlay(state, cavityRealIndex){
+        if(this.cavities[cavityRealIndex] == 0){
+            console.log("Error -> shadow - makePlay() <- no seeds in this cavity");
+            return;
+        }
+
+        const nCavs = this.cavities.length / 2;
+
+        let dest = cavityRealIndex;
+        let prevDest = dest;  //only used to check if final cavity is empty
+
+        let i = 0; //to skip the first iteration
+
+        while(this.cavities[cavityRealIndex] > 0){
+            prevDest = dest;
+            if(dest == (nCavs * 2)){
+                if(i > 0 && state == gameState.TURN_PLAYER2) this.moveSeedToStorage(cavityRealIndex, 1);
+                dest = nCavs - 1;
+            }
+            else if(dest >= nCavs){
+                if(i > 0) this.moveSeedToCavity(cavityRealIndex, dest);
+                dest++;
+            }
+            else if(dest < 0){
+                if(i > 0 && state == gameState.TURN_PLAYER1) this.moveSeedToStorage(cavityRealIndex, 0);
+                dest = nCavs;
+            }
+            else{  // < nCavs
+                if(i > 0) this.moveSeedToCavity(cavityRealIndex, dest);
+                dest--;
+            }
+            i++;
+        }
+
+        //when last seed ends in player empty cavity
+        if(prevDest != -1 && prevDest != (nCavs * 2)){
+            if(state == gameState.TURN_PLAYER1 && prevDest < nCavs){
+                if(this.cavities[prevDest] == 1){
+                    //removes seeds from opposite side and from prevDest and add to storage 1
+                    const opposite = this.getOppositeIndex(prevDest, nCavs);
+
+                    while(this.cavities[opposite] > 0){
+                        this.moveSeedToStorage(opposite, 0);
+                    }
+                    this.moveSeedToStorage(prevDest, 0);
+                }
+            }
+            else if(state == gameState.TURN_PLAYER2 && prevDest >= nCavs){
+                if(this.cavities[prevDest] == 1){
+                    //removes seeds from opposite side and from prevDest and add to storage 2
+                    const opposite = this.getOppositeIndex(prevDest, nCavs);
+
+                    while(this.cavities[opposite] > 0){
+                        this.moveSeedToStorage(opposite, 1);
+                    }
+                    this.moveSeedToStorage(prevDest, 1);
+                }
+            }
+        }
+    }
+
+    getOppositeIndex(index, nCavs){
+        if(index >= nCavs) return index - nCavs;
+        else return index + nCavs;
+    }
+
+    undoPlay(cavs, scores){
+        this.cavities = cavs;
+        this.storages = scores;
+    }
+
+    cavitiesNotEmpty(state){
+        let notEmpty = [];  //indexes of empty cavities
+
+        const nCavs = this.cavities.length / 2;
+
+        if(state == gameState.TURN_PLAYER1){
+            for(let i = 0; i < nCavs; i++){
+                if(this.cavities[i] != 0){
+                    notEmpty.push(i);
+                }
+            }
+        }
+        else if(state == gameState.TURN_PLAYER2){
+            for(let i = nCavs; i < nCavs * 2; i++){
+                if(this.cavities[i] != 0){
+                    notEmpty.push(i);
+                }
+            }
+        }
+        return notEmpty;
+    }
+
+    getBestPlay(depth){
+        //build the commands tree
+        let tree = new TreeNode(-1);
+
+        createTree(this, gameState.TURN_PLAYER2, tree, depth);  //assuming the computer will be always the second player
+
+        //apply minimax hover the tree
+        const optimalScore = this.minimax(tree, depth, true);
+
+        console.log("OPTIMAL VALUE: ", optimalScore);
+
+        //console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!PRINTING TREE AFTER MINIMAX!!!!!!!!!!!!!!!!!!!!!!!!");
+
+        //printTree(tree);
+
+        //retrieve the best command based on minimax
+        //(loop edges in depth = 1 and retrieve first command that gives the optimal score)
+        let bestPlay = null;
+        let i = 1;
+
+        tree.edges.forEach(edge => {
+            if(edge.destNode.value == optimalScore){
+                console.log("I: " + i + " edge.destNode.value " + edge.destNode.value);
+                bestPlay = edge.playCommand;
+                i++;
+            }
+        });
+        return bestPlay;
+    }
+
+    minimax(tree, depth, maximizingPlayer){
+        if(depth == 0 || tree.value != -1) return tree.value;  //if value is different than -1, the game has ended
+
+        if(maximizingPlayer){
+            let maxEval = -Infinity
+
+            if(tree.edges == undefined) return -1;
+
+            tree.edges.forEach(edge => {
+                let val = this.minimax(edge.destNode, depth - 1, false);
+                maxEval = Math.max(maxEval, val);
+            });
+            tree.setValue(maxEval);
+
+            return maxEval;
+        }
+        else{
+            let minEval = Infinity
+
+            if(tree.edges == undefined) return -1;
+
+            tree.edges.forEach(edge => {
+                let val = this.minimax(edge.destNode, depth - 1, true);
+                minEval = Math.min(minEval, val);
+            });
+            tree.setValue(minEval);
+
+            return minEval;
+        }
+    }
+}
+
+function createTree(shadowGame, state, root, depth){
+    //loop the not empty cavities and create edges from prev node to a new node
+    const notEmpty = shadowGame.cavitiesNotEmpty(state);
+
+    if(DEBUGGING){
+        console.log("DEPTH: " + depth + " Turn: " + state.toString() + "    notEmpty[]: " + notEmpty);
+        console.log("#############################################");
+        //debugger;
+    }
+
+    for(let i = 0; i < notEmpty.length; i++){
+        //execute possible move on shadowGame
+        if(i != 0){
+            shadowGame.undoCommand();
+        }
+
+        if(DEBUGGING) console.log("DEPTH: " + depth + "    i: " + i);
+
+        const cavityRealIndex = notEmpty[i];
+        const move = new PlayCommand(shadowGame, state, cavityRealIndex);
+
+        let node = new TreeNode(-1);
+        let edge = new TreeEdge(move, node);
+        root.addEdge(edge);
+
+        if(DEBUGGING){
+            //debugger;
+            console.log("i: " + i + " Board BEFORE command in cavityIndex: " + notEmpty[i]);
+            shadowGame.printShadowBoard();
+        }
+
+        shadowGame.executeCommand(move);
+
+        if(DEBUGGING){
+            console.log("I: " + i + " Board AFTER command in cavityIndex: " + notEmpty[i]);
+            shadowGame.printShadowBoard();
+        }
+
+        //recursively call createTree with each new node created
+        if((depth-1) != 0){
+            //debugger;
+            createTree(shadowGame, switchTurnState(state), node, depth-1);
+        }
+        else{
+            //only set game score on tree terminal values
+            node.setValue(shadowGame.getPlayerScore(gameState.TURN_PLAYER2));
+        }
+        //debugger;
+    }
+    if(notEmpty.length != 0 ) shadowGame.undoCommand();
+    else{
+        root.setValue(shadowGame.getPlayerScore(gameState.TURN_PLAYER2));  //CHECK/TEST THIS LINE
+    }
+    if(DEBUGGING) console.log("=============================================");
+}
+
+function switchTurnState(state){
+    switch (state) {
+        case gameState.TURN_PLAYER1:
+            return gameState.TURN_PLAYER2;
+        case gameState.TURN_PLAYER2:
+            return gameState.TURN_PLAYER1;
+        default:
+            console.log("Error -> switchTurnState() <- no such state accepted");
+            return;
+    }
+}
+
+function printTree(tree) {
+    let i = 1;
+
+    function innerPrint(tree, i) {
+        console.log(Array(i).join('■■■■■■■'), tree.value);
+
+        tree.edges.forEach(function(edge) {
+            let j = i + 1;
+            innerPrint(edge.destNode, j);
+        })
+    }
+    innerPrint(tree, i);
+  }
+
+class TreeNode{
+    constructor(value){
+        this.value = value;
+        this.edges = [];
+    }
+
+    getValue(){
+        return this.value;
+    }
+
+    setValue(value){
+        this.value = value;
+    }
+
+    addEdge(edge){
+        this.edges.push(edge);
+    }
+}
+
+class TreeEdge{
+    constructor(playCommand, destNode){
+        this.playCommand = playCommand;
+        this.destNode = destNode;
+    }
+
+    getPlayCommand(){
+        return this.playCommand;
+    }
+
+    getDestNode(){
+        return this.destNode;
+    }
+}
+
+/**
+ * TESTS FOR DEBUGGING
+ */
+/*
+let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, 6, 5, true);
+let shadowGame2 = new ShadowGame(gameState.TURN_PLAYER1, 3, 2, true);
+let shadowGame3 = new ShadowGame(gameState.TURN_PLAYER1, 3, 2, true);
+
+//undoPlay tests with special play
+shadowGame2.makePlay(gameState.TURN_PLAYER1, 0);
+shadowGame2.printShadowBoard();
+shadowGame2.makePlay(gameState.TURN_PLAYER1, 2);
+shadowGame2.printShadowBoard();
+shadowGame2.undoPlay(gameState.TURN_PLAYER1, 2, 2, [1, 0]);
+shadowGame2.printShadowBoard();
+shadowGame2.makePlay(gameState.TURN_PLAYER2, 3);
+shadowGame2.printShadowBoard();
+shadowGame2.undoPlay(gameState.TURN_PLAYER2, 3, 3, [1, 0]);
+shadowGame2.printShadowBoard();
+
+console.log("Commands Tests");
+//undoPlay Commands test
+shadowGame3.printShadowBoard();
+shadowGame3.executeCommand(new PlayCommand(shadowGame3, gameState.TURN_PLAYER1, 0));
+shadowGame3.printShadowBoard();
+shadowGame3.executeCommand(new PlayCommand(shadowGame3, gameState.TURN_PLAYER1, 2));
+shadowGame3.printShadowBoard();
+shadowGame3.undoCommand();
+shadowGame3.printShadowBoard();
+shadowGame3.executeCommand(new PlayCommand(shadowGame3, gameState.TURN_PLAYER2, 3));
+shadowGame3.printShadowBoard();
+shadowGame3.undoCommand();
+shadowGame3.printShadowBoard();
+
+//ShadowGame methods test
+shadowGame.makePlay(gameState.TURN_PLAYER1, 6);
+shadowGame.printShadowBoard();
+shadowGame.makePlay(gameState.TURN_PLAYER2, 7);
+shadowGame.printShadowBoard();
+shadowGame.undoPlay(gameState.TURN_PLAYER2, 7, 6);
+shadowGame.printShadowBoard();
+shadowGame.undoPlay(gameState.TURN_PLAYER2, 6, 5);
+shadowGame.printShadowBoard();
+/*
+//Commands tests
+const play1 = new PlayCommand(shadowGame, gameState.TURN_PLAYER1, 2);
+shadowGame.executeCommand(play1);
+shadowGame.printShadowBoard();
+shadowGame.undoCommand();
+shadowGame.printShadowBoard();
+shadowGame.executeCommand(new PlayCommand(shadowGame, gameState.TURN_PLAYER1, 0));
+shadowGame.printShadowBoard();
+shadowGame.executeCommand(new PlayCommand(shadowGame, gameState.TURN_PLAYER2, 6));
+shadowGame.printShadowBoard();
+shadowGame.undoCommand();
+shadowGame.printShadowBoard();
+console.log(shadowGame.cavitiesNotEmpty(gameState.TURN_PLAYER2));
+*/
+
+//Tree tests
+/*
+let tree = new TreeNode(-1);
+createTree(shadowGame3, gameState.TURN_PLAYER2, tree, 10);
+debugger;
+printTree(tree);
+*/
+
+//Minimax tests
+//console.log(shadowGame2.getBestPlay(9));
