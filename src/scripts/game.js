@@ -48,7 +48,24 @@ const gameMode = {
  };
 
  //Development Macros
-const DEBUGGING = true;
+const DEBUGGING = false;
+
+const dificultyDepth = {
+    EASY: 2,
+    MEDIUM: 5,
+    HARD: 7,
+}
+
+const colors  = {
+    turnHighlight: "#F0851B"
+}
+
+const timeouts = {
+    turnHighlights: 700,
+    turnWarnings: 1500,
+    startBigMessage: 2500,
+    pcModeDelay: 2000
+}
 
 /**
  * Utils
@@ -354,8 +371,20 @@ class GameViewer{
         }
     }
 
-    updateTurnMessage(text){
+    updateTurnMessage(text, highlight){
         this.turnMessage.innerHTML = text;
+
+        if(highlight){
+            const prevColor = this.turnMessage.style.color;
+
+            this.turnMessage.style.color = colors.turnHighlight;
+
+            const that = this;
+
+            setTimeout(function () {
+                that.turnMessage.style.color = prevColor;
+            }, timeouts.turnHighlights);
+        }
     }
 
     updateSysMessage(text){
@@ -404,7 +433,7 @@ class GameViewer{
         bigMessage.style.display = "block";
         setTimeout(function () {
             bigMessage.style.display = "none";
-        }, 2500);
+        }, timeouts.startBigMessage);
     }
 
     disableModesCheckboxes(){
@@ -574,9 +603,9 @@ class GamePresenter{
         this.viewer.updateSysMessage(this.model.sysMessage);
     }
 
-    updateTurnMessage(text){
+    updateTurnMessage(text, highlight){
         this.model.turnMessage = text;
-        this.viewer.updateTurnMessage(this.model.turnMessage);
+        this.viewer.updateTurnMessage(this.model.turnMessage, highlight);
     }
 
     updateCavitiesAndStorages(){
@@ -597,19 +626,19 @@ class GamePresenter{
                 break;
             case gameState.TURN_PLAYER1:
                 if(cavityRealIndex >= nCavs){
-                    this.viewer.updateTurnMessage("That cavitity belongs to " + this.model.players[1].getUsername());
+                    this.viewer.updateTurnMessage("That cavitity belongs to " + this.model.players[1].getUsername(), true);
                     setTimeout(function () {
                         that.updateTurnMessage("It's " + that.model.players[0].getUsername() + " turn");
-                    }, 2000);
+                    }, timeouts.turnWarnings);
 
                     return;
                 }
                 if(this.model.cavities[cavityRealIndex].length == 0){
-                    this.viewer.updateTurnMessage("That cavitity is empty, choose another one");
+                    this.viewer.updateTurnMessage("That cavitity is empty, choose another one", true);
 
                     setTimeout(function () {
                         that.updateTurnMessage("It's " + that.model.players[0].getUsername() + " turn");
-                    }, 2000);
+                    }, timeouts.turnWarnings);
 
                     return;
                 }
@@ -624,7 +653,7 @@ class GamePresenter{
 
                         this.switchTurns();
 
-                        sleep(2000).then(() => {
+                        sleep(timeouts.pcModeDelay).then(() => {
                             let pcPlayAgain = true;
 
                             while(pcPlayAgain){
@@ -637,13 +666,13 @@ class GamePresenter{
                                 //changing depth of minimax, based on dificulty
                                 switch(this.computerDificulty){
                                     case computerDificulty.EASY:
-                                        depth = 1;
+                                        depth = dificultyDepth.EASY;
                                         break;
                                     case computerDificulty.MEDIUM:
-                                        depth = 3;
+                                        depth = dificultyDepth.MEDIUM;
                                         break;
                                     case computerDificulty.HARD:
-                                        depth = 5;
+                                        depth = dificultyDepth.HARD;
                                         break;
                                     default:
                                         console.log("Error -> makePlay() <- no such dificulty exists");
@@ -664,19 +693,19 @@ class GamePresenter{
                     return;
                 }
                 if(cavityRealIndex < nCavs){
-                    this.viewer.updateTurnMessage("That cavitites belongs to " + this.model.players[0].getUsername());
+                    this.viewer.updateTurnMessage("That cavitites belongs to " + this.model.players[0].getUsername(), true);
                     setTimeout(function () {
                         that.updateTurnMessage("It's " + that.model.players[1].getUsername() + " turn");
-                    }, 2000);
+                    }, timeouts.turnWarnings);
 
                     return;
                 }
                 if(this.model.cavities[cavityRealIndex].length == 0){
-                    this.viewer.updateTurnMessage("That cavitity is empty, choose another one");
+                    this.viewer.updateTurnMessage("That cavitity is empty, choose another one", true);
 
                     setTimeout(function () {
                         that.updateTurnMessage("It's " + that.model.players[1].getUsername() + " turn");
-                    }, 2000);
+                    }, timeouts.turnWarnings);
 
                     return;
                 }
@@ -690,11 +719,11 @@ class GamePresenter{
     switchTurns(){
         if(this.state == gameState.CONFIG) return;
         if(this.state == gameState.TURN_PLAYER1){
-            this.updateTurnMessage("It's " + this.model.players[1].getUsername() + " turn");
+            this.updateTurnMessage("It's " + this.model.players[1].getUsername() + " turn", true);
             this.state = gameState.TURN_PLAYER2;
         }
         else{
-            this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn");
+            this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn", true);
             this.state = gameState.TURN_PLAYER1;
         }
     }
@@ -800,11 +829,11 @@ class GamePresenter{
         switch(randPlayer){
             case 0:
                 this.state = gameState.TURN_PLAYER1;
-                this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn");
+                this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn", true);
                 break;
             case 1:
                 this.state = gameState.TURN_PLAYER2;
-                this.updateTurnMessage("It's " + this.model.players[1].getUsername() + " turn");
+                this.updateTurnMessage("It's " + this.model.players[1].getUsername() + " turn", true);
                 break;
             default:
                 console.log("Error -> generateInitPlayer() <- invalid randPlayer number!");
@@ -896,7 +925,7 @@ class GamePresenter{
                 this.mode = gameMode.PC;
                 this.model.players[1].setUsername("Computer");
                 this.state = gameState.TURN_PLAYER1;  //when it is against the computer the player one always starts first
-                this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn");
+                this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn", true);
                 this.configComputerDificulty();
             }
             else if(document.getElementById("input-settings-info--online").checked){
