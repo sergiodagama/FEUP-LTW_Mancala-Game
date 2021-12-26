@@ -1475,14 +1475,12 @@ console.log(shadowGame.cavitiesNotEmpty(gameState.TURN_PLAYER2));
 */
 
 //Tree tests
-
 /*
 let tree = new TreeNode(-1);
 createTree(shadowGame3, gameState.TURN_PLAYER2, tree, 10);
 debugger;
 printTree(tree);
 */
-
 
 //Minimax tests
 //console.log(shadowGame2.getBestPlay(9));
