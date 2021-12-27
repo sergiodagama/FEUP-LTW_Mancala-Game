@@ -1,12 +1,19 @@
 /**
  * Constants
  */
-//Seed Resources
+
+//----------------- RESOURCES -----------------
+
+//Seeds
 const seedRes = ["../res/seeds/seed_red.png", "../res/seeds/seed_green.png", "../res/seeds/seed_yellow.png", "../res/seeds/seed_blue.png"];
 const seedResAlt = ["../res/seeds/seed_red_alt.png", "../res/seeds/seed_green_alt.png", "../res/seeds/seed_yellow_alt.png", "../res/seeds/seed_blue_alt.png"];
 
-//Country Resources
+//Countries flags and Modes icons
 const countryRes = ["../res/flags/guest.png", "../res/flags/online.png", "../res/flags/computer.png", "../res/flags/al.png", "../res/flags/br.png", "../res/flags/computer.png", "../res/flags/es.png", "../res/flags/fr.png", "../res/flags/pt.png"];
+
+//Fireworks Audios
+const fireworkAudios = ["../res/audio/fireworks/soft.mp3", "../res/audio/fireworks/hard.mp3", "../res/audio/fireworks/splash.mp3"];
+//------------ GAME CONFIGURATIONS -------------
 
 //Default values for game configuration
 const configDefaultValues = {
@@ -17,6 +24,8 @@ const configDefaultValues = {
     MAX_CAVITIES: 8,
     MIN_CAVITIES: 2,
  };
+
+ //------------------- STATES -------------------
 
  //Game states
 const gameState = {
@@ -1066,6 +1075,14 @@ class Firework{
         this.particles = [];
         this.createParticles();
         this.end = false;
+        this.audio = new Audio(this.randAudio());
+        this.audioControler = true;
+    }
+
+    randAudio(){
+        //returns a random integer from 0 to 2 ->  3 available
+        const randAudio = Math.ceil(Math.random()*3) - 1;
+        return fireworkAudios[randAudio];
     }
 
     createParticles(){
@@ -1106,6 +1123,11 @@ class Firework{
                 console.log("PASSE");
                 this.end = true;
             }
+
+            if(this.audioControler){
+                this.audio.play();
+                this.audioControler = false;
+            }
         }
         else{
             this.initParticle.applyForce(this.gravity);
@@ -1134,34 +1156,33 @@ class FireworksScene{
             this.fireworks[i].update();
         }
         for(let i = 0; i < this.fireworks.length; i++){
-
-            if(this.fireworks[i].end){
-                console.log("HERE");
-                this.fireworks.shift();
-            }
+            if(this.fireworks[i].end) this.fireworks.shift();
         }
-        console.log("SIZE " + this.fireworks.length);
     }
 
     animationLoop(){
         this.animFrame = requestAnimationFrame(this.animationLoop.bind(this));
 
-        this.ctx.clearRect(0, 0, this.width, this.height);/*
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        /*
         this.ctx.globalCompositeOperation = 'source-over';
         //decrease the alpha property to create more prominent trails
         this.ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
         this.ctx.fillRect( 0, 0, this.width, this.height);
-        this.ctx.globalCompositeOperation = 'lighter';*/
+         */
         this.ctx.globalCompositeOperation = 'lighter';
         this.drawFireworks(this.ctx);
     }
 
     start(){
-        this.fireworks = [];
         this.animationLoop();
     }
 
     stop(){
+        for(let i = 0; i < this.fireworks.length; i++){
+            this.fireworks[i].audio.pause();
+        }
+        this.fireworks = [];
         this.ctx.clearRect(0, 0, this.width, this.height);
         cancelAnimationFrame(this.animFrame);
     }
