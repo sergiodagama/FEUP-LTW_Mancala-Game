@@ -256,6 +256,7 @@ class GameViewer{
         this.turnMessage = document.getElementById("p-game-area-header-messages");
         this.player1Name = document.getElementById("p-game-area-header-p1-name");
         this.player2Name = document.getElementById("p-game-area-header-p2-name");
+        this.fireworks = null;
     }
 
     registerWith(presenter){
@@ -368,7 +369,14 @@ class GameViewer{
         const primPhrase = document.getElementById("p-winner-banner-primary");
         const secunPhrase = document.getElementById("p-winner-banner-secundary");
 
+        console.log("WIDTHH: " + winnerBanner.style.width);
+        console.log("HIE: " + winnerBanner.style.height);
+
+        this.fireworks = new FireworksScene("c-game-area-fireworks", 800, 600);
+        this.fireworks.start();
+
         winnerBanner.style.display = "grid";
+        document.getElementById("c-game-area-fireworks").style.display = "block";
 
         let primaryWinPhrase = "WINS", secundaryWinPhrase;
 
@@ -415,6 +423,8 @@ class GameViewer{
     removeWinner(){
         const winnerBanner = document.getElementById("d-game-area-winner-banner");
         winnerBanner.style.display = "none";
+        if(this.fireworks != null) this.fireworks.stop();
+        document.getElementById("c-game-area-fireworks").style.display = "none";
     }
 
     //Listeners
@@ -994,3 +1004,165 @@ authentication.listenAll();
  * Minimax
  */
 
+
+/**
+ * Canvas Graphics
+ */
+
+//Fireworks
+class Vector{
+    constructor(x, y){
+        this.x = x;
+        this.y = y;
+    }
+
+    add(vector){
+        this.x += vector.x;
+        this.y += vector.y;
+    }
+
+    mul(vector){
+        this.x *= vector.x;
+        this.y *= vector.y;
+    }
+}
+
+class Particle{
+    constructor(x, y, color, thickness){
+        this.pos = new Vector(x, y);
+        this.vel = new Vector(0, 0);
+        this.acel = new Vector(0, 0);
+        this.color = color;
+        this.thickness = thickness;
+    }
+
+    applyForce(forceVector){
+        this.acel.add(forceVector);
+    }
+
+    update(){
+        this.pos.add(this.vel);
+        this.vel.add(this.acel);
+        this.acel.mul(new Vector(0, 0));
+    }
+
+    show(ctx){
+        ctx.beginPath();
+        ctx.arc(this.pos.x, this.pos.y, this.thickness, 0, 2 * Math.PI);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+    }
+}
+
+class Firework{
+    constructor(x, y){
+        this.thickness = Math.random() * 4 + 2
+        this.color = "#" + Math.floor(Math.random()*16777215).toString(16);
+        this.initParticle = new Particle(x, y, this.color, this.thickness);
+        this.initParticle.vel.y = Math.floor(Math.random() * - 5) - 9;
+        this.gravity = new Vector(0, 0.2);
+        this.exploded = false;
+        this.particles = [];
+        this.createParticles();
+        this.end = false;
+    }
+
+    createParticles(){
+        for(let i = 0; i < 100; i++){
+            this.particles.push(new Particle(0, 0, this.color, this.thickness));
+            const phi = 2*Math.PI*Math.random();
+            const speed = 3;
+            this.particles[i].vel = new Vector(Math.cos(phi) * speed, Math.sin(phi) * speed);
+            this.particles[i].vel.mul(new Vector(Math.random(), Math.random()));
+        }
+    }
+
+    draw(ctx){
+        if(this.exploded){
+            this.particles.forEach(particle => {
+                particle.show(ctx);
+            });
+        }
+        else this.initParticle.show(ctx);
+    }
+
+    update(){
+        if(this.initParticle.vel.y < 0){
+            for(let i = 0; i < 100; i++){
+                this.particles[i].pos.x = this.initParticle.pos.x;
+                this.particles[i].pos.y = this.initParticle.pos.y;
+            }
+        }
+        if(this.initParticle.vel.y >= 0) this.exploded = true;
+
+        if(this.exploded){
+            this.particles.forEach(particle => {
+                particle.applyForce(this.gravity);
+                particle.update();
+            });
+
+            if( this.particles[0].pos.y > 2000){
+                console.log("PASSE");
+                this.end = true;
+            }
+        }
+        else{
+            this.initParticle.applyForce(this.gravity);
+            this.initParticle.update();
+        }
+    }
+}
+
+class FireworksScene{
+    constructor(canvasId, width, height){
+        this.canvas = document.getElementById(canvasId);
+        this.ctx = this.canvas.getContext('2d');
+        this.animFrame = undefined;
+        this.fireworks = [];
+        this.width = width;
+        this.height = height;
+    }
+
+    drawFireworks(){
+        if(Math.random() < 0.05){
+            //this.fireworks.push(new Firework(Math.random() * this.width, this.height - (0.1 * this.hegiht) - ((0.1 * this.hegiht) * Math.random())));
+            this.fireworks.push(new Firework(Math.random() * this.width, this.height - (this.height * 0.1)));
+        }
+        for(let i = 0; i < this.fireworks.length; i++){
+            this.fireworks[i].draw(this.ctx);
+            this.fireworks[i].update();
+        }
+        for(let i = 0; i < this.fireworks.length; i++){
+
+            if(this.fireworks[i].end){
+                console.log("HERE");
+                this.fireworks.shift();
+            }
+        }
+        console.log("SIZE " + this.fireworks.length);
+    }
+
+    animationLoop(){
+        this.animFrame = requestAnimationFrame(this.animationLoop.bind(this));
+
+        this.ctx.clearRect(0, 0, this.width, this.height);/*
+        this.ctx.globalCompositeOperation = 'source-over';
+        //decrease the alpha property to create more prominent trails
+        this.ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+        this.ctx.fillRect( 0, 0, this.width, this.height);
+        this.ctx.globalCompositeOperation = 'lighter';*/
+        this.ctx.globalCompositeOperation = 'lighter';
+        this.drawFireworks(this.ctx);
+    }
+
+    start(){
+        this.fireworks = [];
+        this.animationLoop();
+    }
+
+    stop(){
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        cancelAnimationFrame(this.animFrame);
+    }
+}
