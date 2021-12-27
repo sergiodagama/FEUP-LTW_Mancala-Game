@@ -11,8 +11,10 @@ const seedResAlt = ["../res/seeds/seed_red_alt.png", "../res/seeds/seed_green_al
 //Countries flags and Modes icons
 const countryRes = ["../res/flags/guest.png", "../res/flags/online.png", "../res/flags/computer.png", "../res/flags/al.png", "../res/flags/br.png", "../res/flags/computer.png", "../res/flags/es.png", "../res/flags/fr.png", "../res/flags/pt.png"];
 
-//Fireworks Audios
+//Audios
 const fireworkAudios = ["../res/audio/fireworks/soft.mp3", "../res/audio/fireworks/hard.mp3", "../res/audio/fireworks/splash.mp3"];
+//const backgroundAudio = "../res/audio/background/background.mp3";
+
 //------------ GAME CONFIGURATIONS -------------
 
 //Default values for game configuration
