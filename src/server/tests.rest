@@ -1,3 +1,12 @@
+POST http://localhost:4000/login
+content-type: application/json
+
+{
+    "nick": "jon",
+    "password": "1234"
+}
+
+###
 POST http://localhost:4000/register
 content-type: application/json
 
@@ -8,4 +17,3 @@ content-type: application/json
     "birthday": "2-11-1997",
     "country": "en"
 }
-

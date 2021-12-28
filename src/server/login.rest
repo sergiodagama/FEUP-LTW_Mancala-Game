@@ -1,8 +1,0 @@
-POST http://localhost:4000/login
-content-type: application/json
-
-{
-    "nick": "jon",
-    "password": "1234"
-}
-

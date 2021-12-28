@@ -1,12 +1,23 @@
 import Express from "express";
+import jwt from "jsonwebtoken";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = Express();
-
-app.use(Express.json());  //to parse request body as json
 
 const PORT = 4000
 
 let users = [];
+
+
+let allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', "*");
+    res.header('Access-Control-Allow-Headers', "*");
+    next();
+}
+app.use(allowCrossDomain);
+
+app.use(Express.json());  //to parse request body as json
 
 /**
  * Routes
@@ -19,7 +30,7 @@ app.post("/login", (req, res) => {
     const userIndex = users.map(user => user.nick).indexOf(req.body.nick);
 
     if(userIndex == -1){
-        res.status(404).send("You are not registered yet!");
+        res.status(404).send({"status": "You are not registered yet!"});
     }
     else{
         const user = users[userIndex];
@@ -28,19 +39,21 @@ app.post("/login", (req, res) => {
             console.log("LOGIN INFO:");
             console.log(req.body);
 
+            //create authorization token and send it
+            const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_SECRET);
+
             let userInfo = {
                 "email": user.email,
                 "nick": user.nick,
                 "birthday": user.birthday,
-                "country": user.country
+                "country": user.country,
+                "accessToken": accessToken
             }
 
             res.status(200).send(userInfo);
-
-            //create authorization token and send it
         }
         else{
-            res.status(400).send("Wrong password!");
+            res.status(400).send({"status": "Wrong password!"});
         }
     }
 })
@@ -50,16 +63,16 @@ app.post("/register", (req, res) => {
     console.log("Register Endpoint");
 
     if(Object.keys(req.body).length < 5){
-        res.status(400).send("Missing information for registering!");
+        res.status(400).send({"status": "Missing information for registering!"});
     }
     else if(users.map(user => user.nick).indexOf(req.body.nick) != -1){
-        res.status(400).send("User is already registered!");
+        res.status(400).send({"status": "User is already registered!"});
     }
     else{
         console.log("REGISTER INFO:");
         console.log(req.body);
         users.push(req.body);
-        res.status(200).send("User registered with success!");
+        res.status(200).send({"status": "User registered with success!"});
     }
 })
 
@@ -68,12 +81,12 @@ app.post("/recover", (req, res) => {
     console.log("Recover Endpoint");
 
     if(users.map(user => user.email).indexOf(req.body.email) == -1){
-        res.status(404).send("Email not registered!");
+        res.status(404).send({"status": "Email not registered!"});
     }
     else{
         console.log("RECOVER INFO:");
         console.log(req.body);
-        res.send("We sent you all the recover information to your email");
+        res.send({"status": "We sent you all the recover information to your email"});
         //send recovery email
     }
 })

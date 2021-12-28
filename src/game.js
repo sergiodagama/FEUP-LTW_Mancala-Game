@@ -889,6 +889,8 @@ class Authentication{
         this.formLogin = document.getElementById("form-authentication-login");
         this.formRegister = document.getElementById("form-authentication-signup");
         this.formForgot = document.getElementById("form-authentication-forgot");
+        this.port = 4000;
+        this.serverName = "http://localhost:" + this.port; //http://localhost:4000/login
     }
 
     //listeners e handlers
@@ -908,8 +910,12 @@ class Authentication{
 
             console.log("Before: ", requestData);
 
-            fetch('http://twserver.alunos.dcc.fc.up.pt:8008/register',
+            fetch('http://localhost:4000/login',
                 {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     method: 'post',
                     body: requestData
                 }
@@ -943,14 +949,21 @@ class Authentication{
             this.formRegister = document.getElementById("form-authentication-signup");
 
             const requestData = JSON.stringify({
+                'email': this.formRegister.elements["email"].value,
                 'nick': this.formRegister.elements["nick"].value,
-                'password': this.formRegister.elements["password"].value
+                'password': this.formRegister.elements["password"].value,
+                'birthday': this.formRegister.elements["birthday"].value,
+                'country': this.formRegister.elements["country"].value
             })
 
             console.log("Before: ", requestData);
 
-            fetch('http://twserver.alunos.dcc.fc.up.pt:8008/register',
+            fetch("http://localhost:4000/register",
                 {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     method: 'post',
                     body: requestData
                 }
