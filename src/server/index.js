@@ -9,6 +9,24 @@ const PORT = 4000
 
 let users = [];
 
+/**
+ * Middleware
+*/
+function validateToken(req, res, next){
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if(token == null){
+        return res.sendStatus(401);
+    }
+
+    jwt.verify(token, process.env.TOKEN_ACCESS_SECRET, (err, user) => {
+        if(err) return res.sendStatus(403);
+
+        req.user = user;
+        next();
+    })
+}
 
 let allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', "*");
