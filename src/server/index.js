@@ -30,7 +30,7 @@ app.post("/login", (req, res) => {
     const userIndex = users.map(user => user.nick).indexOf(req.body.nick);
 
     if(userIndex == -1){
-        res.status(404).send({"status": "You are not registered yet!"});
+        res.status(400).send({"status": "You are not registered yet!"});
     }
     else{
         const user = users[userIndex];
@@ -81,7 +81,7 @@ app.post("/recover", (req, res) => {
     console.log("Recover Endpoint");
 
     if(users.map(user => user.email).indexOf(req.body.email) == -1){
-        res.status(404).send({"status": "Email not registered!"});
+        res.status(400).send({"status": "Email not registered!"});
     }
     else{
         console.log("RECOVER INFO:");

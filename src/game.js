@@ -924,11 +924,12 @@ class Authentication{
                 function(response) {
                     // See server response data
                     response.json().then(function(data) {
-                        if (response.status !== 200) {
-                            console.log('Looks like there was a problem. Status Code: ', response.status);
+                        if (response.status == 400) {
+                            game.gamePresenter.updateSysMessage(data.status);
                         }
-                        else{
+                        else if(response.status == 200){
                             //TODO: show user tab and hide login section
+                            game.gamePresenter.updateSysMessage("Logged in with success");
                             game.gameModel.updatePlayer1(new Player(nick));
                             game.gamePresenter.updatePlayer1Name();
                         }
@@ -970,14 +971,20 @@ class Authentication{
             )
             .then(
                 function(response) {
-                    if (response.status !== 200) {
-                        console.log('Looks like there was a problem. Status Code: ', response.status);
-                    }
-                    // See server response data
                     response.json().then(function(data) {
+                        if(response.status == 400){
+                            game.gamePresenter.updateSysMessage(data.status);
+                        }
+                        // See server response data
+                        else if(response.status == 200){
+                            game.gamePresenter.updateSysMessage(data.status);
+
+                            //TODO: show user tab and hide login section
+
+                        }
                         console.log(data);
-                        //TODO: show user tab and hide login section
                     });
+
                 }
             )  // in case of fetch error
             .catch(function(error) {
