@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = Express();
-
 const PORT = 4000
 
 let users = [];
@@ -12,6 +11,7 @@ let users = [];
 /**
  * Middleware
 */
+//Authentication tokens validation
 function validateToken(req, res, next){
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -28,19 +28,19 @@ function validateToken(req, res, next){
     })
 }
 
+//CORS prevention
 let allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', "*");
     res.header('Access-Control-Allow-Headers', "*");
     next();
 }
-app.use(allowCrossDomain);
 
+app.use(allowCrossDomain);
 app.use(Express.json());  //to parse request body as json
 
 /**
  * Routes
  */
-
 //Login
 app.post("/login", (req, res) => {
     console.log("Login Endpoint");
@@ -67,7 +67,6 @@ app.post("/login", (req, res) => {
                 "country": user.country,
                 "accessToken": accessToken
             }
-
             res.status(200).send(userInfo);
         }
         else{
@@ -90,8 +89,15 @@ app.post("/register", (req, res) => {
         console.log("REGISTER INFO:");
         console.log(req.body);
         users.push(req.body);
-        res.status(200).send({"status": "User registered with success!"});
+        res.status(200).send(req.body);
     }
+})
+
+//Logout
+app.post("/logout", (req, res) => {
+    console.log("Logout Endpoint");
+
+    res.send({"status": "Logged out successfully!"});
 })
 
 //Recover
