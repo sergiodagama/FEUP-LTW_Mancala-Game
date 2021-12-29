@@ -1,16 +1,98 @@
 import Express from "express";
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+
 dotenv.config();
 
 const app = Express();
 const PORT = 4000
 
-let users = [];
+/**
+ * Database
+ */
+
+//class that encapsulates the database manipulations
+class Database{
+    constructor(){
+        this.models = [];
+    }
+
+    start(){
+        //connect to mongoDB
+        mongoose.connect("mongodb://localhost/mancala").then(() => {
+            console.log("MongoDB connected successfully!");
+        }).catch((err) => {
+            console.log("MongoDB connection failed: " + err);
+        })
+    }
+
+    createUserSchema(){
+        const userSchema = mongoose.Schema({
+            nick: {
+                type: String,
+                require: true
+            },
+            password: {
+                type: String,
+                require: true
+            },
+            email: {
+                type: String,
+                require: true
+            },
+            birthday: {
+                type: String,
+                require: true
+            },
+            country: {
+                type: String,
+            }
+        })
+
+        const userModel = mongoose.model("usuario", userSchema);
+        this.models.push(userModel);
+    }
+
+    loadSchemas(){
+        this.createUserSchema();
+    }
+
+    createUser(user){
+        const dbUser = mongoose.model("usuario");
+
+        new dbUser({
+            nick: user.nick,
+            password: user.password,
+            email: user.email,
+            birthday: user.birthday,
+            country: user.country
+        }).save().then(() => {
+            console.log("Create new user successfully in DB");
+        }).catch((err) => {
+            console.log("Error when creating user in DB: " + err);
+        })
+    }
+
+    findUser(username){
+        return this.models[0].findOne({nick: username}, (err, doc) => {
+            if (err){
+                console.log("Error on DB function findUser()" + err);
+            }
+            else{
+                console.log("DOC ", doc);
+            }
+        });
+    }
+}
+
+const db = new Database();
+db.start();
+db.loadSchemas();
 
 /**
  * Middleware
-*/
+ */
 //Authentication tokens validation
 function validateToken(req, res, next){
     const authHeader = req.headers['authorization'];
@@ -45,26 +127,26 @@ app.use(Express.json());  //to parse request body as json
 app.post("/login", (req, res) => {
     console.log("Login Endpoint");
 
-    const userIndex = users.map(user => user.nick).indexOf(req.body.nick);
+    const userFound = db.findUser(req.body.nick);
 
-    if(userIndex == -1){
+    console.log("USER FOUND: ", userFound);
+
+    if(userFound == []){
         res.status(400).send({"status": "You are not registered yet!"});
     }
     else{
-        const user = users[userIndex];
-
-        if(user.password == req.body.password){
+        if(userFound.password == req.body.password){
             console.log("LOGIN INFO:");
             console.log(req.body);
 
             //create authorization token and send it
-            const accessToken = jwt.sign(user, process.env.TOKEN_ACCESS_SECRET);
+            const accessToken = jwt.sign(userFound, process.env.TOKEN_ACCESS_SECRET);
 
             let userInfo = {
-                "email": user.email,
-                "nick": user.nick,
-                "birthday": user.birthday,
-                "country": user.country,
+                "email": userFound.email,
+                "nick": userFound.nick,
+                "birthday": userFound.birthday,
+                "country": userFound.country,
                 "accessToken": accessToken
             }
             res.status(200).send(userInfo);
@@ -82,14 +164,18 @@ app.post("/register", (req, res) => {
     if(Object.keys(req.body).length < 5){
         res.status(400).send({"status": "Missing information for registering!"});
     }
-    else if(users.map(user => user.nick).indexOf(req.body.nick) != -1){
+    else if(db.findUser(req.body.nick) != undefined){
         res.status(400).send({"status": "User is already registered!"});
     }
     else{
         console.log("REGISTER INFO:");
         console.log(req.body);
-        users.push(req.body);
+
+        //response back to client
         res.status(200).send(req.body);
+
+        //creating user in database
+        db.createUser(req.body);
     }
 })
 
