@@ -75,13 +75,11 @@ class Database{
     }
 
     findUser(username){
-        return this.models[0].findOne({nick: username}, (err, doc) => {
-            if (err){
-                console.log("Error on DB function findUser()" + err);
-            }
-            else{
-                console.log("DOC ", doc);
-            }
+        this.models[0].findOne({nick: username}).exec().then((doc) => {
+            console.log("HER BRO ", doc);
+            return doc;
+        }).catch((err) =>{
+            console.log("Error on DB function findUser()" + err);
         });
     }
 }
@@ -131,7 +129,7 @@ app.post("/login", (req, res) => {
 
     console.log("USER FOUND: ", userFound);
 
-    if(userFound == []){
+    if(userFound == null){
         res.status(400).send({"status": "You are not registered yet!"});
     }
     else{
@@ -164,7 +162,7 @@ app.post("/register", (req, res) => {
     if(Object.keys(req.body).length < 5){
         res.status(400).send({"status": "Missing information for registering!"});
     }
-    else if(db.findUser(req.body.nick) != undefined){
+    else if(db.findUser(req.body.nick) != null){
         res.status(400).send({"status": "User is already registered!"});
     }
     else{
