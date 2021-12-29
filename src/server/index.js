@@ -8,15 +8,15 @@ dotenv.config();
 const app = Express();
 const PORT = 4000
 
+let models = [];
+
 /**
  * Database
  */
 
 //class that encapsulates the database manipulations
 class Database{
-    constructor(){
-        this.models = [];
-    }
+    constructor(){}
 
     start(){
         //connect to mongoDB
@@ -51,7 +51,7 @@ class Database{
         })
 
         const userModel = mongoose.model("usuario", userSchema);
-        this.models.push(userModel);
+        models.push(userModel);
     }
 
     loadSchemas(){
@@ -72,15 +72,6 @@ class Database{
         }).catch((err) => {
             console.log("Error when creating user in DB: " + err);
         })
-    }
-
-    findUser(username){
-        this.models[0].findOne({nick: username}).exec().then((doc) => {
-            console.log("HER BRO ", doc);
-            return doc;
-        }).catch((err) =>{
-            console.log("Error on DB function findUser()" + err);
-        });
     }
 }
 
@@ -125,34 +116,33 @@ app.use(Express.json());  //to parse request body as json
 app.post("/login", (req, res) => {
     console.log("Login Endpoint");
 
-    const userFound = db.findUser(req.body.nick);
-
-    console.log("USER FOUND: ", userFound);
-
-    if(userFound == null){
-        res.status(400).send({"status": "You are not registered yet!"});
-    }
-    else{
-        if(userFound.password == req.body.password){
-            console.log("LOGIN INFO:");
-            console.log(req.body);
-
-            //create authorization token and send it
-            const accessToken = jwt.sign(userFound, process.env.TOKEN_ACCESS_SECRET);
-
-            let userInfo = {
-                "email": userFound.email,
-                "nick": userFound.nick,
-                "birthday": userFound.birthday,
-                "country": userFound.country,
-                "accessToken": accessToken
-            }
-            res.status(200).send(userInfo);
+    models[0].findOne({nick: req.body.nick}, (err, userFound) => {
+        if (err){
+            console.log("User not found" + err);
+            res.status(400).send({"status": "You are not registered yet!"});
         }
         else{
-            res.status(400).send({"status": "Wrong password!"});
+            console.log("Found user ", userFound);
+
+            if(userFound.password == req.body.password){
+                console.log("LOGIN INFO:");
+                console.log(req.body);
+
+                //create authorization token and send it
+                const accessToken = jwt.sign(userFound, process.env.TOKEN_ACCESS_SECRET);
+
+                let userInfo = {
+                    "email": userFound.email,
+                    "nick": userFound.nick,
+                    "birthday": userFound.birthday,
+                    "country": userFound.country,
+                    "accessToken": accessToken
+                }
+                res.status(200).send(userInfo);
+            }
+            else res.status(400).send({"status": "Wrong password!"});
         }
-    }
+    });
 })
 
 //Register
@@ -162,19 +152,26 @@ app.post("/register", (req, res) => {
     if(Object.keys(req.body).length < 5){
         res.status(400).send({"status": "Missing information for registering!"});
     }
-    else if(db.findUser(req.body.nick) != null){
-        res.status(400).send({"status": "User is already registered!"});
-    }
-    else{
-        console.log("REGISTER INFO:");
-        console.log(req.body);
 
-        //response back to client
-        res.status(200).send(req.body);
+    models[0].findOne({nick: req.body.nick}, (err, userFound) => {
+        if (err){
+            console.log("User not found " + err);
 
-        //creating user in database
-        db.createUser(req.body);
-    }
+            console.log("REGISTER INFO:");
+            console.log(req.body);
+
+            //response back to client
+            res.status(200).send(req.body);
+
+            //creating user in database
+            db.createUser(req.body);
+        }
+        else{
+            console.log("Result : ", userFound);
+            res.status(400).send({"status": "User is already registered!"});
+        }
+    });
+
 })
 
 //Logout
