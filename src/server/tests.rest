@@ -17,3 +17,7 @@ content-type: application/json
     "birthday": "2-11-1997",
     "country": "en"
 }
+
+###
+POST http://localhost:4000/join/23
+content-type: application/json

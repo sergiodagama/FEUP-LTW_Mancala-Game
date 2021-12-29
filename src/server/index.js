@@ -10,6 +10,8 @@ const PORT = 4000
 
 let models = [];
 
+let waitingRoom = [];
+
 /**
  * Database
  */
@@ -112,6 +114,7 @@ app.use(Express.json());  //to parse request body as json
 /**
  * Routes
  */
+//---------------Authentication---------------
 //Login
 app.post("/login", (req, res) => {
     console.log("Login Endpoint");
@@ -185,16 +188,65 @@ app.post("/logout", (req, res) => {
 app.post("/recover", (req, res) => {
     console.log("Recover Endpoint");
 
-    if(users.map(user => user.email).indexOf(req.body.email) == -1){
-        res.status(400).send({"status": "Email not registered!"});
+    models[0].findOne({nick: req.body.nick}, (err, userFound) => {
+        if (userFound == null || err){
+            res.status(400).send({"status": "Email not registered!"});
+        }
+        else{
+            console.log("RECOVER INFO:");
+            console.log(req.body);
+            res.send({"status": "We sent you all the recover information to your email"});
+            //send recovery email
+        }
+    });
+})
+
+function findIndexByNick(array, username){
+    return array.map(user => user.nick).indexOf(username);
+}
+
+//---------------Game---------------
+//Joinning game waiting room
+app.post("/join", (req, res) => {
+    console.log("Join waiting room Endpoint");
+
+    if(findIndexByNick(waitingRoom, req.body.nick) == -1){
+        waitingRoom.push(req.body);
+        res.status(200).send({"status": "You are in the waiting room"});
     }
     else{
-        console.log("RECOVER INFO:");
-        console.log(req.body);
-        res.send({"status": "We sent you all the recover information to your email"});
-        //send recovery email
+        res.status(400).send({"status": "You already are in the waiting room"});
     }
 })
+
+//Leaving game waiting room
+app.post("/leave", (req, res) => {
+    console.log("Leave waiting room Endpoint");
+
+    const userIndex = findIndexByNick(waitingRoom, req.body.nick);
+
+    if(userIndex == -1){
+        waitingRoom.splice(userIndex, 1);
+        res.status(200).send({"status": "You were removed from the waiting room"});
+    }
+    else{
+        res.status(400).send({"status": "You already aren't in the waiting room"});
+    }
+})
+
+/*
+//Invite to game session
+app.post("/join/:invitedUserId", (req, res) => {
+    console.log("Join game session Endpoint");
+    console.log("ID: " + req.params);
+    res.send(req.params);
+})
+
+//Leaving game session
+app.post("/leave/:sessionId", (req, res) => {
+    console.log("Leave game session Endpoint");
+})
+*/
 
 app.listen(PORT, ()=>{
     console.log("Server is Running in port " + PORT);
