@@ -50,7 +50,7 @@ class Database{
             }
         })
 
-        const userModel = mongoose.model("usuario", userSchema);
+        const userModel = mongoose.model("Users", userSchema);
         models.push(userModel);
     }
 
@@ -59,7 +59,7 @@ class Database{
     }
 
     createUser(user){
-        const dbUser = mongoose.model("usuario");
+        const dbUser = mongoose.model("Users");
 
         new dbUser({
             nick: user.nick,
@@ -117,8 +117,8 @@ app.post("/login", (req, res) => {
     console.log("Login Endpoint");
 
     models[0].findOne({nick: req.body.nick}, (err, userFound) => {
-        if (err){
-            console.log("User not found" + err);
+        if (userFound == null || err){
+            //console.log("User not found" + err);
             res.status(400).send({"status": "You are not registered yet!"});
         }
         else{
@@ -129,7 +129,7 @@ app.post("/login", (req, res) => {
                 console.log(req.body);
 
                 //create authorization token and send it
-                const accessToken = jwt.sign(userFound, process.env.TOKEN_ACCESS_SECRET);
+                const accessToken = jwt.sign(req.body, process.env.TOKEN_ACCESS_SECRET);
 
                 let userInfo = {
                     "email": userFound.email,
@@ -154,7 +154,7 @@ app.post("/register", (req, res) => {
     }
 
     models[0].findOne({nick: req.body.nick}, (err, userFound) => {
-        if (err){
+        if (userFound == null || err || userFound == []){
             console.log("User not found " + err);
 
             console.log("REGISTER INFO:");
