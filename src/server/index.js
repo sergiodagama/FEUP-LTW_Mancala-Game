@@ -85,20 +85,22 @@ db.loadSchemas();
  * Middleware
  */
 //Authentication tokens validation
-function validateToken(req, res, next){
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+const validateToken = () => { return (req, res, next) =>
+    {
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
 
-    if(token == null){
-        return res.sendStatus(401);
+        if(token == null){
+            return res.status(401).send("Access Denied");
+        }
+
+        jwt.verify(token, process.env.TOKEN_ACCESS_SECRET, (err, user) => {
+            if(err) return res.status(403).send("Error: Access Denied");
+
+            req.user = user;
+            next();
+        })
     }
-
-    jwt.verify(token, process.env.TOKEN_ACCESS_SECRET, (err, user) => {
-        if(err) return res.sendStatus(403);
-
-        req.user = user;
-        next();
-    })
 }
 
 //CORS prevention
@@ -207,7 +209,7 @@ function findIndexByNick(array, username){
 
 //---------------Game---------------
 //Joinning game waiting room
-app.post("/join", (req, res) => {
+app.post("/join", validateToken(), (req, res) => {
     console.log("Join waiting room Endpoint");
 
     if(findIndexByNick(waitingRoom, req.body.nick) == -1){
