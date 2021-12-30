@@ -334,6 +334,46 @@ header{
     color: #242331;
 }
 
+#d-authentication-userTab{
+    display: none;
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+    padding-left: 3em;
+    padding-right: 4em;
+    border-radius: 1em;
+    color: white;
+    background-color: #FF9F1C;
+    border:solid;
+    border-color: white;
+}
+
+.d-userTab-info{
+    padding: 0.6em;
+	color: white;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+#d-userTab-info--username{
+    padding-left: 0.4em;
+    padding-bottom: 0.3em;
+    color: #242331;
+    font-size: 1.5em;
+}
+
+#a-authentication-logout{
+    justify-self: right;
+    padding-top: 1.5em;
+    padding-bottom: 0.5em;
+    color: white;
+	font-size: 0.8em;
+    cursor: pointer;
+}
+
+#a-authentication-logout:hover{
+    color: #242331;
+}
+
 /* || System Messages */
 #section-main-system-messages{
     grid-area: system_messages;

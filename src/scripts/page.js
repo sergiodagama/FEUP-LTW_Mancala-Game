@@ -4,7 +4,7 @@ class Page{
         this.chat = document.getElementById("img-header-navbar-chat-icon");
         this.rules = document.getElementById("img-header-navbar-rules-icon");
         this.score = document.getElementById("img-header-navbar-score-icon");
-        this.isSectionOpen = [false, false, false, true];  //[chat | rules | score | menu]
+        this.isSectionOpen = [false, false, false, true, false];  //[chat | rules | score | menu | chat(if user is logged)]
 
         //Responsive Menu for mobile size
         this.menu = document.getElementById("img-header-navbar-menu-icon");
@@ -155,10 +155,16 @@ class Page{
     }
 
     toggleChat(){
-        this.toggleIcon(0, this.chat, "../res/icons/chat_icon.png", "../res/icons/chat_icon_active.png");
-        this.toggleVisibility(this.isSectionOpen[0], "section-main-authentication", "section-main-chat", "block", "block");
-        this.toggleSignIn();  //this two lines prevents from having multiple sections open in Authentication area
-        this.toggleGoBackPass();
+        if(document.getElementById("d-userTab-info--username").innerHTML == "Username"){
+            this.toggleIcon(0, this.chat, "../res/icons/chat_icon.png", "../res/icons/chat_icon_active.png");
+            this.toggleVisibility(this.isSectionOpen[0], "section-main-authentication", "section-main-chat", "block", "block");
+            this.toggleSignIn();  //this two lines prevents from having multiple sections open in Authentication area
+            this.toggleGoBackPass();
+        }
+        else{
+            this.toggleIcon(4, this.chat, "../res/icons/chat_icon.png", "../res/icons/chat_icon_active.png");
+            this.toggleVisibility(this.isSectionOpen[4], "d-authentication-userTab", "section-main-chat", "grid", "block");
+        }
     }
 
     toggleRules() {

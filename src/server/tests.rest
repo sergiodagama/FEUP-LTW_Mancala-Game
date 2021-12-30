@@ -1,0 +1,23 @@
+POST http://localhost:4000/login
+content-type: application/json
+
+{
+    "nick": "jon",
+    "password": "1234"
+}
+
+###
+POST http://localhost:4000/register
+content-type: application/json
+
+{
+    "nick": "jon",
+    "password": "1234",
+    "email": "jon@gmail.com",
+    "birthday": "2-11-1997",
+    "country": "en"
+}
+
+###
+POST http://localhost:4000/join/23
+content-type: application/json
