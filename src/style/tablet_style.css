@@ -36,17 +36,13 @@
         filter: drop-shadow(2px 2px 20px white);
     }
 
-    /*
-     || Configurations
     #section-main-configurations{
         grid-area: game;
         display: none;
     }
-    */
 
-    /* || Configurations
     #section-main-score{
-        grid-area: auth;
+        grid-area: game;
         display: none;
-    }*/
+    }
 }

@@ -6,7 +6,7 @@ class Page{
         this.score = document.getElementById("img-header-navbar-score-icon");
         this.isSectionOpen = [false, false, false, true];  //[chat | rules | score | menu]
 
-        //Responsive Menu
+        //Responsive Menu for mobile size
         this.menu = document.getElementById("img-header-navbar-menu-icon");
         this.dMain = document.getElementById("d-main");
 
@@ -32,6 +32,9 @@ class Page{
         console.log(this.sections);
 
         this.menuButtons = document.getElementsByClassName("p-menu");
+
+        //Responsive selection for tablet size
+        this.tabletSelection = document.getElementById("sel-header-menu");
 
         //Authentication
         this.signUp = document.getElementById("h3-login-titles-signup--in"); //in section sign in change to signUn
@@ -92,14 +95,18 @@ class Page{
         this.modeComputer.addEventListener("click", this.displayModeComputer.bind(this));
     }
 
-    listenMenu(){
-        this.menu.addEventListener("click", this.toggleMenu.bind(this))
+    listenMobileMenu(){
+        this.menu.addEventListener("click", this.toggleMenu.bind(this));
     }
 
-    listenMenuButtons(){
+    listenMobileMenuButtons(){
         for(let i = 0; i < this.menuButtons.length; i++){
             this.menuButtons[i].addEventListener("click", this.displaySections.bind(this, i));
         }
+    }
+
+    listenTabletSelection(){
+        this.tabletSelection.addEventListener("click", this.toggleTabletSelection.bind(this));
     }
 
     //Calls all listeners
@@ -112,8 +119,9 @@ class Page{
         this.listenRecoverPass();
         this.listenGoBackPass();
         this.listenChangingModes();
-        this.listenMenu();
-        this.listenMenuButtons();
+        this.listenMobileMenu();
+        this.listenMobileMenuButtons();
+        this.listenTabletSelection();
     }
 
     /**
@@ -186,6 +194,33 @@ class Page{
         this.isSectionOpen[3] = !(this.isSectionOpen[3]);
     }
 
+    toggleTabletSelection(){
+        switch(this.tabletSelection.value){
+            case "Game":
+                this.toggleVisibility(true, "section-main-score", "section-main-game", "block", "block");
+                this.toggleVisibility(true, "section-main-rules", "section-main-game", "block", "block");
+                this.toggleVisibility(true, "section-main-configurations", "section-main-game", "block", "block");
+                break;
+            case "Configurations":
+                this.toggleVisibility(true, "section-main-game", "section-main-configurations", "block", "block");
+                this.toggleVisibility(true, "section-main-rules", "section-main-configurations", "block", "block");
+                this.toggleVisibility(true, "section-main-score", "section-main-configurations", "block", "block");
+                break;
+            case "Leaderboard":
+                this.toggleVisibility(true, "section-main-game", "section-main-score", "block", "block");
+                this.toggleVisibility(true, "section-main-rules", "section-main-score", "block", "block");
+                this.toggleVisibility(true, "section-main-configurations", "section-main-score", "block", "block");
+                break;
+            case "Rules":
+                this.toggleVisibility(true, "section-main-game", "section-main-rules", "block", "block");
+                this.toggleVisibility(true, "section-main-score", "section-main-rules", "block", "block");
+                this.toggleVisibility(true, "section-main-configurations", "section-main-rules", "block", "block");
+                break;
+            default:
+                console.log("Error -> toggleTabletSelection() <- no such value in selection");
+        }
+    }
+
     displayModeLocal(){
         this.p2Icon.src = "../res/default_players_icons/local.png";
         this.p2Name.innerHTML = "Local";
@@ -214,8 +249,6 @@ class Page{
     }
 
     displaySections(index){
-
-        console.log("SECION: "+ this.sections);
         for(let i = 0; i < this.sections.length; i++){
             this.sections[i].style.display = "none";
         }
