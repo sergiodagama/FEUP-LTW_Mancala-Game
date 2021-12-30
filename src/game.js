@@ -434,6 +434,7 @@ class GameViewer{
     removeWinner(){
         const winnerBanner = document.getElementById("d-game-area-winner-banner");
         winnerBanner.style.display = "none";
+        console.log("FIREWOKRS IN REMOVE WINNER: ", this.fireworks);
         if(this.fireworks != null) this.fireworks.stop();
         document.getElementById("c-game-area-fireworks").style.display = "none";
     }
@@ -488,8 +489,6 @@ class GamePresenter{
     }
 
     handleConfigs(){
-        this.viewer.removeWinner();
-
         //get current quantities
         const quantities = document.getElementsByClassName("input-settings-info--quantities");
         const nCavs = quantities[0].value;
@@ -1177,10 +1176,12 @@ class FireworksScene{
     }
 
     start(){
+        console.log("STARTING FIREWORKS");
         this.animationLoop();
     }
 
     stop(){
+        console.log("STOPING FIREWORKS");
         for(let i = 0; i < this.fireworks.length; i++){
             this.fireworks[i].audio.pause();
         }
