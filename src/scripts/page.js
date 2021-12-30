@@ -4,7 +4,37 @@ class Page{
         this.chat = document.getElementById("img-header-navbar-chat-icon");
         this.rules = document.getElementById("img-header-navbar-rules-icon");
         this.score = document.getElementById("img-header-navbar-score-icon");
-        this.isSectionOpen = [false, false, false];  //[chat | rules | score]
+        this.isSectionOpen = [false, false, false, true];  //[chat | rules | score | menu]
+
+        //Responsive Menu for mobile size
+        this.menu = document.getElementById("img-header-navbar-menu-icon");
+        this.dMain = document.getElementById("d-main");
+
+        //Sections for menu display
+        this.authSection = document.getElementById("section-main-authentication");
+        this.gameSection = document.getElementById("section-main-game");
+        this.commandsSection = document.getElementById("section-main-commands");
+        this.configsSection = document.getElementById("section-main-configurations");
+        this.chatSection = document.getElementById("section-main-chat");
+        this.rulesSection = document.getElementById("section-main-rules");
+        this.scoreSection = document.getElementById("section-main-score");
+
+        this.sections = [
+            this.gameSection,
+            this.authSection,
+            this.configsSection,
+            this.chatSection,
+            this.rulesSection,
+            this.scoreSection,
+            this.commandsSection
+                        ];
+
+        console.log(this.sections);
+
+        this.menuButtons = document.getElementsByClassName("p-menu");
+
+        //Responsive selection for tablet size
+        this.tabletSelection = document.getElementById("sel-header-menu");
 
         //Authentication
         this.signUp = document.getElementById("h3-login-titles-signup--in"); //in section sign in change to signUn
@@ -65,6 +95,20 @@ class Page{
         this.modeComputer.addEventListener("click", this.displayModeComputer.bind(this));
     }
 
+    listenMobileMenu(){
+        this.menu.addEventListener("click", this.toggleMenu.bind(this));
+    }
+
+    listenMobileMenuButtons(){
+        for(let i = 0; i < this.menuButtons.length; i++){
+            this.menuButtons[i].addEventListener("click", this.displaySections.bind(this, i));
+        }
+    }
+
+    listenTabletSelection(){
+        this.tabletSelection.addEventListener("click", this.toggleTabletSelection.bind(this));
+    }
+
     //Calls all listeners
     listenAll(){
         this.listenChat();
@@ -75,6 +119,9 @@ class Page{
         this.listenRecoverPass();
         this.listenGoBackPass();
         this.listenChangingModes();
+        this.listenMobileMenu();
+        this.listenMobileMenuButtons();
+        this.listenTabletSelection();
     }
 
     /**
@@ -142,6 +189,38 @@ class Page{
         this.toggleVisibility(false, "form-authentication-login", "form-authentication-forgot", "block","block");
     }
 
+    toggleMenu(){
+        this.toggleVisibility(this.isSectionOpen[3], "d-main", "s-menu", "grid", "grid");
+        this.isSectionOpen[3] = !(this.isSectionOpen[3]);
+    }
+
+    toggleTabletSelection(){
+        switch(this.tabletSelection.value){
+            case "Game":
+                this.toggleVisibility(true, "section-main-score", "section-main-game", "block", "block");
+                this.toggleVisibility(true, "section-main-rules", "section-main-game", "block", "block");
+                this.toggleVisibility(true, "section-main-configurations", "section-main-game", "block", "block");
+                break;
+            case "Configurations":
+                this.toggleVisibility(true, "section-main-game", "section-main-configurations", "block", "block");
+                this.toggleVisibility(true, "section-main-rules", "section-main-configurations", "block", "block");
+                this.toggleVisibility(true, "section-main-score", "section-main-configurations", "block", "block");
+                break;
+            case "Leaderboard":
+                this.toggleVisibility(true, "section-main-game", "section-main-score", "block", "block");
+                this.toggleVisibility(true, "section-main-rules", "section-main-score", "block", "block");
+                this.toggleVisibility(true, "section-main-configurations", "section-main-score", "block", "block");
+                break;
+            case "Rules":
+                this.toggleVisibility(true, "section-main-game", "section-main-rules", "block", "block");
+                this.toggleVisibility(true, "section-main-score", "section-main-rules", "block", "block");
+                this.toggleVisibility(true, "section-main-configurations", "section-main-rules", "block", "block");
+                break;
+            default:
+                console.log("Error -> toggleTabletSelection() <- no such value in selection");
+        }
+    }
+
     displayModeLocal(){
         this.p2Icon.src = "../res/default_players_icons/local.png";
         this.p2Name.innerHTML = "Local";
@@ -167,6 +246,19 @@ class Page{
         this.local.style.display = "none";
         this.online.style.display = "none";
         this.computer.style.display = "block";
+    }
+
+    displaySections(index){
+        for(let i = 0; i < this.sections.length; i++){
+            this.sections[i].style.display = "none";
+        }
+        this.sections[index].style.display = "block";
+
+        if(index == 0){
+            this.sections[6].style.display = "flex";
+        }
+
+        this.toggleMenu();
     }
 
     loadingScreen(){

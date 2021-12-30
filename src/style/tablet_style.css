@@ -1,6 +1,10 @@
 /* big tablets or small pc's */
 @media screen and (max-width: 1200px) {
 
+    #img-header-navbar-score-icon{
+        display: none;
+    }
+
     /* || Main */
     #d-main{
         display: grid;
@@ -15,9 +19,30 @@
         min-height: 82.3vh;
     }
 
-    /* || Configurations */
+    #sel-header-menu{
+        display: block;
+    }
+
+    #sel-header-menu{
+        text-align: center;
+        font-weight: 600;
+        border-radius: 1em;
+        outline: none;
+    }
+
+    #sel-header-menu:hover{
+        color: white;
+        background-color: #FF9F1C;
+        filter: drop-shadow(2px 2px 20px white);
+    }
+
     #section-main-configurations{
-        grid-area: auth;
+        grid-area: game;
+        display: none;
+    }
+
+    #section-main-score{
+        grid-area: game;
         display: none;
     }
 }

@@ -12,6 +12,10 @@
         display: block;
     }
 
+    #sel-header-menu{
+        display: none;
+    }
+
     /* || Main */
     #d-main{
         display: grid;
@@ -23,11 +27,6 @@
         min-height: 82.3vh;
     }
 
-    #section-main-authentication{
-        grid-area: auth;
-        display: none;
-    }
-
     /* || Footer */
     footer{
         display: none;
@@ -35,14 +34,14 @@
 
     /* MENU  TO MOVE UP IN FILE*/
     #s-menu{
-        display: grid;
+        display: none;
         justify-content: center;
         align-items: center;
         text-align: center;
         padding: 1.5em;
         padding-bottom: 0em;
         padding-top: 0em;
-        font-size: 1.3em;
+        font-size: 1.2em;
         font-weight: 600;
         color: white;
         background-color: #242331;
@@ -52,7 +51,58 @@
         width: 850px;
         margin: 0em;
         padding: 1.5em;
-        border: solid;
+        border-bottom: solid;
         border-color: white;
+        cursor: pointer;
+    }
+
+    .p-menu:first-child{
+        border-top: solid;
+    }
+
+    .p-menu:last-child{
+        border-bottom: none;
+    }
+
+    .p-menu:hover{
+        background-color: #FF9F1C;
+        color: #242331;
+    }
+
+    #section-main-gam{
+        grid-area: game;
+    }
+
+    #section-main-authentication{
+        grid-area: game;
+        display: none;
+    }
+
+    #section-main-configurations{
+        grid-area: game;
+        display: none;
+    }
+
+    #section-main-chat{
+        grid-area: game;
+        display: none;
+    }
+
+    #section-main-rules{
+        grid-area: game;
+        display: none;
+    }
+
+    #section-main-score{
+        grid-area: game;
+        display: none;
+    }
+
+    #section-main-commands{
+        grid-area: commands;
+    }
+
+    #section-main-system-messages{
+        grid-area: system_messages;
     }
 }
