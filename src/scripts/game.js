@@ -1,12 +1,21 @@
 /**
  * Constants
  */
-//Seed Resources
+
+//----------------- RESOURCES -----------------
+
+//Seeds
 const seedRes = ["../res/seeds/seed_red.png", "../res/seeds/seed_green.png", "../res/seeds/seed_yellow.png", "../res/seeds/seed_blue.png"];
 const seedResAlt = ["../res/seeds/seed_red_alt.png", "../res/seeds/seed_green_alt.png", "../res/seeds/seed_yellow_alt.png", "../res/seeds/seed_blue_alt.png"];
 
-//Country Resources
+//Countries flags and Modes icons
 const countryRes = ["../res/flags/guest.png", "../res/flags/online.png", "../res/flags/computer.png", "../res/flags/al.png", "../res/flags/br.png", "../res/flags/computer.png", "../res/flags/es.png", "../res/flags/fr.png", "../res/flags/pt.png"];
+
+//Audios
+const fireworkAudios = ["../res/audio/fireworks/soft.mp3", "../res/audio/fireworks/hard.mp3", "../res/audio/fireworks/splash.mp3"];
+//const backgroundAudio = "../res/audio/background/background.mp3";
+
+//------------ GAME CONFIGURATIONS -------------
 
 //Default values for game configuration
 const configDefaultValues = {
@@ -17,6 +26,8 @@ const configDefaultValues = {
     MAX_CAVITIES: 8,
     MIN_CAVITIES: 2,
  };
+
+ //------------------- STATES -------------------
 
  //Game states
 const gameState = {
@@ -278,6 +289,14 @@ class GameModel{
     resetConfigs(){
         this.config(configDefaultValues.N_CAVITIES, configDefaultValues.N_SEEDS);
     }
+
+    updatePlayer1(player){
+        this.players[0] = player;
+    }
+
+    updatePlayer2(player){
+        this.players[1] = player;
+    }
 }
 
 /**
@@ -288,6 +307,9 @@ class GameViewer{
         this.presenter = null;
         this.sysMessage = document.getElementById("p-system-messages-message");
         this.turnMessage = document.getElementById("p-game-area-header-messages");
+        this.player1Name = document.getElementById("p-game-area-header-p1-name");
+        this.player2Name = document.getElementById("p-game-area-header-p2-name");
+        this.fireworks = null;
     }
 
     registerWith(presenter){
@@ -391,6 +413,14 @@ class GameViewer{
         this.sysMessage.innerHTML = text;
     }
 
+    updatePlayer1Name(name){
+        this.player1Name.innerHTML = name;
+    }
+
+    updatePlayer2Name(name){
+        this.player2Name.innerHTML = name;
+    }
+
     updateScore(score1, score2){
         let scoreElem1 = document.getElementById("p-game-area-header-score--1");
         scoreElem1.innerHTML = score1;
@@ -404,8 +434,14 @@ class GameViewer{
         const primPhrase = document.getElementById("p-winner-banner-primary");
         const secunPhrase = document.getElementById("p-winner-banner-secundary");
 
-        winnerBanner.style.display = "grid";
+        if(won != winningState.TIE){
+            this.fireworks = new FireworksScene("c-game-area-fireworks", 800, 600);
+            this.fireworks.start();
 
+            document.getElementById("c-game-area-fireworks").style.display = "block";
+        }
+
+        winnerBanner.style.display = "grid";
         let primaryWinPhrase = "WINS", secundaryWinPhrase;
 
         switch(won){
@@ -465,6 +501,9 @@ class GameViewer{
     removeWinner(){
         const winnerBanner = document.getElementById("d-game-area-winner-banner");
         winnerBanner.style.display = "none";
+        console.log("FIREWOKRS IN REMOVE WINNER: ", this.fireworks);
+        if(this.fireworks != null) this.fireworks.stop();
+        document.getElementById("c-game-area-fireworks").style.display = "none";
     }
 
     //Listeners
@@ -606,6 +645,14 @@ class GamePresenter{
     updateTurnMessage(text, highlight){
         this.model.turnMessage = text;
         this.viewer.updateTurnMessage(this.model.turnMessage, highlight);
+    }
+
+    updatePlayer1Name(){
+        this.viewer.updatePlayer1Name(this.model.players[0].getUsername());
+    }
+
+    updatePlayer2Name(){
+        this.viewer.updatePlayer2Name(this.model.players[1].getUsername());
     }
 
     updateCavitiesAndStorages(){
@@ -880,12 +927,11 @@ class GamePresenter{
         let won;
 
         if(!quitted){
-            console.log("HERE");
-            if(this.model.storages[0] == this.model.storages[1]){
+            if(this.model.storages[0].length == this.model.storages[1].length){
                 //tie
                 won = winningState.TIE;
             }
-            else if(this.model.storages[0] > this.model.storages[1]){
+            else if(this.model.storages[0].length > this.model.storages[1].length){
                 //player 1 won
                 won = winningState.PLAYER1_WON;
             }
@@ -1002,12 +1048,286 @@ class GameMain{
 }
 
 const game = new GameMain();
-
 game.run();
 
 /**
  * Authentication
  */
+
+class Authentication{
+    constructor(){
+        this.game = null;
+        this.formLogin = document.getElementById("form-authentication-login");
+        this.formRegister = document.getElementById("form-authentication-signup");
+        this.formForgot = document.getElementById("form-authentication-forgot");
+        this.userTab = document.getElementById("d-authentication-userTab");
+        this.port = 4000;
+        this.serverName = "http://localhost:" + this.port; //http://localhost:4000/login
+        this.accessToken = "Bearer ";
+    }
+
+    registerWith(game){
+        this.game = game;
+    }
+
+    showUserTab(user){
+        this.game.gameModel.updatePlayer1(new Player(user.nick));
+        this.game.gamePresenter.updatePlayer1Name();
+
+        this.formLogin.style.display = "none";
+        this.formRegister.style.display = "none";
+        this.formForgot.style.display = "none";
+        this.userTab.style.display = "grid";
+
+        const userInfo = document.getElementsByClassName("d-userTab-info");
+
+        userInfo[0].innerHTML = user.nick;
+        userInfo[1].innerHTML = user.email;
+        userInfo[2].innerHTML = user.birthday;
+        userInfo[3].innerHTML = user.country;
+
+        document.getElementById("h2-authentication-title").innerHTML = "Account";
+
+        //save access token
+        this.accessToken += user.accessToken;
+        console.log("this.accessTOKEN " + this.accessToken);
+    }
+
+    hideUserTab(){
+        this.formLogin.style.display = "block";
+        this.formRegister.style.display = "none";
+        this.formForgot.style.display = "none";
+        this.userTab.style.display = "none";
+
+        const userInfo = document.getElementsByClassName("d-userTab-info");
+
+        userInfo[0].innerHTML = "Username";
+        userInfo[1].innerHTML = "";
+        userInfo[2].innerHTML = "";
+        userInfo[3].innerHTML = "";
+
+        document.getElementById("h2-authentication-title").innerHTML = "Authentication";
+        document.getElementById("section-main-commands").style.display = "flex";
+        document.getElementById("p-game-area-header-p1-name").innerHTML = "Guest";
+
+        this.accessToken = "Bearer ";
+    }
+
+    //listeners and handlers
+    listenFormLogin(){
+        const that = this;
+
+        this.formLogin.addEventListener("submit", function (e){
+            e.preventDefault();
+
+            this.formLogin = document.getElementById("form-authentication-login");
+
+            console.log("HEREE ", this.formLogin);
+
+            const nick = this.formLogin.elements["nick"].value;
+            const password = this.formLogin.elements["password"].value;
+
+            const requestData = JSON.stringify({
+                'nick': nick,
+                'password': password
+            })
+
+            console.log("Before: ", requestData);
+
+            fetch('http://localhost:4000/login',
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    method: 'post',
+                    body: requestData
+                }
+            )
+            .then(
+                function(response) {
+                    // See server response data
+                    response.json().then(function(data) {
+                        if (response.status == 400) {
+                            that.game.gamePresenter.updateSysMessage(data.status);
+                        }
+                        else if(response.status == 200){
+                            //show user tab and hide login section
+                            that.showUserTab(data);
+                        }
+                        console.log(data);
+                    });
+                }
+            )  // in case of fetch error
+            .catch(function(error) {
+                console.log('Fetch Error in Login: ', error);
+            });
+        });
+    }
+
+    listenFormRegister(){
+        const that = this;
+
+        this.formRegister.addEventListener("submit", function (e){
+            e.preventDefault();
+
+            this.formRegister = document.getElementById("form-authentication-signup");
+
+            const requestData = JSON.stringify({
+                'email': this.formRegister.elements["email"].value,
+                'nick': this.formRegister.elements["nick"].value,
+                'password': this.formRegister.elements["password"].value,
+                'birthday': this.formRegister.elements["birthday"].value,
+                'country': this.formRegister.elements["country"].value
+            })
+
+            console.log("Before: ", requestData);
+
+            fetch("http://localhost:4000/register",
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    method: 'post',
+                    body: requestData
+                }
+            )
+            .then(
+                function(response) {
+                    response.json().then(function(data) {
+                        if(response.status == 400){
+                            that.game.gamePresenter.updateSysMessage(data.status);
+                        }
+                        // See server response data
+                        else if(response.status == 200){
+                            that.game.gamePresenter.updateSysMessage("Registered with success!");
+
+                            //show user tab and hide login section
+                            that.showUserTab(data);
+                        }
+                        console.log(data);
+                    });
+
+                }
+            )  // in case of fetch error
+            .catch(function(error) {
+                console.log('Fetch Error in Register: ', error);
+            });
+        });
+    }
+
+    listenFormForgot(){
+    }
+
+    listenLogout(){
+        const that = this;
+
+        document.getElementById("a-authentication-logout").addEventListener('click', function() {
+            const nick =  document.getElementsByClassName("d-userTab-info")[0].innerHTML;
+
+            const requestData = JSON.stringify({
+                'nick': nick,
+            })
+
+            fetch("http://localhost:4000/logout",
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': that.accessToken
+                    },
+                    method: 'post',
+                    body: requestData
+                }
+            )
+            .then(
+                function(response) {
+                    response.json().then(function(data) {
+                        if(response.status == 400){
+                            that.game.gamePresenter.updateSysMessage(data.status);
+                        }
+                        // See server response data
+                        else if(response.status == 200){
+                            that.game.gamePresenter.updateSysMessage(data.status);
+
+                            //show user tab and hide login section
+                            that.hideUserTab();
+                        }
+                        console.log(data);
+                    });
+
+                }
+            )  // in case of fetch error
+            .catch(function(error) {
+                console.log('Fetch Error in Register: ', error);
+            });
+        });
+    }
+
+    listenJoin(){
+        const that = this;
+
+        document.getElementById("img-search-bar-add-icon").addEventListener('click', function() {
+            const nick =  document.getElementsByClassName("d-userTab-info")[0].innerHTML;
+
+            const requestData = JSON.stringify({
+                'nick': nick,
+            })
+
+            let joinURL = new URL('http://localhost:4000/join');
+
+            const invitedUsername = document.getElementById("input-search-bar").value;
+
+            if(invitedUsername != ""){
+                joinURL.search = new URLSearchParams({
+                    invitedUser: invitedUsername
+                });
+            }
+
+            fetch(joinURL,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': that.accessToken
+                    },
+                    method: 'post',
+                    body: requestData
+                }
+            )
+            .then(
+                function(response) {
+                    response.json().then(function(data) {
+                        if(response.status == 400){
+                            that.game.gamePresenter.updateSysMessage(data.status);
+                        }
+                        // See server response data
+                        else if(response.status == 200){
+                            that.game.gamePresenter.updateSysMessage(data.status);
+                        }
+                        console.log(data);
+                    });
+
+                }
+            )  // in case of fetch error
+            .catch(function(error) {
+                console.log('Fetch Error in Register: ', error);
+            });
+        });
+    }
+
+    listenAll(){
+        this.listenFormLogin();
+        this.listenFormRegister();
+        this.listenLogout();
+        this.listenJoin();
+    }
+}
+
+const authentication = new Authentication();
+authentication.registerWith(game);
+authentication.listenAll();
 
 /**
  * Chat
@@ -1299,6 +1619,128 @@ class ShadowGame {
     }
 }
 
+/**
+ * Canvas Graphics
+ */
+
+//Fireworks
+class Vector{
+    constructor(x, y){
+        this.x = x;
+        this.y = y;
+    }
+
+    add(vector){
+        this.x += vector.x;
+        this.y += vector.y;
+    }
+
+    mul(vector){
+        this.x *= vector.x;
+        this.y *= vector.y;
+    }
+}
+
+class Particle{
+    constructor(x, y, color, thickness){
+        this.pos = new Vector(x, y);
+        this.vel = new Vector(0, 0);
+        this.acel = new Vector(0, 0);
+        this.color = color;
+        this.thickness = thickness;
+    }
+
+    applyForce(forceVector){
+        this.acel.add(forceVector);
+    }
+
+    update(){
+        this.pos.add(this.vel);
+        this.vel.add(this.acel);
+        this.acel.mul(new Vector(0, 0));
+    }
+
+    show(ctx){
+        ctx.beginPath();
+        ctx.arc(this.pos.x, this.pos.y, this.thickness, 0, 2 * Math.PI);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+    }
+}
+
+class Firework{
+    constructor(x, y){
+        this.thickness = Math.random() * 4 + 2
+        this.color = "#" + Math.floor(Math.random()*16777215).toString(16);
+        this.initParticle = new Particle(x, y, this.color, this.thickness);
+        this.initParticle.vel.y = Math.floor(Math.random() * - 5) - 9;
+        this.gravity = new Vector(0, 0.2);
+        this.exploded = false;
+        this.particles = [];
+        this.createParticles();
+        this.end = false;
+        this.audio = new Audio(this.randAudio());
+        this.audioControler = true;
+    }
+
+    randAudio(){
+        //returns a random integer from 0 to 2 ->  3 available
+        const randAudio = Math.ceil(Math.random()*3) - 1;
+        return fireworkAudios[randAudio];
+    }
+
+    createParticles(){
+        for(let i = 0; i < 100; i++){
+            this.particles.push(new Particle(0, 0, this.color, this.thickness));
+            const phi = 2*Math.PI*Math.random();
+            const speed = 3;
+            this.particles[i].vel = new Vector(Math.cos(phi) * speed, Math.sin(phi) * speed);
+            this.particles[i].vel.mul(new Vector(Math.random(), Math.random()));
+        }
+    }
+
+    draw(ctx){
+        if(this.exploded){
+            this.particles.forEach(particle => {
+                particle.show(ctx);
+            });
+        }
+        else this.initParticle.show(ctx);
+    }
+
+    update(){
+        if(this.initParticle.vel.y < 0){
+            for(let i = 0; i < 100; i++){
+                this.particles[i].pos.x = this.initParticle.pos.x;
+                this.particles[i].pos.y = this.initParticle.pos.y;
+            }
+        }
+        if(this.initParticle.vel.y >= 0) this.exploded = true;
+
+        if(this.exploded){
+            this.particles.forEach(particle => {
+                particle.applyForce(this.gravity);
+                particle.update();
+            });
+
+            if( this.particles[0].pos.y > 2000){
+                console.log("PASSE");
+                this.end = true;
+            }
+
+            if(this.audioControler){
+                this.audio.play();
+                this.audioControler = false;
+            }
+        }
+        else{
+            this.initParticle.applyForce(this.gravity);
+            this.initParticle.update();
+        }
+    }
+}
+
 function createTree(shadowGame, state, root, depth){
     //loop the not empty cavities and create edges from prev node to a new node
     const notEmpty = shadowGame.cavitiesNotEmpty(state);
@@ -1418,69 +1860,58 @@ class TreeEdge{
 /**
  * TESTS FOR DEBUGGING
  */
-/*
-let shadowGame = new ShadowGame(gameState.TURN_PLAYER1, 6, 5, true);
-let shadowGame2 = new ShadowGame(gameState.TURN_PLAYER1, 3, 2, true);
-let shadowGame3 = new ShadowGame(gameState.TURN_PLAYER1, 3, 2, true);
+//paste tests here
 
-//undoPlay tests with special play
-shadowGame2.makePlay(gameState.TURN_PLAYER1, 0);
-shadowGame2.printShadowBoard();
-shadowGame2.makePlay(gameState.TURN_PLAYER1, 2);
-shadowGame2.printShadowBoard();
-shadowGame2.undoPlay(gameState.TURN_PLAYER1, 2, 2, [1, 0]);
-shadowGame2.printShadowBoard();
-shadowGame2.makePlay(gameState.TURN_PLAYER2, 3);
-shadowGame2.printShadowBoard();
-shadowGame2.undoPlay(gameState.TURN_PLAYER2, 3, 3, [1, 0]);
-shadowGame2.printShadowBoard();
+class FireworksScene{
+    constructor(canvasId, width, height){
+        this.canvas = document.getElementById(canvasId);
+        this.ctx = this.canvas.getContext('2d');
+        this.animFrame = undefined;
+        this.fireworks = [];
+        this.width = width;
+        this.height = height;
+    }
 
-console.log("Commands Tests");
-//undoPlay Commands test
-shadowGame3.printShadowBoard();
-shadowGame3.executeCommand(new PlayCommand(shadowGame3, gameState.TURN_PLAYER1, 0));
-shadowGame3.printShadowBoard();
-shadowGame3.executeCommand(new PlayCommand(shadowGame3, gameState.TURN_PLAYER1, 2));
-shadowGame3.printShadowBoard();
-shadowGame3.undoCommand();
-shadowGame3.printShadowBoard();
-shadowGame3.executeCommand(new PlayCommand(shadowGame3, gameState.TURN_PLAYER2, 3));
-shadowGame3.printShadowBoard();
-shadowGame3.undoCommand();
-shadowGame3.printShadowBoard();
+    drawFireworks(){
+        if(Math.random() < 0.05){
+            //this.fireworks.push(new Firework(Math.random() * this.width, this.height - (0.1 * this.hegiht) - ((0.1 * this.hegiht) * Math.random())));
+            this.fireworks.push(new Firework(Math.random() * this.width, this.height - (this.height * 0.1)));
+        }
+        for(let i = 0; i < this.fireworks.length; i++){
+            this.fireworks[i].draw(this.ctx);
+            this.fireworks[i].update();
+        }
+        for(let i = 0; i < this.fireworks.length; i++){
+            if(this.fireworks[i].end) this.fireworks.shift();
+        }
+    }
 
-//ShadowGame methods test
-shadowGame.makePlay(gameState.TURN_PLAYER1, 6);
-shadowGame.printShadowBoard();
-shadowGame.makePlay(gameState.TURN_PLAYER2, 7);
-shadowGame.printShadowBoard();
-shadowGame.undoPlay(gameState.TURN_PLAYER2, 7, 6);
-shadowGame.printShadowBoard();
-shadowGame.undoPlay(gameState.TURN_PLAYER2, 6, 5);
-shadowGame.printShadowBoard();
-/*
-//Commands tests
-const play1 = new PlayCommand(shadowGame, gameState.TURN_PLAYER1, 2);
-shadowGame.executeCommand(play1);
-shadowGame.printShadowBoard();
-shadowGame.undoCommand();
-shadowGame.printShadowBoard();
-shadowGame.executeCommand(new PlayCommand(shadowGame, gameState.TURN_PLAYER1, 0));
-shadowGame.printShadowBoard();
-shadowGame.executeCommand(new PlayCommand(shadowGame, gameState.TURN_PLAYER2, 6));
-shadowGame.printShadowBoard();
-shadowGame.undoCommand();
-shadowGame.printShadowBoard();
-console.log(shadowGame.cavitiesNotEmpty(gameState.TURN_PLAYER2));
-*/
+    animationLoop(){
+        this.animFrame = requestAnimationFrame(this.animationLoop.bind(this));
 
-//Tree tests
-/*
-let tree = new TreeNode(-1);
-createTree(shadowGame3, gameState.TURN_PLAYER2, tree, 10);
-debugger;
-printTree(tree);
-*/
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        /*
+        this.ctx.globalCompositeOperation = 'source-over';
+        //decrease the alpha property to create more prominent trails
+        this.ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+        this.ctx.fillRect( 0, 0, this.width, this.height);
+         */
+        this.ctx.globalCompositeOperation = 'lighter';
+        this.drawFireworks(this.ctx);
+    }
 
-//Minimax tests
-//console.log(shadowGame2.getBestPlay(9));
+    start(){
+        console.log("STARTING FIREWORKS");
+        this.animationLoop();
+    }
+
+    stop(){
+        console.log("STOPING FIREWORKS");
+        for(let i = 0; i < this.fireworks.length; i++){
+            this.fireworks[i].audio.pause();
+        }
+        this.fireworks = [];
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        cancelAnimationFrame(this.animFrame);
+    }
+}

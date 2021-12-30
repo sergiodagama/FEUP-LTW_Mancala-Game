@@ -27,11 +27,22 @@
         <img id="img-header-navbar-rules-icon" class="img-header-navbar-icon" src="../res/icons/rules_icon.png" alt="Rules icon">
 		    <img id="img-header-navbar-score-icon" class="img-header-navbar-icon" src="../res/icons/score_icon.png" alt="Leaderboard icon">
         <img id="img-header-navbar-menu-icon" class="img-header-navbar-icon responsive" src="../res/responsive/menu_icon.png" alt="Navigation menu icon">
+
+        <!-- || Responsive menu tablet-->
+        <select name="Menu" id="sel-header-menu" class="sel-header-menu responsive">
+          <option value="Game">Game</option>
+          <option value="Configurations">Configurations</option>
+          <option value="Leaderboard">Leaderboard</option>
+          <option value="Rules">Rules</option>
+        </select>
       </span>
     </header>
 
-    <!--|| Responsive Menu-->
-    <span id="s-menu">
+    <!--|| Responsive Menu mobile-->
+    <span id="s-menu" class="s-menu responsive">
+      <p id="p-menu-game" class="p-menu">Play</p>
+      <p id="p-menu-login" class="p-menu">Login</p>
+      <p id="p-menu-configs" class="p-menu">Configurations</p>
       <p id="p-menu-chat" class="p-menu">Chat</p>
       <p id="p-menu-rules" class="p-menu">Rules</p>
       <p id="p-menu-score" class="p-menu">Leaderboard</p>
@@ -43,7 +54,7 @@
         <h2 id="h2-authentication-title">Authentication</h2>
 
         <!--|| Sign In-->
-        <form id="form-authentication-login" action="signin" method="post">
+        <form id="form-authentication-login">
 
           <div class="d-login-titles">
             <h3 id="h3-login-titles-signin--in">Sign In</h3>
@@ -52,12 +63,12 @@
 
           <div class="d-login-info">
             <label class="label-login-info" for="input-login-info--1">Username</label>   <!-- IDS that are only used for -for- atribute of label only have identifaction as numbers -->
-            <input id="input-login-info--1" class="input-login-info" type="text" placeholder="username"/>
+            <input id="input-login-info--1" class="input-login-info" type="text" placeholder="username" name="nick"/>
           </div>
 
           <div class="d-login-info">
             <label class="label-login-info" for="input-login-info--2">Password</label>
-            <input id="input-login-info--2" class="input-login-info" type="password" placeholder="password"/>
+            <input id="input-login-info--2" class="input-login-info" type="password" placeholder="password" name="password"/>
           </div>
 
           <input id="button-login-signin" type="submit" value="Login"/><br/>
@@ -69,7 +80,7 @@
         </form>
 
         <!--|| Sign Up-->
-        <form id="form-authentication-signup" action="signup" method="post">
+        <form id="form-authentication-signup">
 
           <div class="d-login-titles">
             <h3 id="h3-login-titles-signin--up">Sign In</h3>
@@ -78,28 +89,28 @@
 
           <div class="d-signup-info">
             <label class="label-signup-info" for="input-signup-info--0">Email</label>
-            <input id="input-signup-info--0" class="input-signup-info" type="text" placeholder="email"/>
+            <input id="input-signup-info--0" class="input-signup-info" type="text" placeholder="email" name="email"/>
           </div>
 
           <div class="d-signup-info">
             <label class="label-signup-info" for="input-signup-info--1">Username</label>
-            <input id="input-signup-info--1" class="input-signup-info" type="text" placeholder="username"/>
+            <input id="input-signup-info--1" class="input-signup-info" type="text" placeholder="username" name="nick"/>
           </div>
 
           <div class="d-signup-info">
             <label class="label-signup-info" for="input-signup-info--2">Password</label>
-            <input id="input-signup-info--2" class="input-signup-info" type="password" placeholder="password"/>
+            <input id="input-signup-info--2" class="input-signup-info" type="password" placeholder="password" name="password"/>
           </div>
 
           <div id="d-signup-info-additional">
             <div class="d-signup-info">
               <label class="label-signup-info" for="input-signup-info--3">Birthday</label>
-              <input id="input-signup-info--3" class="input-signup-info signup-additional" type="date"/>
+              <input id="input-signup-info--3" class="input-signup-info signup-additional" type="date" name="birthday"/>
             </div>
 
             <div class="d-signup-info">
               <label class="label-signup-info" for="input-signup-info--4">Country</label>
-              <select id="input-signup-info--4" class="input-signup-info signup-additional">
+              <select id="input-signup-info--4" class="input-signup-info signup-additional" name="country">
                 <option value="Portugal">Portugal</option>
                 <option value="France">France</option>
                 <option value="Spain">Spain</option>
@@ -113,18 +124,28 @@
           <input id="button-signup-register" type="submit" value="Register"/>
         </form>
 
-        <form id="form-authentication-forgot" action="recover" method="post">
+        <!--|| Recover Account -->
+        <form id="form-authentication-forgot" action="submit" method="post">
           <div class="d-forgot-titles">
             <h3 id="h3-forgot-titles-recover">Recover your password</h3>
           </div>
           <div class="d-forgot-info">
             <p id="p-forgot-info-description">We will send you a password recovery email shortly.</p>
             <label class="label-login-info">Email</label>
-            <input class="input-login-info" type="email" placeholder="email"/>
+            <input class="input-login-info" type="email" placeholder="email" name="email"/>
           </div>
           <input id="button-forgot-recover" type="submit" value="Send email"/><br/>
           <a id="a-forgot-goback">Go back</a>
         </form>
+
+        <!--|| Recover Account -->
+        <div id="d-authentication-userTab">
+          <div id="d-userTab-info--username" class="d-userTab-info">Username</div>
+          <div id="d-userTab-info--email" class="d-userTab-info">Email</div>
+          <div id="d-userTab-info--birthday" class="d-userTab-info">Birthday</div>
+          <div id="d-userTab-info--country" class="d-userTab-info">country</div>
+          <a id="a-authentication-logout">Logout</a>
+        </div>
 
       </section>
 
@@ -212,6 +233,8 @@
           </div>
 
           <p id="p-game-area-big-messages">Game Started</p>
+
+          <canvas id="c-game-area-fireworks" width="800" height="500"></canvas>
 
         </div>
       </section>
