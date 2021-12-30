@@ -10,7 +10,13 @@ const PORT = 4000
 
 let models = [];
 
+let activeUsers = [];
+
 let waitingRoom = [];
+
+function findIndexByNick(array, username){
+    return array.map(user => user.nick).indexOf(username);
+}
 
 /**
  * Database
@@ -126,6 +132,9 @@ app.post("/login", (req, res) => {
             //console.log("User not found" + err);
             res.status(400).send({"status": "You are not registered yet!"});
         }
+        else if(activeUsers.indexOf(req.body.nick) != -1){
+            res.status(400).send({"status": "You already have your account open!"});
+        }
         else{
             console.log("Found user ", userFound);
 
@@ -144,6 +153,9 @@ app.post("/login", (req, res) => {
                     "accessToken": accessToken
                 }
                 res.status(200).send(userInfo);
+
+                //add user to active users
+                activeUsers.push(req.body.nick);
             }
             else res.status(400).send({"status": "Wrong password!"});
         }
@@ -170,6 +182,9 @@ app.post("/register", (req, res) => {
 
             //creating user in database
             db.createUser(req.body);
+
+            //add user to active users
+            activeUsers.push(req.body.nick);
         }
         else{
             console.log("Result : ", userFound);
@@ -180,8 +195,17 @@ app.post("/register", (req, res) => {
 })
 
 //Logout
-app.post("/logout", (req, res) => {
+app.post("/logout", validateToken(), (req, res) => {
     console.log("Logout Endpoint");
+
+    const userInWaitinRoom = findIndexByNick(waitingRoom, req.body.nick);
+
+    if(userInWaitinRoom != -1){
+        //redirect to leave
+    }
+
+    //remove user from active users
+    activeUsers.splice(activeUsers.indexOf(req.body.nick), 1);
 
     res.send({"status": "Logged out successfully!"});
 })
@@ -203,10 +227,6 @@ app.post("/recover", (req, res) => {
     });
 })
 
-function findIndexByNick(array, username){
-    return array.map(user => user.nick).indexOf(username);
-}
-
 //---------------Game---------------
 //Joinning game waiting room
 app.post("/join", validateToken(), (req, res) => {
@@ -222,7 +242,7 @@ app.post("/join", validateToken(), (req, res) => {
 })
 
 //Leaving game waiting room
-app.post("/leave", (req, res) => {
+app.post("/leave", validateToken(), (req, res) => {
     console.log("Leave waiting room Endpoint");
 
     const userIndex = findIndexByNick(waitingRoom, req.body.nick);

@@ -892,6 +892,7 @@ class Authentication{
         this.userTab = document.getElementById("d-authentication-userTab");
         this.port = 4000;
         this.serverName = "http://localhost:" + this.port; //http://localhost:4000/login
+        this.accessToken = "Bearer ";
     }
 
     registerWith(game){
@@ -915,6 +916,10 @@ class Authentication{
         userInfo[3].innerHTML = user.country;
 
         document.getElementById("h2-authentication-title").innerHTML = "Account";
+
+        //save access token
+        this.accessToken += user.accessToken;
+        console.log("this.accessTOKEN " + this.accessToken);
     }
 
     hideUserTab(){
@@ -933,6 +938,8 @@ class Authentication{
         document.getElementById("h2-authentication-title").innerHTML = "Authentication";
         document.getElementById("section-main-commands").style.display = "flex";
         document.getElementById("p-game-area-header-p1-name").innerHTML = "Guest";
+
+        this.accessToken = "Bearer ";
     }
 
     //listeners and handlers
@@ -1080,10 +1087,56 @@ class Authentication{
         });
     }
 
+    listenJoin(){
+        const that = this;
+
+        document.getElementById("img-search-bar-add-icon").addEventListener('click', function() {
+            const nick =  document.getElementsByClassName("d-userTab-info")[0].innerHTML;
+
+            const requestData = JSON.stringify({
+                'nick': nick,
+            })
+
+            fetch("http://localhost:4000/join",
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': that.accessToken
+                    },
+                    method: 'post',
+                    body: requestData
+                }
+            )
+            .then(
+                function(response) {
+                    response.json().then(function(data) {
+                        if(response.status == 400){
+                            that.game.gamePresenter.updateSysMessage(data.status);
+                        }
+                        // See server response data
+                        else if(response.status == 200){
+                            that.game.gamePresenter.updateSysMessage(data.status);
+
+                            //show user tab and hide login section
+                            that.hideUserTab();
+                        }
+                        console.log(data);
+                    });
+
+                }
+            )  // in case of fetch error
+            .catch(function(error) {
+                console.log('Fetch Error in Register: ', error);
+            });
+        });
+    }
+
     listenAll(){
         this.listenFormLogin();
         this.listenFormRegister();
         this.listenLogout();
+        this.listenJoin();
     }
 }
 
