@@ -54,7 +54,7 @@
         <h2 id="h2-authentication-title">Authentication</h2>
 
         <!--|| Sign In-->
-        <form id="form-authentication-login" action="signin" method="post">
+        <form id="form-authentication-login">
 
           <div class="d-login-titles">
             <h3 id="h3-login-titles-signin--in">Sign In</h3>
@@ -63,12 +63,12 @@
 
           <div class="d-login-info">
             <label class="label-login-info" for="input-login-info--1">Username</label>   <!-- IDS that are only used for -for- atribute of label only have identifaction as numbers -->
-            <input id="input-login-info--1" class="input-login-info" type="text" placeholder="username"/>
+            <input id="input-login-info--1" class="input-login-info" type="text" placeholder="username" name="nick"/>
           </div>
 
           <div class="d-login-info">
             <label class="label-login-info" for="input-login-info--2">Password</label>
-            <input id="input-login-info--2" class="input-login-info" type="password" placeholder="password"/>
+            <input id="input-login-info--2" class="input-login-info" type="password" placeholder="password" name="password"/>
           </div>
 
           <input id="button-login-signin" type="submit" value="Login"/><br/>
@@ -80,7 +80,7 @@
         </form>
 
         <!--|| Sign Up-->
-        <form id="form-authentication-signup" action="signup" method="post">
+        <form id="form-authentication-signup">
 
           <div class="d-login-titles">
             <h3 id="h3-login-titles-signin--up">Sign In</h3>
@@ -94,12 +94,12 @@
 
           <div class="d-signup-info">
             <label class="label-signup-info" for="input-signup-info--1">Username</label>
-            <input id="input-signup-info--1" class="input-signup-info" type="text" placeholder="username"/>
+            <input id="input-signup-info--1" class="input-signup-info" type="text" placeholder="username" name="nick"/>
           </div>
 
           <div class="d-signup-info">
             <label class="label-signup-info" for="input-signup-info--2">Password</label>
-            <input id="input-signup-info--2" class="input-signup-info" type="password" placeholder="password"/>
+            <input id="input-signup-info--2" class="input-signup-info" type="password" placeholder="password" name="password"/>
           </div>
 
           <div id="d-signup-info-additional">
@@ -124,7 +124,7 @@
           <input id="button-signup-register" type="submit" value="Register"/>
         </form>
 
-        <form id="form-authentication-forgot" action="recover" method="post">
+        <form id="form-authentication-forgot" action="submit" method="post">
           <div class="d-forgot-titles">
             <h3 id="h3-forgot-titles-recover">Recover your password</h3>
           </div>
@@ -223,6 +223,8 @@
           </div>
 
           <p id="p-game-area-big-messages">Game Started</p>
+
+          <canvas id="c-game-area-fireworks" width="800" height="500"></canvas>
 
         </div>
       </section>

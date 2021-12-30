@@ -673,6 +673,14 @@ header{
     font-weight: 600;
 }
 
+#c-game-area-fireworks{
+    display: none;
+    grid-area: gamegameplay;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+}
+
 #p-game-area-big-messages{
     display: none;
     grid-area: gamegameplay;

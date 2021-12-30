@@ -276,4 +276,4 @@ class Page{
 
 const page = new Page();
 page.listenAll();
-//page.loadingScreen();
+page.loadingScreen();
