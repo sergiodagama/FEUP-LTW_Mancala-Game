@@ -1053,14 +1053,21 @@ class Authentication{
         const that = this;
 
         document.getElementById("a-authentication-logout").addEventListener('click', function() {
+            const nick =  document.getElementsByClassName("d-userTab-info")[0].innerHTML;
+
+            const requestData = JSON.stringify({
+                'nick': nick,
+            })
+
             fetch("http://localhost:4000/logout",
                 {
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        'Authorization': that.accessToken
                     },
                     method: 'post',
-                    //body: requestData
+                    body: requestData
                 }
             )
             .then(
@@ -1097,7 +1104,17 @@ class Authentication{
                 'nick': nick,
             })
 
-            fetch("http://localhost:4000/join",
+            let joinURL = new URL('http://localhost:4000/join');
+
+            const invitedUsername = document.getElementById("input-search-bar").value;
+
+            if(invitedUsername != ""){
+                joinURL.search = new URLSearchParams({
+                    invitedUser: invitedUsername
+                });
+            }
+
+            fetch(joinURL,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -1117,9 +1134,6 @@ class Authentication{
                         // See server response data
                         else if(response.status == 200){
                             that.game.gamePresenter.updateSysMessage(data.status);
-
-                            //show user tab and hide login section
-                            that.hideUserTab();
                         }
                         console.log(data);
                     });

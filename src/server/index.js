@@ -201,7 +201,8 @@ app.post("/logout", validateToken(), (req, res) => {
     const userInWaitinRoom = findIndexByNick(waitingRoom, req.body.nick);
 
     if(userInWaitinRoom != -1){
-        //redirect to leave
+        //leave waiting room if is there
+        waitingRoom.splice(userInWaitinRoom, 1);
     }
 
     //remove user from active users
@@ -229,15 +230,27 @@ app.post("/recover", (req, res) => {
 
 //---------------Game---------------
 //Joinning game waiting room
-app.post("/join", validateToken(), (req, res) => {
+app.post("/join/:invitedUsername", validateToken(), (req, res) => {
     console.log("Join waiting room Endpoint");
 
-    if(findIndexByNick(waitingRoom, req.body.nick) == -1){
-        waitingRoom.push(req.body);
-        res.status(200).send({"status": "You are in the waiting room"});
+    if(invitedUsername == ""){
+        if(findIndexByNick(waitingRoom, req.body.nick) == -1){
+            waitingRoom.push(req.body);
+            res.status(200).send({"status": "You are in the waiting room"});
+        }
+        else{
+            res.status(400).send({"status": "You already are in the waiting room"});
+        }
     }
     else{
-        res.status(400).send({"status": "You already are in the waiting room"});
+        if(findIndexByNick(req.params.invitedUsername) == -1){
+            res.send("That user is not online");
+        }
+        else{
+            res.send("Invite sent, please wait");
+
+            //send invite to the actual user
+        }
     }
 })
 
@@ -257,13 +270,6 @@ app.post("/leave", validateToken(), (req, res) => {
 })
 
 /*
-//Invite to game session
-app.post("/join/:invitedUserId", (req, res) => {
-    console.log("Join game session Endpoint");
-    console.log("ID: " + req.params);
-    res.send(req.params);
-})
-
 //Leaving game session
 app.post("/leave/:sessionId", (req, res) => {
     console.log("Leave game session Endpoint");
