@@ -177,8 +177,17 @@ app.post("/register", (req, res) => {
             console.log("REGISTER INFO:");
             console.log(req.body);
 
-            //response back to client
-            res.status(200).send(req.body);
+            //create authorization token and send it
+            const accessToken = jwt.sign(req.body, process.env.TOKEN_ACCESS_SECRET);
+
+            let userInfo = {
+                "email": req.body.email,
+                "nick": req.body.nick,
+                "birthday": req.body.birthday,
+                "country": req.body.country,
+                "accessToken": accessToken
+            }
+            res.status(200).send(userInfo);
 
             //creating user in database
             db.createUser(req.body);

@@ -434,15 +434,14 @@ class GameViewer{
         const primPhrase = document.getElementById("p-winner-banner-primary");
         const secunPhrase = document.getElementById("p-winner-banner-secundary");
 
-        console.log("WIDTHH: " + winnerBanner.style.width);
-        console.log("HIE: " + winnerBanner.style.height);
+        if(won != winningState.TIE){
+            this.fireworks = new FireworksScene("c-game-area-fireworks", 800, 600);
+            this.fireworks.start();
 
-        this.fireworks = new FireworksScene("c-game-area-fireworks", 800, 600);
-        this.fireworks.start();
+            document.getElementById("c-game-area-fireworks").style.display = "block";
+        }
 
         winnerBanner.style.display = "grid";
-        document.getElementById("c-game-area-fireworks").style.display = "block";
-
         let primaryWinPhrase = "WINS", secundaryWinPhrase;
 
         switch(won){
@@ -928,12 +927,11 @@ class GamePresenter{
         let won;
 
         if(!quitted){
-            console.log("HERE");
-            if(this.model.storages[0] == this.model.storages[1]){
+            if(this.model.storages[0].length == this.model.storages[1].length){
                 //tie
                 won = winningState.TIE;
             }
-            else if(this.model.storages[0] > this.model.storages[1]){
+            else if(this.model.storages[0].length > this.model.storages[1].length){
                 //player 1 won
                 won = winningState.PLAYER1_WON;
             }
@@ -1330,7 +1328,6 @@ class Authentication{
 const authentication = new Authentication();
 authentication.registerWith(game);
 authentication.listenAll();
-
 
 /**
  * Chat
