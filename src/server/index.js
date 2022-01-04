@@ -1,22 +1,33 @@
-import Express from "express";
 import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import http from 'http';
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 
-const app = Express();
 const PORT = 4000
 
 let models = [];
-
 let activeUsers = [];
-
 let waitingRoom = [];
 
 function findIndexByNick(array, username){
     return array.map(user => user.nick).indexOf(username);
 }
+
+/**
+ * Nodemailer
+ */
+ const transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    //secure: true,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
 
 /**
  * Database
@@ -91,200 +102,207 @@ db.loadSchemas();
  * Middleware
  */
 //Authentication tokens validation
-const validateToken = () => { return (req, res, next) =>
-    {
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
+function validateToken(req, res) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    console.log(token);
 
-        if(token == null){
-            return res.status(401).send("Access Denied");
-        }
-
-        jwt.verify(token, process.env.TOKEN_ACCESS_SECRET, (err, user) => {
-            if(err) return res.status(403).send("Error: Access Denied");
-
-            req.user = user;
-            next();
-        })
+    if(token == null){
+        send(res, 401, {"Content-Type": "application/json"}, {"status": "Access Denied!"});
+        return false;
     }
-}
 
-//CORS prevention
-let allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', "*");
-    res.header('Access-Control-Allow-Headers', "*");
-    next();
+    return jwt.verify(token, process.env.TOKEN_ACCESS_SECRET, (err) => {
+        if(err){
+            send(res, 403, {"Content-Type": "application/json"}, {"status": "Error: Access Denied!"});
+            return false;
+        }
+        else{
+            console.log("HERE");
+            return true;
+        }
+    });
 }
-
-app.use(allowCrossDomain);
-app.use(Express.json());  //to parse request body as json
 
 /**
- * Routes
+ * Server
  */
-//---------------Authentication---------------
-//Login
-app.post("/login", (req, res) => {
-    console.log("Login Endpoint");
 
-    models[0].findOne({nick: req.body.nick}, (err, userFound) => {
-        if (userFound == null || err){
-            //console.log("User not found" + err);
-            res.status(400).send({"status": "You are not registered yet!"});
-        }
-        else if(activeUsers.indexOf(req.body.nick) != -1){
-            res.status(400).send({"status": "You already have your account open!"});
-        }
-        else{
-            console.log("Found user ", userFound);
+function send(res, status, type, data){
+    res.writeHead(status, type);
+    res.write(JSON.stringify(data));
+    res.end();
+}
 
-            if(userFound.password == req.body.password){
-                console.log("LOGIN INFO:");
-                console.log(req.body);
+http.createServer((req, res) => {
 
-                //create authorization token and send it
-                const accessToken = jwt.sign(req.body, process.env.TOKEN_ACCESS_SECRET);
+    /**
+     * Routes
+     */
+    const url = req.url;
 
-                let userInfo = {
-                    "email": userFound.email,
-                    "nick": userFound.nick,
-                    "birthday": userFound.birthday,
-                    "country": userFound.country,
-                    "accessToken": accessToken
+    if(url === "/login"){
+        console.log("\n===> Login Endpoint\n");
+
+        req.on('data', data => {
+            const jsonData = JSON.parse(data.toString());
+            console.log('>> Request data: ', jsonData);
+
+            models[0].findOne({nick: jsonData.nick}, (err, userFound) => {
+                if (userFound == null || err){
+                    send(res, 400, {"Content-Type": "application/json"}, {"status": "You are not registered yet!"});
                 }
-                res.status(200).send(userInfo);
+                else if(activeUsers.indexOf(jsonData.nick) != -1){
+                    send(res, 400, {"Content-Type": "application/json"}, {"status": "You already have your account open!"});
 
-                //add user to active users
-                activeUsers.push(req.body.nick);
-            }
-            else res.status(400).send({"status": "Wrong password!"});
-        }
-    });
-})
+                }
+                else{
+                    console.log("Found user ", userFound);
 
-//Register
-app.post("/register", (req, res) => {
-    console.log("Register Endpoint");
+                    if(userFound.password == jsonData.password){
+                        //create authorization token and send it
+                        const accessToken = jwt.sign(jsonData, process.env.TOKEN_ACCESS_SECRET);
 
-    if(Object.keys(req.body).length < 5){
-        res.status(400).send({"status": "Missing information for registering!"});
+                        let userInfo = {
+                            "email": userFound.email,
+                            "nick": userFound.nick,
+                            "birthday": userFound.birthday,
+                            "country": userFound.country,
+                            "accessToken": accessToken
+                        }
+                        send(res, 200, {"Content-Type": "application/json"}, userInfo);
+
+                        //add user to active users
+                        activeUsers.push(jsonData.nick);
+                    }
+                    else{
+                        send(res, 400, {"Content-Type": "application/json"}, {"status": "Wrong password!"});
+                    }
+                }
+            });
+        });
+
+        req.on('end', () => {
+            console.log('>> Request End\n');
+        });
     }
+    else if(url === "/register"){
+        console.log("\n===> Register Endpoint\n");
 
-    models[0].findOne({nick: req.body.nick}, (err, userFound) => {
-        if (userFound == null || err || userFound == []){
-            console.log("User not found " + err);
+        req.on('data', data => {
+            const jsonData = JSON.parse(data.toString());
+            console.log('>> Request data: ', jsonData);
 
-            console.log("REGISTER INFO:");
-            console.log(req.body);
-
-            //create authorization token and send it
-            const accessToken = jwt.sign(req.body, process.env.TOKEN_ACCESS_SECRET);
-
-            let userInfo = {
-                "email": req.body.email,
-                "nick": req.body.nick,
-                "birthday": req.body.birthday,
-                "country": req.body.country,
-                "accessToken": accessToken
+            if(Object.keys(jsonData).length < 5){
+                send(res, 400, {"Content-Type": "application/json"}, {"status": "Missing information for registering!"});
             }
-            res.status(200).send(userInfo);
 
-            //creating user in database
-            db.createUser(req.body);
+            models[0].findOne({nick: jsonData.nick}, (err, userFound) => {
+                if (userFound == null || err || userFound == []){
+                    console.log("User not found " + err);
 
-            //add user to active users
-            activeUsers.push(req.body.nick);
-        }
-        else{
-            console.log("Result : ", userFound);
-            res.status(400).send({"status": "User is already registered!"});
-        }
-    });
+                    //create authorization token and send it
+                    const accessToken = jwt.sign(jsonData, process.env.TOKEN_ACCESS_SECRET);
 
-})
+                    let userInfo = {
+                        "email": jsonData.email,
+                        "nick": jsonData.nick,
+                        "birthday": jsonData.birthday,
+                        "country": jsonData.country,
+                        "accessToken": accessToken
+                    }
+                    send(res, 200, {"Content-Type": "application/json"}, userInfo);
 
-//Logout
-app.post("/logout", validateToken(), (req, res) => {
-    console.log("Logout Endpoint");
+                    //creating user in database
+                    db.createUser(jsonData);
 
-    const userInWaitinRoom = findIndexByNick(waitingRoom, req.body.nick);
+                    //add user to active users
+                    activeUsers.push(jsonData.nick);
+                }
+                else{
+                    console.log("Result : ", userFound);
+                    send(res, 400, {"Content-Type": "application/json"}, {"status": "User is already registered!"});
+                }
+            });
+        });
 
-    if(userInWaitinRoom != -1){
-        //leave waiting room if is there
-        waitingRoom.splice(userInWaitinRoom, 1);
+        req.on('end', () => {
+            console.log('>> Request End\n');
+        });
     }
+    else if(url === "/logout"){
+        if(validateToken(req, res)){
+            console.log("\n===> Logout Endpoint\n");
 
-    //remove user from active users
-    activeUsers.splice(activeUsers.indexOf(req.body.nick), 1);
+            req.on('data', data => {
+                const jsonData = JSON.parse(data.toString());
+                console.log('>> Request data: ', jsonData);
 
-    res.send({"status": "Logged out successfully!"});
-})
+                const userInWaitinRoom = findIndexByNick(waitingRoom, jsonData.nick);
 
-//Recover
-app.post("/recover", (req, res) => {
-    console.log("Recover Endpoint");
+                if(userInWaitinRoom != -1){
+                    //leave waiting room if is there
+                    waitingRoom.splice(userInWaitinRoom, 1);
+                }
 
-    models[0].findOne({nick: req.body.nick}, (err, userFound) => {
-        if (userFound == null || err){
-            res.status(400).send({"status": "Email not registered!"});
+
+                const userActiveIndex = activeUsers.indexOf(jsonData.nick);
+
+                if(userActiveIndex != -1){
+                    //remove user from active users
+                    activeUsers.splice(activeUsers.indexOf(jsonData.nick), 1);
+
+                    send(res, 200, {"Content-Type": "application/json"}, {"status": "Logged out successfully!"});
+                }
+                else{
+                    send(res, 400, {"Content-Type": "application/json"}, {"status": "You do not have your account open!"});
+                }
+            });
+            req.on('end', () => {
+                console.log('>> Request End\n');
+            });
         }
-        else{
-            console.log("RECOVER INFO:");
-            console.log(req.body);
-            res.send({"status": "We sent you all the recover information to your email"});
-            //send recovery email
-        }
-    });
-})
+    }
+    else if(url === "/recover"){
+        console.log("\n===> Recover Endpoint\n");
 
-//---------------Game---------------
-//Joinning game waiting room
-app.post("/join/:invitedUsername", validateToken(), (req, res) => {
-    console.log("Join waiting room Endpoint");
+        req.on('data', data => {
+            const jsonData = JSON.parse(data.toString());
+            console.log('>> Request data: ', jsonData);
 
-    if(invitedUsername == ""){
-        if(findIndexByNick(waitingRoom, req.body.nick) == -1){
-            waitingRoom.push(req.body);
-            res.status(200).send({"status": "You are in the waiting room"});
-        }
-        else{
-            res.status(400).send({"status": "You already are in the waiting room"});
-        }
+            models[0].findOne({email: jsonData.email}, (err, userFound) => {
+                if (userFound == null || err){
+                    send(res, 400, {"Content-Type": "application/json"}, {"status": "Email not registered!"})
+                }
+                else{
+                    //send recovery email
+                    transporter.sendMail(
+                        {
+                            from: 'mancalaserver@gmail.com',
+                            to: userFound.email,
+                            subject: 'Recover your Mancala Account',
+                            text: "Recovery information\n" + "Username: " + userFound.nick + "\nPassword: " + userFound.password
+                        },
+                        function(error, info){
+                            if (error) {
+                                console.log(error);
+                                send(res, 400, {"Content-Type": "application/json"}, {"status": "We were not able to sent you the email, please contact us"});
+                            } else {
+                                console.log('Email sent: ' + info.response);
+                                send(res, 200, {"Content-Type": "application/json"}, {"status": "We sent you the recover information to your email"});
+                            }
+                    });
+                }
+            });
+        });
+        req.on('end', () => {
+            console.log('>> Request End\n');
+        });
     }
     else{
-        if(findIndexByNick(req.params.invitedUsername) == -1){
-            res.send("That user is not online");
-        }
-        else{
-            res.send("Invite sent, please wait");
 
-            //send invite to the actual user
-        }
     }
 })
-
-//Leaving game waiting room
-app.post("/leave", validateToken(), (req, res) => {
-    console.log("Leave waiting room Endpoint");
-
-    const userIndex = findIndexByNick(waitingRoom, req.body.nick);
-
-    if(userIndex == -1){
-        waitingRoom.splice(userIndex, 1);
-        res.status(200).send({"status": "You were removed from the waiting room"});
-    }
-    else{
-        res.status(400).send({"status": "You already aren't in the waiting room"});
-    }
-})
-
-/*
-//Leaving game session
-app.post("/leave/:sessionId", (req, res) => {
-    console.log("Leave game session Endpoint");
-})
-*/
-
-app.listen(PORT, ()=>{
+.listen(PORT, () => {
     console.log("Server is Running in port " + PORT);
-})
+});

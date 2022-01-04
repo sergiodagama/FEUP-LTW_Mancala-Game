@@ -1,3 +1,4 @@
+//LOGIN
 POST http://localhost:4000/login
 content-type: application/json
 
@@ -6,18 +7,35 @@ content-type: application/json
     "password": "1234"
 }
 
+//REGISTER
 ###
 POST http://localhost:4000/register
 content-type: application/json
 
 {
-    "nick": "jon",
+    "nick": "jony",
     "password": "1234",
-    "email": "jon@gmail.com",
+    "email": "sergio.r.gama@gmail.com",
     "birthday": "2-11-1997",
     "country": "en"
 }
 
+//RECOVER
 ###
-POST http://localhost:4000/join/23
+POST http://localhost:4000/recover
 content-type: application/json
+
+{
+    "email": "sergio.r.gama@gmail.com"
+}
+
+//LOGOUT
+###
+POST http://localhost:4000/logout
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrIjoiam9uIiwicGFzc3dvcmQiOiIxMjM0IiwiaWF0IjoxNjQxMzEzMDU3fQ.2Hi8A0mhn-O8dBz-5gag54esJaPJaQhbHI1XfKqzOBc
+
+{
+    "nick": "jon",
+    "password": "1234"
+}
