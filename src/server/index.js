@@ -127,14 +127,34 @@ function validateToken(req, res) {
 /**
  * Server
  */
+const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': '*',
+    'Access-Control-Max-Age': 2592000, // 30 days
+    'Content-Type': 'application/json',
+};
 
-function send(res, status, type, data){
-    res.writeHead(status, type);
+function send(res, status, data){
+    res.writeHead(status, headers);
     res.write(JSON.stringify(data));
     res.end();
 }
 
 http.createServer((req, res) => {
+    /**
+     * Preflight Request
+     */
+    if (req.method === 'OPTIONS') {
+        console.log(">> Preflight request");
+        res.writeHead(204, {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': '*',
+            'Access-Control-Max-Age': 2592000, // 30 days
+        });
+        res.end();
+        return;
+    }
 
     /**
      * Routes
@@ -144,16 +164,19 @@ http.createServer((req, res) => {
     if(url === "/login"){
         console.log("\n===> Login Endpoint\n");
 
-        req.on('data', data => {
+        req.on('error', (err) => {
+            console.error(err);
+        })
+        .on('data', (data) => {
             const jsonData = JSON.parse(data.toString());
             console.log('>> Request data: ', jsonData);
 
             models[0].findOne({nick: jsonData.nick}, (err, userFound) => {
                 if (userFound == null || err){
-                    send(res, 400, {"Content-Type": "application/json"}, {"status": "You are not registered yet!"});
+                    send(res, 400, {"status": "You are not registered yet!"});
                 }
                 else if(activeUsers.indexOf(jsonData.nick) != -1){
-                    send(res, 400, {"Content-Type": "application/json"}, {"status": "You already have your account open!"});
+                    send(res, 400, {"status": "You already have your account open!"});
 
                 }
                 else{
@@ -170,19 +193,18 @@ http.createServer((req, res) => {
                             "country": userFound.country,
                             "accessToken": accessToken
                         }
-                        send(res, 200, {"Content-Type": "application/json"}, userInfo);
+                        send(res, 200, userInfo);
 
                         //add user to active users
                         activeUsers.push(jsonData.nick);
                     }
                     else{
-                        send(res, 400, {"Content-Type": "application/json"}, {"status": "Wrong password!"});
+                        send(res, 400, {"status": "Wrong password!"});
                     }
                 }
             });
-        });
-
-        req.on('end', () => {
+        })
+        .on('end', () => {
             console.log('>> Request End\n');
         });
     }
