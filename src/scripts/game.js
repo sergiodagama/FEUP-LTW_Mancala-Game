@@ -1218,6 +1218,50 @@ class Authentication{
     }
 
     listenFormForgot(){
+        const that = this;
+
+        this.formForgot.addEventListener("submit", function (e){
+            e.preventDefault();
+
+            this.formForgot = document.getElementById("form-authentication-forgot");
+
+            const email = this.formForgot.elements["email"].value;
+
+            const requestData = JSON.stringify({
+                'email': email,
+            })
+
+            console.log("Before: ", requestData);
+
+            fetch('http://localhost:4000/recover',
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    method: 'post',
+                    body: requestData
+                }
+            )
+            .then(
+                function(response) {
+                    // See server response data
+                    response.json().then(function(data) {
+                        if (response.status == 400) {
+                            that.game.gamePresenter.updateSysMessage(data.status);
+                        }
+                        else if(response.status == 200){
+                            //show user tab and hide login section
+                            that.game.gamePresenter.updateSysMessage(data.status);
+                        }
+                        console.log(data);
+                    });
+                }
+            )  // in case of fetch error
+            .catch(function(error) {
+                console.log('Fetch Error in Recover: ', error);
+            });
+        });
     }
 
     listenLogout(){
@@ -1260,7 +1304,7 @@ class Authentication{
                 }
             )  // in case of fetch error
             .catch(function(error) {
-                console.log('Fetch Error in Register: ', error);
+                console.log('Fetch Error in Logout: ', error);
             });
         });
     }
@@ -1312,7 +1356,7 @@ class Authentication{
                 }
             )  // in case of fetch error
             .catch(function(error) {
-                console.log('Fetch Error in Register: ', error);
+                console.log('Fetch Error in Join: ', error);
             });
         });
     }
@@ -1320,6 +1364,7 @@ class Authentication{
     listenAll(){
         this.listenFormLogin();
         this.listenFormRegister();
+        this.listenFormForgot();
         this.listenLogout();
         this.listenJoin();
     }

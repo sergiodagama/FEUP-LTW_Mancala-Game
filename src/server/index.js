@@ -161,6 +161,7 @@ http.createServer((req, res) => {
      */
     const url = req.url;
 
+    //Login Endpoint
     if(url === "/login"){
         console.log("\n===> Login Endpoint\n");
 
@@ -208,6 +209,7 @@ http.createServer((req, res) => {
             console.log('>> Request End\n');
         });
     }
+    //Register Endpoint
     else if(url === "/register"){
         console.log("\n===> Register Endpoint\n");
 
@@ -216,7 +218,7 @@ http.createServer((req, res) => {
             console.log('>> Request data: ', jsonData);
 
             if(Object.keys(jsonData).length < 5){
-                send(res, 400, {"Content-Type": "application/json"}, {"status": "Missing information for registering!"});
+                send(res, 400, {"status": "Missing information for registering!"});
             }
 
             models[0].findOne({nick: jsonData.nick}, (err, userFound) => {
@@ -233,7 +235,7 @@ http.createServer((req, res) => {
                         "country": jsonData.country,
                         "accessToken": accessToken
                     }
-                    send(res, 200, {"Content-Type": "application/json"}, userInfo);
+                    send(res, 200, userInfo);
 
                     //creating user in database
                     db.createUser(jsonData);
@@ -243,7 +245,7 @@ http.createServer((req, res) => {
                 }
                 else{
                     console.log("Result : ", userFound);
-                    send(res, 400, {"Content-Type": "application/json"}, {"status": "User is already registered!"});
+                    send(res, 400, {"status": "User is already registered!"});
                 }
             });
         });
@@ -252,6 +254,7 @@ http.createServer((req, res) => {
             console.log('>> Request End\n');
         });
     }
+    //Logout Endpoint
     else if(url === "/logout"){
         if(validateToken(req, res)){
             console.log("\n===> Logout Endpoint\n");
@@ -274,10 +277,10 @@ http.createServer((req, res) => {
                     //remove user from active users
                     activeUsers.splice(activeUsers.indexOf(jsonData.nick), 1);
 
-                    send(res, 200, {"Content-Type": "application/json"}, {"status": "Logged out successfully!"});
+                    send(res, 200, {"status": "Logged out successfully!"});
                 }
                 else{
-                    send(res, 400, {"Content-Type": "application/json"}, {"status": "You do not have your account open!"});
+                    send(res, 400, {"status": "You do not have your account open!"});
                 }
             });
             req.on('end', () => {
@@ -285,6 +288,7 @@ http.createServer((req, res) => {
             });
         }
     }
+    //Recover Endpoint
     else if(url === "/recover"){
         console.log("\n===> Recover Endpoint\n");
 
@@ -294,7 +298,7 @@ http.createServer((req, res) => {
 
             models[0].findOne({email: jsonData.email}, (err, userFound) => {
                 if (userFound == null || err){
-                    send(res, 400, {"Content-Type": "application/json"}, {"status": "Email not registered!"})
+                    send(res, 400, {"status": "Email not registered!"})
                 }
                 else{
                     //send recovery email
@@ -308,10 +312,10 @@ http.createServer((req, res) => {
                         function(error, info){
                             if (error) {
                                 console.log(error);
-                                send(res, 400, {"Content-Type": "application/json"}, {"status": "We were not able to sent you the email, please contact us"});
+                                send(res, 400, {"status": "We were not able to sent you the email, please contact us"});
                             } else {
                                 console.log('Email sent: ' + info.response);
-                                send(res, 200, {"Content-Type": "application/json"}, {"status": "We sent you the recover information to your email"});
+                                send(res, 200, {"status": "We sent you the recover information to your email"});
                             }
                     });
                 }
@@ -321,8 +325,10 @@ http.createServer((req, res) => {
             console.log('>> Request End\n');
         });
     }
+    //Wrong endpoint
     else{
-
+        console.log("\n===> Not Found Endpoint\n");
+        send(res, 404, {"status": "Requested endpoint Not Found"});
     }
 })
 .listen(PORT, () => {
