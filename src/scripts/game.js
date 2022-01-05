@@ -1051,10 +1051,10 @@ const game = new GameMain();
 game.run();
 
 /**
- * Authentication
+ * Server Requests (Online mode support)
  */
 
-class Authentication{
+class OnlineMode {
     constructor(){
         this.game = null;
         this.formLogin = document.getElementById("form-authentication-login");
@@ -1350,6 +1350,9 @@ class Authentication{
                         else if(response.status == 200){
                             that.game.gamePresenter.updateSysMessage(data.status);
                         }
+                        else if(response.status == 401){
+                            that.game.gamePresenter.updateSysMessage("You have to be signed in!");
+                        }
                         console.log(data);
                     });
 
@@ -1370,13 +1373,9 @@ class Authentication{
     }
 }
 
-const authentication = new Authentication();
-authentication.registerWith(game);
-authentication.listenAll();
-
-/**
- * Chat
- */
+const onlineMode = new OnlineMode();
+onlineMode.registerWith(game);
+onlineMode.listenAll();
 
 /**
  * Minimax

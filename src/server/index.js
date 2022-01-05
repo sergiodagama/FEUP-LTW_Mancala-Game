@@ -1,7 +1,8 @@
-import jwt from "jsonwebtoken";
+import http from 'http';
+import url from 'url';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import http from 'http';
+import jwt from "jsonwebtoken";
 import nodemailer from 'nodemailer';
 
 dotenv.config();
@@ -98,34 +99,9 @@ const db = new Database();
 db.start();
 db.loadSchemas();
 
-/**
- * Middleware
- */
-//Authentication tokens validation
-function validateToken(req, res) {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    console.log(token);
-
-    if(token == null){
-        send(res, 401, {"Content-Type": "application/json"}, {"status": "Access Denied!"});
-        return false;
-    }
-
-    return jwt.verify(token, process.env.TOKEN_ACCESS_SECRET, (err) => {
-        if(err){
-            send(res, 403, {"Content-Type": "application/json"}, {"status": "Error: Access Denied!"});
-            return false;
-        }
-        else{
-            console.log("HERE");
-            return true;
-        }
-    });
-}
 
 /**
- * Server
+ * Send response util
  */
 const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -140,6 +116,33 @@ function send(res, status, data){
     res.end();
 }
 
+/**
+ * Middleware
+ */
+//Authentication tokens validation
+function validateToken(req, res) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if(token == null){
+        send(res, 401, {"status": "Access Denied!"});
+        return false;
+    }
+
+    return jwt.verify(token, process.env.TOKEN_ACCESS_SECRET, (err) => {
+        if(err){
+            send(res, 403, {"status": "Error: Access Denied!"});
+            return false;
+        }
+        else{
+            return true;
+        }
+    });
+}
+
+/**
+ * Server
+ */
 http.createServer((req, res) => {
     /**
      * Preflight Request
@@ -159,10 +162,10 @@ http.createServer((req, res) => {
     /**
      * Routes
      */
-    const url = req.url;
+    const endpoint = req.url;
 
     //Login Endpoint
-    if(url === "/login"){
+    if(endpoint === "/login"){
         console.log("\n===> Login Endpoint\n");
 
         req.on('error', (err) => {
@@ -210,7 +213,7 @@ http.createServer((req, res) => {
         });
     }
     //Register Endpoint
-    else if(url === "/register"){
+    else if(endpoint === "/register"){
         console.log("\n===> Register Endpoint\n");
 
         req.on('data', data => {
@@ -255,7 +258,7 @@ http.createServer((req, res) => {
         });
     }
     //Logout Endpoint
-    else if(url === "/logout"){
+    else if(endpoint === "/logout"){
         if(validateToken(req, res)){
             console.log("\n===> Logout Endpoint\n");
 
@@ -289,7 +292,7 @@ http.createServer((req, res) => {
         }
     }
     //Recover Endpoint
-    else if(url === "/recover"){
+    else if(endpoint === "/recover"){
         console.log("\n===> Recover Endpoint\n");
 
         req.on('data', data => {
@@ -324,6 +327,43 @@ http.createServer((req, res) => {
         req.on('end', () => {
             console.log('>> Request End\n');
         });
+    }
+    else if(endpoint.substring(0, 5) === "/join"){
+        if(validateToken(req, res)){
+            console.log("\n===> Join Endpoint\n");
+
+            const params = url.parse(endpoint, true).query;
+
+            console.log("PARAMS: ", params.invitedUser);
+
+            req.on('data', data => {
+                const jsonData = JSON.parse(data.toString());
+                console.log('>> Request data: ', jsonData);
+
+                if(Object.keys(params).length === 0){
+                    if(findIndexByNick(waitingRoom, jsonData.nick) == -1){
+                        waitingRoom.push(jsonData);
+                        send(res, 200, {"status": "You are in the waiting room"});
+                    }
+                    else{
+                        send(res, 400, {"status": "You already are in the waiting room"});
+                    }
+                }
+                else{
+                    if(findIndexByNick(waitingRoom, params.invitedUser) == -1){
+                        send(res, 400, {"status": "That user is not online"});
+                    }
+                    else{
+                        send(res, 200, {"status": "Invite sent, please wait"});
+
+                        //TODO: send invite to the actual user
+                    }
+                }
+            });
+            req.on('end', () => {
+                console.log('>> Request End\n');
+            });
+        }
     }
     //Wrong endpoint
     else{
