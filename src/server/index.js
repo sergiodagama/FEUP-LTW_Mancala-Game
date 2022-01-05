@@ -4,13 +4,14 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import jwt from "jsonwebtoken";
 import nodemailer from 'nodemailer';
+import WebSocket, { WebSocketServer } from 'ws';
 
 dotenv.config();
 
 const PORT = 4000
 
 let models = [];
-let activeUsers = [];
+let activeUsers = new Map();
 let waitingRoom = [];
 
 function findIndexByNick(array, username){
@@ -41,9 +42,9 @@ class Database{
     start(){
         //connect to mongoDB
         mongoose.connect("mongodb://localhost/mancala").then(() => {
-            console.log("MongoDB connected successfully!");
+            console.log("db >> MongoDB connected successfully!");
         }).catch((err) => {
-            console.log("MongoDB connection failed: " + err);
+            console.log("db >> MongoDB connection failed: " + err);
         })
     }
 
@@ -99,7 +100,6 @@ const db = new Database();
 db.start();
 db.loadSchemas();
 
-
 /**
  * Send response util
  */
@@ -141,14 +141,29 @@ function validateToken(req, res) {
 }
 
 /**
+ * WebSocket server
+ */
+/*
+const wss = new WebSocketServer({ port: 4001 });
+
+wss.on('connection', (ws) => {
+    ws.on('message', (data) => {
+        console.log('received: %s', data);
+    });
+
+    ws.send('something');
+});
+*/
+
+/**
  * Server
  */
-http.createServer((req, res) => {
+const server = http.createServer((req, res) => {
     /**
      * Preflight Request
      */
     if (req.method === 'OPTIONS') {
-        console.log(">> Preflight request");
+        console.log("server >> Preflight request");
         res.writeHead(204, {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': '*',
@@ -173,13 +188,13 @@ http.createServer((req, res) => {
         })
         .on('data', (data) => {
             const jsonData = JSON.parse(data.toString());
-            console.log('>> Request data: ', jsonData);
+            console.log('server >> Request data: ', jsonData);
 
             models[0].findOne({nick: jsonData.nick}, (err, userFound) => {
                 if (userFound == null || err){
                     send(res, 400, {"status": "You are not registered yet!"});
                 }
-                else if(activeUsers.indexOf(jsonData.nick) != -1){
+                else if(activeUsers.get(jsonData.nick) != undefined){
                     send(res, 400, {"status": "You already have your account open!"});
 
                 }
@@ -199,8 +214,8 @@ http.createServer((req, res) => {
                         }
                         send(res, 200, userInfo);
 
-                        //add user to active users
-                        activeUsers.push(jsonData.nick);
+                        //add user to active users map
+                        activeUsers.set(jsonData.nick, "none");
                     }
                     else{
                         send(res, 400, {"status": "Wrong password!"});
@@ -209,7 +224,7 @@ http.createServer((req, res) => {
             });
         })
         .on('end', () => {
-            console.log('>> Request End\n');
+            console.log('server >> Request End\n');
         });
     }
     //Register Endpoint
@@ -218,7 +233,7 @@ http.createServer((req, res) => {
 
         req.on('data', data => {
             const jsonData = JSON.parse(data.toString());
-            console.log('>> Request data: ', jsonData);
+            console.log('server >> Request data: ', jsonData);
 
             if(Object.keys(jsonData).length < 5){
                 send(res, 400, {"status": "Missing information for registering!"});
@@ -243,8 +258,8 @@ http.createServer((req, res) => {
                     //creating user in database
                     db.createUser(jsonData);
 
-                    //add user to active users
-                    activeUsers.push(jsonData.nick);
+                    //add user to active users map
+                    activeUsers.set(jsonData.nick, "none");
                 }
                 else{
                     console.log("Result : ", userFound);
@@ -254,7 +269,7 @@ http.createServer((req, res) => {
         });
 
         req.on('end', () => {
-            console.log('>> Request End\n');
+            console.log('server >> Request End\n');
         });
     }
     //Logout Endpoint
@@ -264,7 +279,7 @@ http.createServer((req, res) => {
 
             req.on('data', data => {
                 const jsonData = JSON.parse(data.toString());
-                console.log('>> Request data: ', jsonData);
+                console.log('server >> Request data: ', jsonData);
 
                 const userInWaitinRoom = findIndexByNick(waitingRoom, jsonData.nick);
 
@@ -273,12 +288,12 @@ http.createServer((req, res) => {
                     waitingRoom.splice(userInWaitinRoom, 1);
                 }
 
+                const userActive = activeUsers.get(jsonData.nick);
 
-                const userActiveIndex = activeUsers.indexOf(jsonData.nick);
+                if(userActive != undefined){
 
-                if(userActiveIndex != -1){
-                    //remove user from active users
-                    activeUsers.splice(activeUsers.indexOf(jsonData.nick), 1);
+                    //remove user from active users map
+                    activeUsers.delete(jsonData.nick);
 
                     send(res, 200, {"status": "Logged out successfully!"});
                 }
@@ -287,7 +302,7 @@ http.createServer((req, res) => {
                 }
             });
             req.on('end', () => {
-                console.log('>> Request End\n');
+                console.log('server >> Request End\n');
             });
         }
     }
@@ -297,7 +312,7 @@ http.createServer((req, res) => {
 
         req.on('data', data => {
             const jsonData = JSON.parse(data.toString());
-            console.log('>> Request data: ', jsonData);
+            console.log('server >> Request data: ', jsonData);
 
             models[0].findOne({email: jsonData.email}, (err, userFound) => {
                 if (userFound == null || err){
@@ -325,9 +340,10 @@ http.createServer((req, res) => {
             });
         });
         req.on('end', () => {
-            console.log('>> Request End\n');
+            console.log('server >> Request End\n');
         });
     }
+    //Join Endpoint
     else if(endpoint.substring(0, 5) === "/join"){
         if(validateToken(req, res)){
             console.log("\n===> Join Endpoint\n");
@@ -338,7 +354,7 @@ http.createServer((req, res) => {
 
             req.on('data', data => {
                 const jsonData = JSON.parse(data.toString());
-                console.log('>> Request data: ', jsonData);
+                console.log('server >> Request data: ', jsonData);
 
                 if(Object.keys(params).length === 0){
                     if(findIndexByNick(waitingRoom, jsonData.nick) == -1){
@@ -361,7 +377,7 @@ http.createServer((req, res) => {
                 }
             });
             req.on('end', () => {
-                console.log('>> Request End\n');
+                console.log('server >> Request End\n');
             });
         }
     }
@@ -371,6 +387,7 @@ http.createServer((req, res) => {
         send(res, 404, {"status": "Requested endpoint Not Found"});
     }
 })
-.listen(PORT, () => {
-    console.log("Server is Running in port " + PORT);
+
+server.listen(PORT, () => {
+    console.log("server >> Started in port " + PORT + " successfully!");
 });

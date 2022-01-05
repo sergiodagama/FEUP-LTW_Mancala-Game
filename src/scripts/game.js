@@ -1062,8 +1062,9 @@ class OnlineMode {
         this.formForgot = document.getElementById("form-authentication-forgot");
         this.userTab = document.getElementById("d-authentication-userTab");
         this.port = 4000;
-        this.serverName = "http://localhost:" + this.port; //http://localhost:4000/login
+        this.serverName = "http://localhost:" + this.port; //http://localhost:4000/
         this.accessToken = "Bearer ";
+        //this.socket = new WebSocket("ws://localhost:4001");
     }
 
     registerWith(game){
@@ -1201,6 +1202,7 @@ class OnlineMode {
                         }
                         // See server response data
                         else if(response.status == 200){
+                            //create socket
                             that.game.gamePresenter.updateSysMessage("Registered with success!");
 
                             //show user tab and hide login section
@@ -1297,6 +1299,8 @@ class OnlineMode {
 
                             //show user tab and hide login section
                             that.hideUserTab();
+
+                            that.socket.close();
                         }
                         console.log(data);
                     });
