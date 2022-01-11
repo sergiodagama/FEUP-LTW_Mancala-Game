@@ -1065,6 +1065,7 @@ class OnlineMode {
         this.serverName = "http://localhost:" + this.port; //http://localhost:4000/
         this.accessToken = "Bearer ";
         //this.socket = new WebSocket("ws://localhost:4001");
+        this.evtSource = new EventSource("http://localhost:4000/update");  //FIXME: change here to be closed somewhere
     }
 
     registerWith(game){

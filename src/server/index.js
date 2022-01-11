@@ -10,9 +10,18 @@ dotenv.config();
 
 const PORT = 4000
 
+let groupId = 0;
+
 let models = [];
 let activeUsers = new Map();
 let waitingRoom = [];
+let activeGames = []; //contain 1 if one user as enter the game, contain 2 if both users has entered
+let gamesUsers = [];  //TODO: is not beeing filled
+
+
+function getTheOtherUserByGameId(username, id){
+    //TODO: returns the other user of the same game
+}
 
 function findIndexByNick(array, username){
     return array.map(user => user.nick).indexOf(username);
@@ -116,6 +125,11 @@ function send(res, status, data){
     res.end();
 }
 
+function sendEvent(res, data){
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.write(data);
+}
+
 /**
  * Middleware
  */
@@ -215,7 +229,7 @@ const server = http.createServer((req, res) => {
                         send(res, 200, userInfo);
 
                         //add user to active users map
-                        activeUsers.set(jsonData.nick, "none");
+                        activeUsers.set(jsonData.nick, res);
                     }
                     else{
                         send(res, 400, {"status": "Wrong password!"});
@@ -259,7 +273,7 @@ const server = http.createServer((req, res) => {
                     db.createUser(jsonData);
 
                     //add user to active users map
-                    activeUsers.set(jsonData.nick, "none");
+                    activeUsers.set(jsonData.nick, res);
                 }
                 else{
                     console.log("Result : ", userFound);
@@ -359,20 +373,30 @@ const server = http.createServer((req, res) => {
                 if(Object.keys(params).length === 0){
                     if(findIndexByNick(waitingRoom, jsonData.nick) == -1){
                         waitingRoom.push(jsonData);
-                        send(res, 200, {"status": "You are in the waiting room"});
+                        send(res, 200, {"status": "You are in the waiting room",
+                                        "gameId": gameId});
+
+                        activeGames.set(jsonData.nick, gameId);
+
+                        if(waitingRoom.length == 2){
+                            waitingRoom = [];
+                            gameId++;
+                        }
+                        activeGames[gameId] = 0;
                     }
                     else{
                         send(res, 400, {"status": "You already are in the waiting room"});
                     }
                 }
-                else{
+                else{ //TODO: this part is not working yet
                     if(findIndexByNick(waitingRoom, params.invitedUser) == -1){
                         send(res, 400, {"status": "That user is not online"});
                     }
                     else{
                         send(res, 200, {"status": "Invite sent, please wait"});
 
-                        //TODO: send invite to the actual user
+                        //send invite to the actual user
+                        //update(res, {""}); //FIXME: fix here
                     }
                 }
             });
@@ -380,6 +404,30 @@ const server = http.createServer((req, res) => {
                 console.log('server >> Request End\n');
             });
         }
+    }
+    else if(endpoint.substring(0, 7) === "/update"){
+
+        const params = url.parse(endpoint, true).query;
+
+        console.log("gameId: ", params.gameId);
+
+        req.on('data', data => {
+            const jsonData = JSON.parse(data.toString());
+            console.log('server >> Request data: ', jsonData);
+
+            if(activeGames[params.gameId] == 0){
+                activeGames[params.gameId]++;
+            }
+            else if(activeGames[params.gameId] == 1){
+                activeGames[params.gameId]++;
+                sendEvent(activeUsers.get(jsonData.nick), {"status": "start"});
+                sendEvent(activeUsers.get(jsonData.nick), {"status": "start"});
+            }
+
+        });
+        req.on('end', () => {
+            console.log('server >> Request End\n');
+        });
     }
     //Wrong endpoint
     else{
