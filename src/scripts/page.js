@@ -138,7 +138,7 @@ class Page{
             secundayElement.style.display = display2;
         }
         else {
-            primaryElement.style.display = display1;
+            primaryElement.style.display = display1; //FIXME:
             secundayElement.style.display = "none";
         }
     }

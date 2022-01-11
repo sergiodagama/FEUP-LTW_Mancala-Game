@@ -13,14 +13,18 @@ const PORT = 4000
 let groupId = 0;
 
 let models = [];
-let activeUsers = new Map();
-let waitingRoom = [];
-let activeGames = []; //contain 1 if one user as enter the game, contain 2 if both users has entered
-let gamesUsers = [];  //TODO: is not beeing filled
+let activeUsers = new Map();  //has the current active users
+let waitingRoom = [];  //controls the waitingRoom, when user is waiting for other to play
 
+let activeGames = []; //contain 1 if one user as enter the game (of gameId correspondat to the array index), contain 2 if both users has entered
+let gameUsers = [];  //TODO: is not beeing filled
 
-function getTheOtherUserByGameId(username, id){
+function getTheOtherUserByGameId(username, gameId){
     //TODO: returns the other user of the same game
+}
+
+function addToGame(username, gameId){
+    //TODO: adds an user to a particular game
 }
 
 function findIndexByNick(array, username){
@@ -376,6 +380,8 @@ const server = http.createServer((req, res) => {
                         send(res, 200, {"status": "You are in the waiting room",
                                         "gameId": gameId});
 
+                        addToGame(jsonData.nick, gameId);
+
                         activeGames.set(jsonData.nick, gameId);
 
                         if(waitingRoom.length == 2){
@@ -405,7 +411,8 @@ const server = http.createServer((req, res) => {
             });
         }
     }
-    else if(endpoint.substring(0, 7) === "/update"){
+    //Update endpoint
+    else if(endpoint.substring(0, 7) === "/update"){ //TODO: not checking if the user and game are a valid pair
 
         const params = url.parse(endpoint, true).query;
 
@@ -421,9 +428,8 @@ const server = http.createServer((req, res) => {
             else if(activeGames[params.gameId] == 1){
                 activeGames[params.gameId]++;
                 sendEvent(activeUsers.get(jsonData.nick), {"status": "start"});
-                sendEvent(activeUsers.get(jsonData.nick), {"status": "start"});
+                sendEvent(activeUsers.get(getTheOtherUserByGameId(jsonData.nick, params.gameId)), {"status": "start"});
             }
-
         });
         req.on('end', () => {
             console.log('server >> Request End\n');
