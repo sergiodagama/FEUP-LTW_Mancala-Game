@@ -1031,6 +1031,13 @@ class GamePresenter{
 
         this.model.storages[destStorage].push(seed);
     }
+
+    getCurrentConfigs(){
+        const cavities = document.getElementById("input-settings-info--ncavities").value;
+        const seeds = document.getElementById("input-settings-info--nseeds").value;
+
+        return [cavities, seeds];
+    }
 }
 
 class GameMain{
@@ -1062,8 +1069,12 @@ class OnlineMode {
         this.userTab = document.getElementById("d-authentication-userTab");
         this.serverName = 'http://twserver.alunos.dcc.fc.up.pt:8008';
         //this.evtSource = new EventSource(this.serverName + '/update');  //FIXME: change here to be closed somewhere
+
+        //logged user (more pratical than getting it from model)
         this.nick = '';
         this.password = '';
+
+        this.gameId = '';
     }
 
     registerWith(game){
@@ -1218,10 +1229,17 @@ class OnlineMode {
         const that = this;
 
         document.getElementById("img-search-bar-add-icon").addEventListener('click', function() {
-            const nick =  document.getElementsByClassName("d-userTab-info")[0].innerHTML;
+
+            const configs = that.game.gamePresenter.getCurrentConfigs();
+
+            console.log(configs);
 
             const requestData = JSON.stringify({
-                'nick': nick,
+                'group': 0,
+                'nick': that.nick,
+                'password' : that.password,
+                'size': configs[0],
+                'initial': configs[1],
             })
 
             fetch(that.serverName + '/join',
@@ -1239,11 +1257,11 @@ class OnlineMode {
                 function(response) {
                     response.json().then(function(data) {
                         if(response.status == 400){
-                            that.game.gamePresenter.updateSysMessage(data.status);
+                            //that.game.gamePresenter.updateSysMessage(data.status);  //FIXME: add new message
                         }
                         // See server response data
                         else if(response.status == 200){
-                            that.game.gamePresenter.updateSysMessage(data.status);
+                            //that.game.gamePresenter.updateSysMessage(data.status); //FIXME: add new message
                         }
                         else if(response.status == 401){
                             that.game.gamePresenter.updateSysMessage("You have to be signed in!");
