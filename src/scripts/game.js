@@ -1059,60 +1059,45 @@ class OnlineMode {
         this.game = null;
         this.formLogin = document.getElementById("form-authentication-login");
         this.formRegister = document.getElementById("form-authentication-signup");
-        this.formForgot = document.getElementById("form-authentication-forgot");
         this.userTab = document.getElementById("d-authentication-userTab");
-        this.port = 4000;
-        this.serverName = "http://localhost:" + this.port; //http://localhost:4000/
-        this.accessToken = "Bearer ";
-        //this.socket = new WebSocket("ws://localhost:4001");
-        this.evtSource = new EventSource("http://localhost:4000/update");  //FIXME: change here to be closed somewhere
+        this.serverName = 'http://twserver.alunos.dcc.fc.up.pt:8008';
+        //this.evtSource = new EventSource(this.serverName + '/update');  //FIXME: change here to be closed somewhere
+        this.nick = '';
+        this.password = '';
     }
 
     registerWith(game){
         this.game = game;
     }
 
-    showUserTab(user){
-        this.game.gameModel.updatePlayer1(new Player(user.nick));
+    showUserTab(username){
+        console.log("HERE: ", username);
+        this.game.gameModel.updatePlayer1(new Player(username));
         this.game.gamePresenter.updatePlayer1Name();
 
         this.formLogin.style.display = "none";
         this.formRegister.style.display = "none";
-        this.formForgot.style.display = "none";
         this.userTab.style.display = "grid";
 
         const userInfo = document.getElementsByClassName("d-userTab-info");
 
-        userInfo[0].innerHTML = user.nick;
-        userInfo[1].innerHTML = user.email;
-        userInfo[2].innerHTML = user.birthday;
-        userInfo[3].innerHTML = user.country;
+        userInfo[0].innerHTML = username;
 
         document.getElementById("h2-authentication-title").innerHTML = "Account";
-
-        //save access token
-        this.accessToken += user.accessToken;
-        console.log("this.accessTOKEN " + this.accessToken);
     }
 
     hideUserTab(){
         this.formLogin.style.display = "block";
         this.formRegister.style.display = "none";
-        this.formForgot.style.display = "none";
         this.userTab.style.display = "none";
 
         const userInfo = document.getElementsByClassName("d-userTab-info");
 
         userInfo[0].innerHTML = "Username";
-        userInfo[1].innerHTML = "";
-        userInfo[2].innerHTML = "";
-        userInfo[3].innerHTML = "";
 
         document.getElementById("h2-authentication-title").innerHTML = "Authentication";
         document.getElementById("section-main-commands").style.display = "flex";
         document.getElementById("p-game-area-header-p1-name").innerHTML = "Guest";
-
-        this.accessToken = "Bearer ";
     }
 
     //listeners and handlers
@@ -1124,8 +1109,6 @@ class OnlineMode {
 
             this.formLogin = document.getElementById("form-authentication-login");
 
-            console.log("HEREE ", this.formLogin);
-
             const nick = this.formLogin.elements["nick"].value;
             const password = this.formLogin.elements["password"].value;
 
@@ -1134,9 +1117,7 @@ class OnlineMode {
                 'password': password
             })
 
-            console.log("Before: ", requestData);
-
-            fetch('http://localhost:4000/login',
+            fetch(that.serverName + '/register',
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -1151,11 +1132,16 @@ class OnlineMode {
                     // See server response data
                     response.json().then(function(data) {
                         if (response.status == 400) {
-                            that.game.gamePresenter.updateSysMessage(data.status);
+                            that.game.gamePresenter.updateSysMessage(data.status); //FIXME: change message
                         }
                         else if(response.status == 200){
+                            that.game.gamePresenter.updateSysMessage("Logged in with success!");
+
+                            that.nick = nick;
+                            that.password = password;
+
                             //show user tab and hide login section
-                            that.showUserTab(data);
+                            that.showUserTab(nick);
                         }
                         console.log(data);
                     });
@@ -1175,17 +1161,15 @@ class OnlineMode {
 
             this.formRegister = document.getElementById("form-authentication-signup");
 
+            const nick = this.formRegister.elements["nick"].value;
+            const password = this.formRegister.elements["password"].value;
+
             const requestData = JSON.stringify({
-                'email': this.formRegister.elements["email"].value,
-                'nick': this.formRegister.elements["nick"].value,
-                'password': this.formRegister.elements["password"].value,
-                'birthday': this.formRegister.elements["birthday"].value,
-                'country': this.formRegister.elements["country"].value
+                'nick': nick,
+                'password': password,
             })
 
-            console.log("Before: ", requestData);
-
-            fetch("http://localhost:4000/register",
+            fetch(that.serverName + '/register',
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -1199,15 +1183,17 @@ class OnlineMode {
                 function(response) {
                     response.json().then(function(data) {
                         if(response.status == 400){
-                            that.game.gamePresenter.updateSysMessage(data.status);
+                            that.game.gamePresenter.updateSysMessage(data.status); //FIXME: change message shown
                         }
                         // See server response data
                         else if(response.status == 200){
-                            //create socket
                             that.game.gamePresenter.updateSysMessage("Registered with success!");
 
+                            that.nick = nick;
+                            that.password = password;
+
                             //show user tab and hide login section
-                            that.showUserTab(data);
+                            that.showUserTab(nick);
                         }
                         console.log(data);
                     });
@@ -1220,64 +1206,25 @@ class OnlineMode {
         });
     }
 
-    listenFormForgot(){
-        const that = this;
-
-        this.formForgot.addEventListener("submit", function (e){
-            e.preventDefault();
-
-            this.formForgot = document.getElementById("form-authentication-forgot");
-
-            const email = this.formForgot.elements["email"].value;
-
-            const requestData = JSON.stringify({
-                'email': email,
-            })
-
-            console.log("Before: ", requestData);
-
-            fetch('http://localhost:4000/recover',
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    method: 'post',
-                    body: requestData
-                }
-            )
-            .then(
-                function(response) {
-                    // See server response data
-                    response.json().then(function(data) {
-                        if (response.status == 400) {
-                            that.game.gamePresenter.updateSysMessage(data.status);
-                        }
-                        else if(response.status == 200){
-                            //show user tab and hide login section
-                            that.game.gamePresenter.updateSysMessage(data.status);
-                        }
-                        console.log(data);
-                    });
-                }
-            )  // in case of fetch error
-            .catch(function(error) {
-                console.log('Fetch Error in Recover: ', error);
-            });
-        });
-    }
-
     listenLogout(){
         const that = this;
 
         document.getElementById("a-authentication-logout").addEventListener('click', function() {
+            that.hideUserTab();
+        });
+    }
+
+    listenJoin(){
+        const that = this;
+
+        document.getElementById("img-search-bar-add-icon").addEventListener('click', function() {
             const nick =  document.getElementsByClassName("d-userTab-info")[0].innerHTML;
 
             const requestData = JSON.stringify({
                 'nick': nick,
             })
 
-            fetch("http://localhost:4000/logout",
+            fetch(that.serverName + '/join',
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -1297,11 +1244,9 @@ class OnlineMode {
                         // See server response data
                         else if(response.status == 200){
                             that.game.gamePresenter.updateSysMessage(data.status);
-
-                            //show user tab and hide login section
-                            that.hideUserTab();
-
-                            that.socket.close();
+                        }
+                        else if(response.status == 401){
+                            that.game.gamePresenter.updateSysMessage("You have to be signed in!");
                         }
                         console.log(data);
                     });
@@ -1309,12 +1254,12 @@ class OnlineMode {
                 }
             )  // in case of fetch error
             .catch(function(error) {
-                console.log('Fetch Error in Logout: ', error);
+                console.log('Fetch Error in Join: ', error);
             });
         });
     }
 
-    listenJoin(){
+    listenUpdate(){
         const that = this;
 
         document.getElementById("img-search-bar-add-icon").addEventListener('click', function() {
@@ -1324,7 +1269,7 @@ class OnlineMode {
                 'nick': nick,
             })
 
-            let joinURL = new URL('http://localhost:4000/join');
+            let joinURL = new URL(that.serverName + '/update');
 
             const invitedUsername = document.getElementById("input-search-bar").value;
 
@@ -1372,7 +1317,6 @@ class OnlineMode {
     listenAll(){
         this.listenFormLogin();
         this.listenFormRegister();
-        this.listenFormForgot();
         this.listenLogout();
         this.listenJoin();
     }
