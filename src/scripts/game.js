@@ -501,7 +501,6 @@ class GameViewer{
     removeWinner(){
         const winnerBanner = document.getElementById("d-game-area-winner-banner");
         winnerBanner.style.display = "none";
-        console.log("FIREWOKRS IN REMOVE WINNER: ", this.fireworks);
         if(this.fireworks != null) this.fireworks.stop();
         document.getElementById("c-game-area-fireworks").style.display = "none";
     }
@@ -548,6 +547,7 @@ class GamePresenter{
         this.state = gameState.CONFIG;  //game starts in CONFIG mode
         this.mode = gameMode.LOCAL;
         this.computerDificulty = undefined;
+        this.onlineMode = null;
     }
 
     //Getters
@@ -557,6 +557,10 @@ class GamePresenter{
 
     getViewer(){
         return this.viewer;
+    }
+
+    setOnlineMode(onlineMode){
+        this.onlineMode = onlineMode;
     }
 
     handleConfigs(){
@@ -665,34 +669,34 @@ class GamePresenter{
         const nCavs = this.model.cavities.length / 2;
 
         const that = this;  //used for timeout function
+        if(this.mode != gameMode.ONLINE){
+            switch(this.state){
+                case gameState.CONFIG:
+                case gameState.QUIT:
+                    this.viewer.updateSysMessage("You haven't started a game yet!");
+                    break;
+                case gameState.TURN_PLAYER1:
+                    if(cavityRealIndex >= nCavs){
+                        this.viewer.updateTurnMessage("That cavitity belongs to " + this.model.players[1].getUsername(), true);
+                        setTimeout(function () {
+                            that.updateTurnMessage("It's " + that.model.players[0].getUsername() + " turn");
+                        }, timeouts.turnWarnings);
 
-        switch(this.state){
-            case gameState.CONFIG:
-            case gameState.QUIT:
-                this.viewer.updateSysMessage("You haven't started a game yet!");
-                break;
-            case gameState.TURN_PLAYER1:
-                if(cavityRealIndex >= nCavs){
-                    this.viewer.updateTurnMessage("That cavitity belongs to " + this.model.players[1].getUsername(), true);
-                    setTimeout(function () {
-                        that.updateTurnMessage("It's " + that.model.players[0].getUsername() + " turn");
-                    }, timeouts.turnWarnings);
+                        return;
+                    }
+                    if(this.model.cavities[cavityRealIndex].length == 0){
+                        this.viewer.updateTurnMessage("That cavitity is empty, choose another one", true);
 
-                    return;
-                }
-                if(this.model.cavities[cavityRealIndex].length == 0){
-                    this.viewer.updateTurnMessage("That cavitity is empty, choose another one", true);
+                        setTimeout(function () {
+                            that.updateTurnMessage("It's " + that.model.players[0].getUsername() + " turn");
+                        }, timeouts.turnWarnings);
 
-                    setTimeout(function () {
-                        that.updateTurnMessage("It's " + that.model.players[0].getUsername() + " turn");
-                    }, timeouts.turnWarnings);
-
-                    return;
-                }
-                if(this.mode == gameMode.LOCAL){
-                    if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
-                }
-                else{
+                        return;
+                    }
+                    if(this.mode == gameMode.LOCAL){
+                        if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
+                    }
+                    else{
                         //make player one play
                         if(this.makePlay(this.state, cavityRealIndex)) break;
 
@@ -733,33 +737,43 @@ class GamePresenter{
                             }
                             this.switchTurns();
                         })
-                }
-                break;
-            case gameState.TURN_PLAYER2:
-                if(this.mode == gameMode.PC){
-                    return;
-                }
-                if(cavityRealIndex < nCavs){
-                    this.viewer.updateTurnMessage("That cavitites belongs to " + this.model.players[0].getUsername(), true);
-                    setTimeout(function () {
-                        that.updateTurnMessage("It's " + that.model.players[1].getUsername() + " turn");
-                    }, timeouts.turnWarnings);
+                    }
+                    break;
+                case gameState.TURN_PLAYER2:
+                    if(this.mode == gameMode.PC){
+                        return;
+                    }
+                    if(cavityRealIndex < nCavs){
+                        this.viewer.updateTurnMessage("That cavitites belongs to " + this.model.players[0].getUsername(), true);
+                        setTimeout(function () {
+                            that.updateTurnMessage("It's " + that.model.players[1].getUsername() + " turn");
+                        }, timeouts.turnWarnings);
 
-                    return;
-                }
-                if(this.model.cavities[cavityRealIndex].length == 0){
-                    this.viewer.updateTurnMessage("That cavitity is empty, choose another one", true);
+                        return;
+                    }
+                    if(this.model.cavities[cavityRealIndex].length == 0){
+                        this.viewer.updateTurnMessage("That cavitity is empty, choose another one", true);
 
-                    setTimeout(function () {
-                        that.updateTurnMessage("It's " + that.model.players[1].getUsername() + " turn");
-                    }, timeouts.turnWarnings);
+                        setTimeout(function () {
+                            that.updateTurnMessage("It's " + that.model.players[1].getUsername() + " turn");
+                        }, timeouts.turnWarnings);
 
-                    return;
-                }
-                if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
-                break;
-            default:
-                console.log("Error -> handleCavities() <- state not recognized");
+                        return;
+                    }
+                    if(!this.makePlay(this.state, cavityRealIndex)) this.switchTurns();
+                    break;
+                default:
+                    console.log("Error -> handleCavities() <- state not recognized");
+            }
+        }
+        //in the case of online mode
+        else{
+            //in case this player is the second one convert index to range 0-nCavs
+            if(!this.onlineMode.secondPlayer) this.onlineMode.notify(cavityRealIndex);
+            else{
+                const index = cavityRealIndex - nCavs;
+                this.onlineMode.notify(nCavs);
+            }
         }
     }
 
@@ -1000,17 +1014,19 @@ class GamePresenter{
     startGameOnlineMode(data){
         this.mode = gameMode.ONLINE;
 
-        //updating game state
-        if(data.turn == this.model.players[0].username) this.state = gameState.TURN_PLAYER1;
-        else this.state = gameState.TURN_PLAYER2;
+        //to check if player stays with bottom cavs or not
+        if(this.model.player[0].username == Object.keys(data.sides)[0]) this.onlineMode.secondPlayer = false;
+        else this.onlineMode.secondPlayer = true;
 
-        //updating online player name
-        if( this.model.players[0].username == Object.keys(data)[0]) this.model.players[1].setUsername(Object.keys(data)[1]);
-        else this.model.players[1].setUsername(Object.keys(data)[0]);
+        //updating online player names
+        this.model.players[0].setUsername(Object.keys(data.sides)[0]);
+        this.model.players[1].setUsername(Object.keys(data.sides)[1]);
+
+
 
         //getting initial number of cavities and seeds
-        const nCavs = data.Object.keys(data)[0].pits.length;  //TODO: verify this object keys access
-        const nSeeds = data.Object.keys(data)[0].pits[0];
+        const nCavs = data.sides[Object.keys(data.sides)[0]].pits.length;
+        const nSeeds = data.sides[Object.keys(data.sides)[0]].pits[0];
 
         this.viewer.displayStartBigMessage();
         this.config(nCavs, nSeeds);
@@ -1076,6 +1092,10 @@ class GameMain{
         this.gameViewer.listenAll();
         this.gamePresenter.resetConfigs();
     }
+
+    registerWith(onlineMode){
+        this.gamePresenter.setOnlineMode(onlineMode);
+    }
 }
 
 const game = new GameMain();
@@ -1100,6 +1120,8 @@ class OnlineMode {
 
         this.gameId = '';
         this.started = false;
+
+        this.secondPlayer = false;  //to check if it is going to have the bottom cavs
     }
 
     registerWith(game){
@@ -1292,6 +1314,8 @@ class OnlineMode {
                                 that.game.gamePresenter.updateSysMessage("You successfully joined a game!");
 
                                 that.gameId = data.game;
+
+                                that.listenUpdate();
                             }
                             console.log(data);
                         });
@@ -1341,6 +1365,8 @@ class OnlineMode {
                                 that.game.gamePresenter.updateSysMessage("You successfully leaved the game!");
                                 that.gameId = '';
                                 that.started = false;
+                                that.eventSource.close();
+                                that.eventSource = null;
                             }
                             console.log(data);
                         });
@@ -1358,7 +1384,9 @@ class OnlineMode {
     }
 
     listenUpdate(){
-        let updateURL = new URL(that.serverName + '/update');
+        const that = this;
+
+        let updateURL = new URL(this.serverName + '/update');
 
         if(this.nick != '' && this.gameId != ''){
             updateURL.search = new URLSearchParams({
@@ -1367,80 +1395,98 @@ class OnlineMode {
             });
         }
 
-        this.eventSource = new EventSource(this.updateURL);
+        this.eventSource = new EventSource(updateURL);
 
-        eventSource.onmessage = function(event) {
+        this.eventSource.onmessage = function(event) {
+
+            const data = JSON.parse(event.data).board;
+
             if(event.data == {}){
-                this.game.gamePresenter.updateSysMessage("Waiting for other player to join");
+                that.game.gamePresenter.updateSysMessage("Waiting for other player to join");
             }
-            else if(!this.started){
-                this.game.gamePresenter.updateSysMessage("The game has started");
-                this.started = true;
-                this.game.gamePresenter.startGameOnlineMode(event.data)
+            else if(!that.started){
+                that.game.gamePresenter.updateSysMessage("The game has started");
+                that.started = true;
+                that.game.gamePresenter.startGameOnlineMode(data)
             }
             else{
-                //TODO: receive plays
+                //updating board
+                //TODO: update cavities and storage models with updated data
+                that.game.gamePresenter.updateCavitiesAndStorages();
+
+                //TODO: update turn
+                that.game.gamePresenter.updateTurnMessage();
+
+                //TODO: update score
+                that.game.gamePresenter.updateScore(1, 2);
+
+                //check for win
+                if(event.data.hasOwnProperty('winner')){
+                    if(event.data.winner == null){   //FIXME: no need for this verification when usign winner presenter function
+                        //draw
+                        that.game.gamePresenter.winner(false);
+                        that.eventSource.close();
+                        that.eventSource = null;
+                    }
+                    else{
+                        //someone win (event.data.winner)
+                        that.game.gamePresenter.winner(false);
+                        that.eventSource.close();
+                        that.eventSource = null;
+                    }
+                }
             }
-
-            //else
-            //make click in start to start game in both
-
-            //else after start
-            //make play and update board
         };
-        eventSource.onerror = function(event) {
-            this.game.gamePresenter.updateSysMessage(event.data.error);
+        this.eventSource.onerror = function(event) {
+            that.game.gamePresenter.updateSysMessage(event.data.error);
 
         };
     }
 
-    listenNotify(){  //TODO: just raw copy from join for now!!!
-        const that = this;
+    //returns false if move is not done and true if successfull
+    notify(move){
+        const requestData = JSON.stringify({
+            'game': this.gameId,
+            'nick': this.nick,
+            'password' : this.password,
+            'move': move,
+        })
 
-        document.getElementById("button-command-quit").addEventListener('click', function() {
+        if(this.gameId != ''){
+            fetch(this.serverName + '/leave',
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    method: 'post',
+                    body: requestData
+                }
+            )
+            .then(
+                function(response) {
+                    response.json().then(function(data) {
+                        if(response.status == 400){
+                            this.game.gamePresenter.updateSysMessage(data.error);
+                            return false;
+                        }
+                        // See server response data
+                        else if(response.status == 200){
+                            return true;
+                        }
+                        console.log(data);
+                    });
 
-            const requestData = JSON.stringify({
-                'game': that.gameId,
-                'nick': that.nick,
-                'password' : that.password,
-            })
-
-            if(that.gameId != ''){
-                fetch(that.serverName + '/leave',
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                        },
-                        method: 'post',
-                        body: requestData
-                    }
-                )
-                .then(
-                    function(response) {
-                        response.json().then(function(data) {
-                            if(response.status == 400){
-                                that.game.gamePresenter.updateSysMessage(data.error);
-                            }
-                            // See server response data
-                            else if(response.status == 200){
-                                that.game.gamePresenter.updateSysMessage("You successfully leaved the game!");
-                                that.gameId = '';
-                                that.started = false;
-                            }
-                            console.log(data);
-                        });
-
-                    }
-                )  // in case of fetch error
-                .catch(function(error) {
-                    console.log('Fetch Error in Leave: ', error);
-                });
-            }
-            else{
-                that.game.gamePresenter.updateSysMessage("You are not in a game yet!")
-            }
-        });
+                }
+            )  // in case of fetch error
+            .catch(function(error) {
+                console.log('Fetch Error in Leave: ', error);
+            });
+        }
+        else{
+            this.game.gamePresenter.updateSysMessage("You are not in a game yet!");
+            return false;
+        }
     }
 
     listenAll(){
@@ -1449,14 +1495,14 @@ class OnlineMode {
         this.listenLogout();
         this.listenJoin();
         this.listenLeave();
-        this.listenUpdate();
-        this.listenNotify();
     }
 }
 
 const onlineMode = new OnlineMode();
 onlineMode.registerWith(game);
 onlineMode.listenAll();
+
+game.registerWith(onlineMode);
 
 /**
  * Minimax
