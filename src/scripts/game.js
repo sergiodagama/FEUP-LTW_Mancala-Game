@@ -948,7 +948,7 @@ class GamePresenter{
         this.updateScore();
         this.updateSysMessage("The game has finished!");
         this.viewer.displayWinner(won, this.model.players[0].getUsername(), this.model.players[1].getUsername());
-        this.model.resetConfigs();  //TODO: change this to current configs, only in model to not appear in screen while winner banner
+        this.model.resetConfigs();
         this.viewer.enableModesCheckboxes();
         this.state = gameState.CONFIG;
     }
@@ -966,34 +966,48 @@ class GamePresenter{
     }
 
     handleStartCommand(){
-        if(this.state == gameState.QUIT || this.state == gameState.CONFIG){
-            if(document.getElementById("input-settings-info--computer").checked){
-                this.mode = gameMode.PC;
-                this.model.players[1].setUsername("Computer");
-                this.state = gameState.TURN_PLAYER1;  //when it is against the computer the player one always starts first
-                this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn", true);
-                this.configComputerDificulty();
-            }
-            else if(document.getElementById("input-settings-info--online").checked){
-                this.mode = gameMode.ONLINE;
-                this.generateInitPlayer();
-            }
-            else{
-                this.mode = gameMode.LOCAL;
-                this.model.players[1].setUsername("Local");
-                this.generateInitPlayer();
-            }
-
-            this.viewer.displayStartBigMessage();
-            this.updateCavitiesAndStorages();
-            this.updateScore();
-            this.updateSysMessage("You started a game :)");
-            this.viewer.removeWinner();
-            this.viewer.disableModesCheckboxes();
+        if(document.getElementById("input-settings-info--online").checked){
+            this.updateSysMessage("You can't start the game yourself in this mode!");
         }
         else{
-            this.updateSysMessage("You are already playing a game!");
+            if(this.state == gameState.QUIT || this.state == gameState.CONFIG){
+                if(document.getElementById("input-settings-info--computer").checked){
+                    this.mode = gameMode.PC;
+                    this.model.players[1].setUsername("Computer");
+                    this.state = gameState.TURN_PLAYER1;  //when it is against the computer the player one always starts first
+                    this.updateTurnMessage("It's " + this.model.players[0].getUsername() + " turn", true);
+                    this.configComputerDificulty();
+                }
+                else if(document.getElementById("input-settings-info--local").checked){
+                    this.mode = gameMode.LOCAL;
+                    this.model.players[1].setUsername("Local");
+                    this.generateInitPlayer();
+                }
+
+                this.viewer.displayStartBigMessage();
+                this.updateCavitiesAndStorages();
+                this.updateScore();
+                this.updateSysMessage("You started a game :)");
+                this.viewer.removeWinner();
+                this.viewer.disableModesCheckboxes();
+            }
+            else{
+                this.updateSysMessage("You are already playing a game!");
+            }
         }
+    }
+
+    startGameOnlineMode(data){
+        this.mode = gameMode.ONLINE;
+
+        //TODO: check for player name and compare it to gues turn also update player2 name when possible
+        this.state = gameState.TURN_PLAYER1;
+
+        this.viewer.displayStartBigMessage();
+        this.config(nCavs, nSeeds);           //TODO: replace with data from eventsource
+        this.updateScore();
+        this.viewer.removeWinner();
+        this.viewer.disableModesCheckboxes();
     }
 
     handleQuitCommand(){
@@ -1004,7 +1018,8 @@ class GamePresenter{
             this.updateSysMessage("You quitted this game :(");
         }
         else{
-            this.updateSysMessage("You are not playing a game yet!");
+            if(this.mode != gameMode.ONLINE) this.updateSysMessage("You are not playing a game yet!");
+            //in the online mode the quit is handled in the fecth request in OnlineMode class
         }
     }
 
@@ -1068,13 +1083,14 @@ class OnlineMode {
         this.formRegister = document.getElementById("form-authentication-signup");
         this.userTab = document.getElementById("d-authentication-userTab");
         this.serverName = 'http://twserver.alunos.dcc.fc.up.pt:8008';
-        //this.evtSource = new EventSource(this.serverName + '/update');  //FIXME: change here to be closed somewhere
+        this.eventSource = null;
 
         //logged user (more pratical than getting it from model)
         this.nick = '';
         this.password = '';
 
         this.gameId = '';
+        this.started = false;
     }
 
     registerWith(game){
@@ -1105,6 +1121,8 @@ class OnlineMode {
         const userInfo = document.getElementsByClassName("d-userTab-info");
 
         userInfo[0].innerHTML = "Username";
+        this.nick = '';
+        this.password = '';
 
         document.getElementById("h2-authentication-title").innerHTML = "Authentication";
         document.getElementById("section-main-commands").style.display = "flex";
@@ -1143,7 +1161,7 @@ class OnlineMode {
                     // See server response data
                     response.json().then(function(data) {
                         if (response.status == 400) {
-                            that.game.gamePresenter.updateSysMessage(data.status); //FIXME: change message
+                            that.game.gamePresenter.updateSysMessage(data.error);
                         }
                         else if(response.status == 200){
                             that.game.gamePresenter.updateSysMessage("Logged in with success!");
@@ -1194,7 +1212,7 @@ class OnlineMode {
                 function(response) {
                     response.json().then(function(data) {
                         if(response.status == 400){
-                            that.game.gamePresenter.updateSysMessage(data.status); //FIXME: change message shown
+                            that.game.gamePresenter.updateSysMessage(data.error);
                         }
                         // See server response data
                         else if(response.status == 200){
@@ -1222,6 +1240,8 @@ class OnlineMode {
 
         document.getElementById("a-authentication-logout").addEventListener('click', function() {
             that.hideUserTab();
+            that.game.gamePresenter.updateSysMessage("Logged out with success!");
+            that.gameId = '';
         });
     }
 
@@ -1232,8 +1252,6 @@ class OnlineMode {
 
             const configs = that.game.gamePresenter.getCurrentConfigs();
 
-            console.log(configs);
-
             const requestData = JSON.stringify({
                 'group': 0,
                 'nick': that.nick,
@@ -1242,94 +1260,128 @@ class OnlineMode {
                 'initial': configs[1],
             })
 
-            fetch(that.serverName + '/join',
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'Authorization': that.accessToken
-                    },
-                    method: 'post',
-                    body: requestData
-                }
-            )
-            .then(
-                function(response) {
-                    response.json().then(function(data) {
-                        if(response.status == 400){
-                            //that.game.gamePresenter.updateSysMessage(data.status);  //FIXME: add new message
-                        }
-                        // See server response data
-                        else if(response.status == 200){
-                            //that.game.gamePresenter.updateSysMessage(data.status); //FIXME: add new message
-                        }
-                        else if(response.status == 401){
-                            that.game.gamePresenter.updateSysMessage("You have to be signed in!");
-                        }
-                        console.log(data);
-                    });
+            if(that.nick != ''){
+                fetch(that.serverName + '/join',
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                        },
+                        method: 'post',
+                        body: requestData
+                    }
+                )
+                .then(
+                    function(response) {
+                        response.json().then(function(data) {
+                            if(response.status == 400){
+                                that.game.gamePresenter.updateSysMessage(data.error);
 
-                }
-            )  // in case of fetch error
-            .catch(function(error) {
-                console.log('Fetch Error in Join: ', error);
-            });
+                            }
+                            // See server response data
+                            else if(response.status == 200){
+                                that.game.gamePresenter.updateSysMessage("You successfully joined a game!");
+
+                                that.gameId = data.game;
+                            }
+                            console.log(data);
+                        });
+
+                    }
+                )  // in case of fetch error
+                .catch(function(error) {
+                    console.log('Fetch Error in Join: ', error);
+                });
+            }
+            else{
+                that.game.gamePresenter.updateSysMessage("You have to be signed in!")
+            }
+        });
+    }
+
+    listenLeave(){
+        const that = this;
+
+        document.getElementById("button-command-quit").addEventListener('click', function() {
+
+            const requestData = JSON.stringify({
+                'game': that.gameId,
+                'nick': that.nick,
+                'password' : that.password,
+            })
+
+            if(that.gameId != ''){
+                fetch(that.serverName + '/leave',
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                        },
+                        method: 'post',
+                        body: requestData
+                    }
+                )
+                .then(
+                    function(response) {
+                        response.json().then(function(data) {
+                            if(response.status == 400){
+                                that.game.gamePresenter.updateSysMessage(data.error);
+                            }
+                            // See server response data
+                            else if(response.status == 200){
+                                that.game.gamePresenter.updateSysMessage("You successfully leaved the game!");
+                                that.gameId = '';
+                                that.started = false;
+                            }
+                            console.log(data);
+                        });
+
+                    }
+                )  // in case of fetch error
+                .catch(function(error) {
+                    console.log('Fetch Error in Leave: ', error);
+                });
+            }
+            else{
+                that.game.gamePresenter.updateSysMessage("You are not in a game yet!")
+            }
         });
     }
 
     listenUpdate(){
-        const that = this;
+        let updateURL = new URL(that.serverName + '/update');
 
-        document.getElementById("img-search-bar-add-icon").addEventListener('click', function() {
-            const nick =  document.getElementsByClassName("d-userTab-info")[0].innerHTML;
+        if(this.nick != '' && this.gameId != ''){
+            updateURL.search = new URLSearchParams({
+                'game': this.gameId,
+                'nick': this.nick,
+            });
+        }
 
-            const requestData = JSON.stringify({
-                'nick': nick,
-            })
+        this.eventSource = new EventSource(this.updateURL);
 
-            let joinURL = new URL(that.serverName + '/update');
-
-            const invitedUsername = document.getElementById("input-search-bar").value;
-
-            if(invitedUsername != ""){
-                joinURL.search = new URLSearchParams({
-                    invitedUser: invitedUsername
-                });
+        eventSource.onmessage = function(event) {
+            if(event.data == {}){
+                this.game.gamePresenter.updateSysMessage("Waiting for other player to join");
+            }
+            else if(!this.started){
+                this.game.gamePresenter.updateSysMessage("The game has started");
+                this.started = true;
+            }
+            else{
+                //TODO: receive plays
             }
 
-            fetch(joinURL,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'Authorization': that.accessToken
-                    },
-                    method: 'post',
-                    body: requestData
-                }
-            )
-            .then(
-                function(response) {
-                    response.json().then(function(data) {
-                        if(response.status == 400){
-                            that.game.gamePresenter.updateSysMessage(data.status);
-                        }
-                        // See server response data
-                        else if(response.status == 200){
-                            that.game.gamePresenter.updateSysMessage(data.status);
-                        }
-                        else if(response.status == 401){
-                            that.game.gamePresenter.updateSysMessage("You have to be signed in!");
-                        }
-                        console.log(data);
-                    });
+            //else
+            //make click in start to start game in both
 
-                }
-            )  // in case of fetch error
-            .catch(function(error) {
-                console.log('Fetch Error in Join: ', error);
-            });
-        });
+            //else after start
+            //make play and update board
+        };
+        eventSource.onerror = function(event) {
+            this.game.gamePresenter.updateSysMessage(event.data.error);
+
+        };
     }
 
     listenAll(){
@@ -1337,6 +1389,7 @@ class OnlineMode {
         this.listenFormRegister();
         this.listenLogout();
         this.listenJoin();
+        this.listenLeave();
     }
 }
 
