@@ -230,6 +230,31 @@ class GameModel{
         this.sysMessage = "Default system Message";
     }
 
+    createGameBasedOnArrays(cavs, stores){
+        //delete existing seeds and cavities
+        this.deleteCavities();
+        this.emptyStorages();
+
+        console.log("LEGTH: ", cavs.length);
+
+        //add cavites and create seeds
+        for(let i = 0; i < cavs.length; i++){
+            let seeds = [];
+            for(let k = 0; k < cavs[i]; k++){
+                seeds.push(new Seed());
+            }
+            this.cavities.push(seeds);
+        }
+
+        for(let i = 0; i < 2; i++){
+            let seeds = [];
+            for(let k = 0; k < stores[i]; k++){
+                seeds.push(new Seed());
+            }
+            this.storages.push(seeds);
+        }
+    }
+
     //Getters
     getPlayers(){
         return this.players;
@@ -772,7 +797,7 @@ class GamePresenter{
             if(!this.onlineMode.secondPlayer) this.onlineMode.notify(cavityRealIndex);
             else{
                 const index = cavityRealIndex - nCavs;
-                this.onlineMode.notify(nCavs);
+                this.onlineMode.notify(index);
             }
         }
     }
@@ -1015,24 +1040,50 @@ class GamePresenter{
         this.mode = gameMode.ONLINE;
 
         //to check if player stays with bottom cavs or not
-        if(this.model.player[0].username == Object.keys(data.sides)[0]) this.onlineMode.secondPlayer = false;
+        if(this.model.players[0].username == Object.keys(data.sides)[0]) this.onlineMode.secondPlayer = false;
         else this.onlineMode.secondPlayer = true;
 
         //updating online player names
         this.model.players[0].setUsername(Object.keys(data.sides)[0]);
         this.model.players[1].setUsername(Object.keys(data.sides)[1]);
 
-
+        this.viewer.updatePlayer1Name(this.model.players[0].username);
+        this.viewer.updatePlayer2Name(this.model.players[1].username);
 
         //getting initial number of cavities and seeds
         const nCavs = data.sides[Object.keys(data.sides)[0]].pits.length;
         const nSeeds = data.sides[Object.keys(data.sides)[0]].pits[0];
+
+        //update turn message
+        this.updateTurnMessage("It's " + data.turn + " turn", true);
 
         this.viewer.displayStartBigMessage();
         this.config(nCavs, nSeeds);
         this.updateScore();
         this.viewer.removeWinner();
         this.viewer.disableModesCheckboxes();
+    }
+
+    updateBoardOnlineMode(data){
+        console.log(data);
+        //TODO: update cavities and storage models with updated data
+        let newCavs = data.sides[Object.keys(data.sides)[0]].pits;
+        newCavs.concat(data.sides[Object.keys(data.sides)[1]].pits);
+
+        let newStores = [
+            [Object.keys(data.sides)[0]],
+            [Object.keys(data.sides)[1]]
+        ];
+
+        this.model.createGameBasedOnArrays(newCavs, newStores);
+
+        this.updateCavitiesAndStorages();
+
+        //TODO: update turn
+        this.updateTurnMessage(data.turn, false);
+
+        //TODO: update score
+        this.updateScore(this.model.storages[0].length, this.model.storages[1].length);
     }
 
     handleQuitCommand(){
@@ -1365,8 +1416,8 @@ class OnlineMode {
                                 that.game.gamePresenter.updateSysMessage("You successfully leaved the game!");
                                 that.gameId = '';
                                 that.started = false;
-                                that.eventSource.close();
-                                that.eventSource = null;
+                                //that.eventSource.close();
+                                //that.eventSource = null;
                             }
                             console.log(data);
                         });
@@ -1399,7 +1450,9 @@ class OnlineMode {
 
         this.eventSource.onmessage = function(event) {
 
-            const data = JSON.parse(event.data).board;
+            const data = JSON.parse(event.data);
+
+            console.log("DATA: ", event.data);
 
             if(event.data == {}){
                 that.game.gamePresenter.updateSysMessage("Waiting for other player to join");
@@ -1407,33 +1460,27 @@ class OnlineMode {
             else if(!that.started){
                 that.game.gamePresenter.updateSysMessage("The game has started");
                 that.started = true;
-                that.game.gamePresenter.startGameOnlineMode(data)
+                that.game.gamePresenter.startGameOnlineMode(data.board)
             }
             else{
-                //updating board
-                //TODO: update cavities and storage models with updated data
-                that.game.gamePresenter.updateCavitiesAndStorages();
-
-                //TODO: update turn
-                that.game.gamePresenter.updateTurnMessage();
-
-                //TODO: update score
-                that.game.gamePresenter.updateScore(1, 2);
-
                 //check for win
-                if(event.data.hasOwnProperty('winner')){
+                if(data.hasOwnProperty('winner')){
                     if(event.data.winner == null){   //FIXME: no need for this verification when usign winner presenter function
                         //draw
                         that.game.gamePresenter.winner(false);
-                        that.eventSource.close();
-                        that.eventSource = null;
+                        //that.eventSource.close();
+                       // that.eventSource = null;
                     }
                     else{
                         //someone win (event.data.winner)
                         that.game.gamePresenter.winner(false);
-                        that.eventSource.close();
-                        that.eventSource = null;
+                        //that.eventSource.close();
+                        //that.eventSource = null;
                     }
+                }
+                else{
+                    //updating board
+                    that.game.gamePresenter.updateBoardOnlineMode(data.board);
                 }
             }
         };
@@ -1453,7 +1500,7 @@ class OnlineMode {
         })
 
         if(this.gameId != ''){
-            fetch(this.serverName + '/leave',
+            fetch(this.serverName + '/notify',
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -1472,6 +1519,7 @@ class OnlineMode {
                         }
                         // See server response data
                         else if(response.status == 200){
+                            console.log("Play on " + move + " done with success!");
                             return true;
                         }
                         console.log(data);
