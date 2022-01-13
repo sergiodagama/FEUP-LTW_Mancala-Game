@@ -235,10 +235,16 @@ class GameModel{
         this.deleteCavities();
         this.emptyStorages();
 
-        console.log("LEGTH: ", cavs.length);
-
         //add cavites and create seeds
-        for(let i = 0; i < cavs.length; i++){
+        for(let i = cavs.length-1; i <= 0; i--){
+            let seeds = [];
+            for(let k = 0; k < cavs[i]; k++){
+                seeds.push(new Seed());
+            }
+            this.cavities.push(seeds);
+        }
+
+        for(let i = cavs.length/2; i < cavs.length; i++){
             let seeds = [];
             for(let k = 0; k < cavs[i]; k++){
                 seeds.push(new Seed());
@@ -251,7 +257,7 @@ class GameModel{
             for(let k = 0; k < stores[i]; k++){
                 seeds.push(new Seed());
             }
-            this.storages.push(seeds);
+            this.storages[i] = seeds;
         }
     }
 
@@ -794,7 +800,10 @@ class GamePresenter{
         //in the case of online mode
         else{
             //in case this player is the second one convert index to range 0-nCavs
-            if(!this.onlineMode.secondPlayer) this.onlineMode.notify(cavityRealIndex);
+            if(!this.onlineMode.secondPlayer){
+                const index = (nCavs-1) - cavityRealIndex
+                this.onlineMode.notify(index);
+            }
             else{
                 const index = cavityRealIndex - nCavs;
                 this.onlineMode.notify(index);
@@ -1066,23 +1075,25 @@ class GamePresenter{
 
     updateBoardOnlineMode(data){
         console.log(data);
-        //TODO: update cavities and storage models with updated data
+        //update cavities and storage models with updated data
         let newCavs = data.sides[Object.keys(data.sides)[0]].pits;
-        newCavs.concat(data.sides[Object.keys(data.sides)[1]].pits);
+        newCavs = newCavs.concat(data.sides[Object.keys(data.sides)[1]].pits);
 
         let newStores = [
-            [Object.keys(data.sides)[0]],
-            [Object.keys(data.sides)[1]]
+            data.sides[Object.keys(data.sides)[0]].store,
+            data.sides[Object.keys(data.sides)[1]].store
         ];
+
+        //console.log("NEW: ", newCavs, " AND ", newStores);
 
         this.model.createGameBasedOnArrays(newCavs, newStores);
 
         this.updateCavitiesAndStorages();
 
-        //TODO: update turn
-        this.updateTurnMessage(data.turn, false);
+        //update turn message
+        this.updateTurnMessage("It's " + data.turn + " turn", false);
 
-        //TODO: update score
+        //update scores
         this.updateScore(this.model.storages[0].length, this.model.storages[1].length);
     }
 
@@ -1465,18 +1476,9 @@ class OnlineMode {
             else{
                 //check for win
                 if(data.hasOwnProperty('winner')){
-                    if(event.data.winner == null){   //FIXME: no need for this verification when usign winner presenter function
-                        //draw
-                        that.game.gamePresenter.winner(false);
-                        //that.eventSource.close();
-                       // that.eventSource = null;
-                    }
-                    else{
-                        //someone win (event.data.winner)
-                        that.game.gamePresenter.winner(false);
-                        //that.eventSource.close();
-                        //that.eventSource = null;
-                    }
+                    that.game.gamePresenter.winner(false);
+                    that.eventSource.close();
+                    that.eventSource = null;
                 }
                 else{
                     //updating board
@@ -1492,6 +1494,8 @@ class OnlineMode {
 
     //returns false if move is not done and true if successfull
     notify(move){
+        const that = this;
+
         const requestData = JSON.stringify({
             'game': this.gameId,
             'nick': this.nick,
@@ -1500,7 +1504,7 @@ class OnlineMode {
         })
 
         if(this.gameId != ''){
-            fetch(this.serverName + '/notify',
+            fetch(that.serverName + '/notify',
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -1514,7 +1518,7 @@ class OnlineMode {
                 function(response) {
                     response.json().then(function(data) {
                         if(response.status == 400){
-                            this.game.gamePresenter.updateSysMessage(data.error);
+                            that.game.gamePresenter.updateSysMessage(data.error);
                             return false;
                         }
                         // See server response data
