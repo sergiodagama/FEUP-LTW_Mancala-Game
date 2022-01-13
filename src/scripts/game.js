@@ -236,7 +236,7 @@ class GameModel{
         this.emptyStorages();
 
         //add cavites and create seeds
-        for(let i = cavs.length-1; i <= 0; i--){
+        for(let i = (cavs.length/2)-1; i >= 0; i--){
             let seeds = [];
             for(let k = 0; k < cavs[i]; k++){
                 seeds.push(new Seed());
