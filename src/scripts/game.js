@@ -1000,11 +1000,20 @@ class GamePresenter{
     startGameOnlineMode(data){
         this.mode = gameMode.ONLINE;
 
-        //TODO: check for player name and compare it to gues turn also update player2 name when possible
-        this.state = gameState.TURN_PLAYER1;
+        //updating game state
+        if(data.turn == this.model.players[0].username) this.state = gameState.TURN_PLAYER1;
+        else this.state = gameState.TURN_PLAYER2;
+
+        //updating online player name
+        if( this.model.players[0].username == Object.keys(data)[0]) this.model.players[1].setUsername(Object.keys(data)[1]);
+        else this.model.players[1].setUsername(Object.keys(data)[0]);
+
+        //getting initial number of cavities and seeds
+        const nCavs = data.Object.keys(data)[0].pits.length;  //TODO: verify this object keys access
+        const nSeeds = data.Object.keys(data)[0].pits[0];
 
         this.viewer.displayStartBigMessage();
-        this.config(nCavs, nSeeds);           //TODO: replace with data from eventsource
+        this.config(nCavs, nSeeds);
         this.updateScore();
         this.viewer.removeWinner();
         this.viewer.disableModesCheckboxes();
@@ -1013,13 +1022,13 @@ class GamePresenter{
     handleQuitCommand(){
         if(this.state == gameState.TURN_PLAYER1 || this.state == gameState.TURN_PLAYER2){
             this.state = gameState.QUIT;
-            //TODO: save results
             this.winner(true);
             this.updateSysMessage("You quitted this game :(");
+            //TODO: save results
         }
         else{
-            if(this.mode != gameMode.ONLINE) this.updateSysMessage("You are not playing a game yet!");
             //in the online mode the quit is handled in the fecth request in OnlineMode class
+            if(this.mode != gameMode.ONLINE) this.updateSysMessage("You are not playing a game yet!");
         }
     }
 
@@ -1367,6 +1376,7 @@ class OnlineMode {
             else if(!this.started){
                 this.game.gamePresenter.updateSysMessage("The game has started");
                 this.started = true;
+                this.game.gamePresenter.startGameOnlineMode(event.data)
             }
             else{
                 //TODO: receive plays
@@ -1384,12 +1394,63 @@ class OnlineMode {
         };
     }
 
+    listenNotify(){  //TODO: just raw copy from join for now!!!
+        const that = this;
+
+        document.getElementById("button-command-quit").addEventListener('click', function() {
+
+            const requestData = JSON.stringify({
+                'game': that.gameId,
+                'nick': that.nick,
+                'password' : that.password,
+            })
+
+            if(that.gameId != ''){
+                fetch(that.serverName + '/leave',
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                        },
+                        method: 'post',
+                        body: requestData
+                    }
+                )
+                .then(
+                    function(response) {
+                        response.json().then(function(data) {
+                            if(response.status == 400){
+                                that.game.gamePresenter.updateSysMessage(data.error);
+                            }
+                            // See server response data
+                            else if(response.status == 200){
+                                that.game.gamePresenter.updateSysMessage("You successfully leaved the game!");
+                                that.gameId = '';
+                                that.started = false;
+                            }
+                            console.log(data);
+                        });
+
+                    }
+                )  // in case of fetch error
+                .catch(function(error) {
+                    console.log('Fetch Error in Leave: ', error);
+                });
+            }
+            else{
+                that.game.gamePresenter.updateSysMessage("You are not in a game yet!")
+            }
+        });
+    }
+
     listenAll(){
         this.listenFormLogin();
         this.listenFormRegister();
         this.listenLogout();
         this.listenJoin();
         this.listenLeave();
+        this.listenUpdate();
+        this.listenNotify();
     }
 }
 
