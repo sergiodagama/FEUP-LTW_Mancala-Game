@@ -1558,12 +1558,17 @@ class OnlineMode {
         }
     }
 
+    listenRanking(){
+        const scoreIcon = document.getElementById("img-header-navbar-score-icon");
+    }
+
     listenAll(){
         this.listenFormLogin();
         this.listenFormRegister();
         this.listenLogout();
         this.listenJoin();
         this.listenLeave();
+        this.listenRanking();
     }
 }
 

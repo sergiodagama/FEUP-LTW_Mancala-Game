@@ -47,6 +47,7 @@ h3{
 }
 
 table{
+    width: 100%;
     text-align: center;
     border-collapse: separate;
     border-spacing: 0.5em;
@@ -956,6 +957,7 @@ header{
 }
 
 .h3-score-table-title{
+    margin-bottom: 0.5em;
     color: white;
 }
 
