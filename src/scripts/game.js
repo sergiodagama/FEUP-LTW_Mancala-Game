@@ -971,31 +971,37 @@ class GamePresenter{
         this.winner(false);
     }
 
-    winner(quitted){
-        let won;
+    winner(quitted, online){  //the online it's just for online mode
+        if(this.mode != gameMode.ONLINE){
+            let won;
 
-        if(!quitted){
-            if(this.model.storages[0].length == this.model.storages[1].length){
-                //tie
-                won = winningState.TIE;
-            }
-            else if(this.model.storages[0].length > this.model.storages[1].length){
-                //player 1 won
-                won = winningState.PLAYER1_WON;
+            if(!quitted){
+                if(this.model.storages[0].length == this.model.storages[1].length){
+                    //tie
+                    won = winningState.TIE;
+                }
+                else if(this.model.storages[0].length > this.model.storages[1].length){
+                    //player 1 won
+                    won = winningState.PLAYER1_WON;
+                }
+                else{
+                    //player 2 won
+                    won = winningState.PLAYER2_WON;
+                }
             }
             else{
-                //player 2 won
                 won = winningState.PLAYER2_WON;
             }
+            this.viewer.displayWinner(won, this.model.players[0].getUsername(), this.model.players[1].getUsername());
+
         }
         else{
-            won = winningState.PLAYER2_WON;
+            this.viewer.displayWinner(online, this.model.players[0].getUsername(), this.model.players[1].getUsername());
         }
 
         //show winner
         this.updateScore();
         this.updateSysMessage("The game has finished!");
-        this.viewer.displayWinner(won, this.model.players[0].getUsername(), this.model.players[1].getUsername());
         this.model.resetConfigs();
         this.viewer.enableModesCheckboxes();
         this.state = gameState.CONFIG;
@@ -1048,8 +1054,10 @@ class GamePresenter{
     startGameOnlineMode(data){
         this.mode = gameMode.ONLINE;
 
+        let username = document.getElementById("d-userTab-info--username").innerHTML; //to ensure that we are grabbing auth user
+
         //to check if player stays with bottom cavs or not
-        if(this.model.players[0].username == Object.keys(data.sides)[0]) this.onlineMode.secondPlayer = false;
+        if(username == Object.keys(data.sides)[0]) this.onlineMode.secondPlayer = false;
         else this.onlineMode.secondPlayer = true;
 
         //updating online player names
@@ -1204,6 +1212,8 @@ class OnlineMode {
         userInfo[0].innerHTML = username;
 
         document.getElementById("h2-authentication-title").innerHTML = "Account";
+
+        //TODO: show commands (in case of register endpoint they vanish)
     }
 
     hideUserTab(){
@@ -1425,10 +1435,7 @@ class OnlineMode {
                             // See server response data
                             else if(response.status == 200){
                                 that.game.gamePresenter.updateSysMessage("You successfully leaved the game!");
-                                that.gameId = '';
-                                that.started = false;
-                                //that.eventSource.close();
-                                //that.eventSource = null;
+                                that.closeGame();
                             }
                             console.log(data);
                         });
@@ -1476,9 +1483,12 @@ class OnlineMode {
             else{
                 //check for win
                 if(data.hasOwnProperty('winner')){
-                    that.game.gamePresenter.winner(false);
-                    that.eventSource.close();
-                    that.eventSource = null;
+                    let winner = winningState.TIE;
+                    if(data.winner == that.game.gamePresenter.model.players[0].username) winner = winningState.PLAYER1_WON;
+                    else if(data.winner == that.game.gamePresenter.model.players[1].username) winner = winningState.PLAYER2_WON;
+
+                    that.game.gamePresenter.winner(false, winner);
+                    that.closeGame();
                 }
                 else{
                     //updating board
@@ -1490,6 +1500,13 @@ class OnlineMode {
             that.game.gamePresenter.updateSysMessage(event.data.error);
 
         };
+    }
+
+    closeGame(){
+        this.gameId = '';
+        this.started = false;
+        this.eventSource.close();
+        this.eventSource = null;
     }
 
     //returns false if move is not done and true if successfull
