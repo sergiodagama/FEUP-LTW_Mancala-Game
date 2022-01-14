@@ -1549,7 +1549,7 @@ class OnlineMode {
                 }
             )  // in case of fetch error
             .catch(function(error) {
-                console.log('Fetch Error in Leave: ', error);
+                console.log('Fetch Error in Notify: ', error);
             });
         }
         else{
@@ -1558,8 +1558,90 @@ class OnlineMode {
         }
     }
 
+    ranking(){
+        const that = this;
+
+        fetch(that.serverName + '/ranking',
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                method: 'post',
+                body: JSON.stringify({}),
+            }
+        )
+        .then(
+            function(response) {
+                response.json().then(function(data) {
+                    if(response.status == 400){
+                        console.log("Error on request for ranking");
+                    }
+                    // See server response data
+                    else if(response.status == 200){
+
+                        if(data.ranking.length >= 2){
+                            //shows the 2 top players (divs that stay as placeholders in case of no results)
+                            const username1 = document.getElementById("online-username-1");
+                            const vics1 = document.getElementById("online-vics-1");
+                            const games1 = document.getElementById("online-games-1");
+
+                            username1.innerHTML = data.ranking[0].nick;
+                            vics1.innerHTML = data.ranking[0].victories;
+                            games1.innerHTML = data.ranking[0].games;
+
+                            const username2 = document.getElementById("online-username-2");
+                            const vics2 = document.getElementById("online-vics-2");
+                            const games2 = document.getElementById("online-games-2");
+
+                            username2.innerHTML = data.ranking[1].nick;
+                            vics2.innerHTML = data.ranking[1].victories;
+                            games2.innerHTML = data.ranking[1].games;
+
+                            const table = document.getElementById("tbody-online-leaderboard");
+
+                            for(let i = 2; i < 10; i++){
+                                const tr = document.createElement("tr");
+                                const th = document.createElement("th");
+                                const td1 = document.createElement("td");
+                                const td2 = document.createElement("td");
+
+                                th.innerHTML = data.ranking[i].nick;
+                                td1.innerHTML = data.ranking[i].victories;
+                                td2.innerHTML = data.ranking[i].games;
+
+                                tr.appendChild(th);
+                                tr.appendChild(td1);
+                                tr.appendChild(td2);
+                                table.appendChild(tr);
+                            }
+
+                        }
+                    }
+                    console.log(data);
+                });
+
+            }
+        )  // in case of fetch error
+        .catch(function(error) {
+            console.log('Fetch Error in Ranking: ', error);
+        });
+    }
+
     listenRanking(){
-        const scoreIcon = document.getElementById("img-header-navbar-score-icon");
+        const scoreIconNormal = document.getElementById("img-header-navbar-score-icon");
+        const scoreMobile = document.getElementById("p-menu-score");
+        const scoreTablet = document.getElementById("option-menu-tablet-score");
+
+        const scoresReqGenerators = [scoreIconNormal, scoreMobile, scoreTablet];
+
+        const that = this;
+
+        for(let i = 0; i < 3; i++){
+            scoresReqGenerators[i].addEventListener('click', function() {
+                that.ranking();
+            });
+        }
     }
 
     listenAll(){

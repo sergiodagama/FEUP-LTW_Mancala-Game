@@ -47,7 +47,12 @@ h3{
 }
 
 table{
+    display: block;
     width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    height: 10.9em;
+    overflow-y: auto;
     text-align: center;
     border-collapse: separate;
     border-spacing: 0.5em;

@@ -32,7 +32,7 @@
         <select name="Menu" id="sel-header-menu" class="sel-header-menu responsive">
           <option value="Game">Game</option>
           <option value="Configurations">Configurations</option>
-          <option value="Leaderboard">Leaderboard</option>
+          <option id="option-menu-tablet-score" value="Leaderboard">Leaderboard</option>
           <option value="Rules">Rules</option>
         </select>
       </span>
@@ -346,41 +346,45 @@
         <!--|| Local Player Games Records-->
         <h3 class="h3-score-table-title">Local Games</h3>
         <table>
-          <tr>
-            <th class="th-table-void"></th>
-            <th>Victories</th>
-            <th>Games</th>
-          </tr>
-          <tr>
-            <th id="local-username-1">Username</th>
-            <td id="local-vic-1"></td>
-            <td id="local-games-1"></td>
-          </tr>
-          <tr>
-            <th id="local-username-2">Username</th>
-            <td id="local-vic-2"></td>
-            <td id="local-games-2"></td>
-          </tr>
+          <tbody>
+            <tr>
+              <th class="th-table-void"></th>
+              <th>Victories</th>
+              <th>Games</th>
+            </tr>
+            <tr>
+              <th id="local-username-1">Username</th>
+              <td id="local-vic-1"></td>
+              <td id="local-games-1"></td>
+            </tr>
+            <tr>
+              <th id="local-username-2">Username</th>
+              <td id="local-vic-2"></td>
+              <td id="local-games-2"></td>
+            </tr>
+          </tbody>
         </table>
 
         <!--|| Online Players Leaderboard-->
         <h3 class="h3-score-table-title">Online Leaderboard</h3>
         <table>
-          <tr>
-            <th class="th-table-void" style="overflow-y: auto;"></th>
-            <th>Victories</th>
-            <th>Games</th>
-          </tr>
-          <tr>
-            <th id="online-username-1">Username</th>
-            <td id="online-vic-1"></td>
-            <td id="online-games-1"></td>
-          </tr>
-          <tr>
-            <th id="online-username-2">Username</th>
-            <td id="online-vic-2"></td>
-            <td id="online-games-2"></td>
-          </tr>
+          <tbody id="tbody-online-leaderboard">
+            <tr>
+              <th class="th-table-void"></th>
+              <th>Victories</th>
+              <th>Games</th>
+            </tr>
+            <tr>
+              <th id="online-username-1">Username</th>
+              <td id="online-vics-1"></td>
+              <td id="online-games-1"></td>
+            </tr>
+            <tr>
+              <th id="online-username-2">Username</th>
+              <td id="online-vics-2"></td>
+              <td id="online-games-2"></td>
+            </tr>
+          </tbody>
         </table>
       </section>
 
