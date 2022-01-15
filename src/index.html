@@ -39,14 +39,16 @@
     </header>
 
     <!--|| Responsive Menu mobile-->
-    <span id="s-menu" class="s-menu hidden">
-      <p id="p-menu-game" class="p-menu">Play</p>
-      <p id="p-menu-login" class="p-menu">Login</p>
-      <p id="p-menu-configs" class="p-menu">Configurations</p>
-      <p id="p-menu-chat" class="p-menu">Chat</p>
-      <p id="p-menu-rules" class="p-menu">Rules</p>
-      <p id="p-menu-score" class="p-menu">Leaderboard</p>
-    </span>
+    <div id="mobile-menu-turn-off">
+      <span id="s-menu" class="s-menu hidden">
+        <p id="p-menu-game" class="p-menu">Play</p>
+        <p id="p-menu-login" class="p-menu">Login</p>
+        <p id="p-menu-configs" class="p-menu">Configurations</p>
+        <p id="p-menu-chat" class="p-menu">Chat</p>
+        <p id="p-menu-rules" class="p-menu">Rules</p>
+        <p id="p-menu-score" class="p-menu">Leaderboard</p>
+      </span>
+    </div>
 
     <div id="mobile-main-turn-off"> <!--used to toggle menu in mobile-->
       <div id="d-main">
@@ -349,21 +351,11 @@
           <!--|| Local Player Games Records-->
           <h3 class="h3-score-table-title">Local Games</h3>
           <table>
-            <tbody>
+            <tbody id="tbody-local-leaderboard">
               <tr>
                 <th class="th-table-void"></th>
                 <th>Victories</th>
                 <th>Games</th>
-              </tr>
-              <tr>
-                <th id="local-username-1">Username</th>
-                <td id="local-vic-1"></td>
-                <td id="local-games-1"></td>
-              </tr>
-              <tr>
-                <th id="local-username-2">Username</th>
-                <td id="local-vic-2"></td>
-                <td id="local-games-2"></td>
               </tr>
             </tbody>
           </table>

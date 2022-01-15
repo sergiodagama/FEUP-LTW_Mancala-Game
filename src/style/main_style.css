@@ -55,7 +55,7 @@ table{
     overflow-y: auto;
     text-align: center;
     border-collapse: separate;
-    border-spacing: 0.5em;
+    border-spacing: 0.2em;
 }
 
 th{

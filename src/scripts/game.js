@@ -973,8 +973,9 @@ class GamePresenter{
     }
 
     winner(quitted, online){  //the online it's just for online mode
+        let won;
+
         if(this.mode != gameMode.ONLINE){
-            let won;
 
             if(!quitted){
                 if(this.model.storages[0].length == this.model.storages[1].length){
@@ -1006,6 +1007,9 @@ class GamePresenter{
         this.model.resetConfigs();
         this.viewer.enableModesCheckboxes();
         this.state = gameState.CONFIG;
+
+        //save results here
+        this.saveLocalResults(won);
     }
 
     configComputerDificulty(){
@@ -1106,12 +1110,67 @@ class GamePresenter{
         this.updateScore(this.model.storages[0].length, this.model.storages[1].length);
     }
 
+    saveLocalResults(winner){
+        const obtained1 = localStorage.getItem(this.model.players[0].username);
+        let res1 = { 'victories': 0, 'games': 0};
+
+        if (obtained1 === null) {
+            if(winner == winningState.TIE || winner == winningState.PLAYER2_WON){
+                res1.victories = 0;
+                res1.games = 1;
+            }
+            else if(winner == winningState.PLAYER1_WON){
+                res1.victories = 1;
+                res1.games = 1;
+            }
+        }
+        else{
+            const parsed1 = JSON.parse(obtained1);
+
+            if(winner == winningState.TIE || winner == winningState.PLAYER2_WON){
+                res1.victories = 0 + parsed1.victories;
+                res1.games = 1 + parsed1.games;
+            }
+            else if(winner == winningState.PLAYER1_WON){
+                res1.victories = 1 + parsed1.victories;
+                res1.games = 1 + parsed1.games;;
+            }
+        }
+        localStorage.setItem(this.model.players[0].username, JSON.stringify(res1));
+
+        const obtained2 = localStorage.getItem(this.model.players[1].username);
+        let res2 = { 'victories': 0, 'games': 0};
+
+        if (obtained2 === null) {
+            if(winner == winningState.TIE || winner == winningState.PLAYER1_WON){
+                res2.victories = 0;
+                res2.games = 1;
+            }
+            else if(winner == winningState.PLAYER2_WON){
+                res2.victories = 1;
+                res2.games = 1;
+            }
+        }
+        else{
+            const parsed2 = JSON.parse(obtained2);
+
+            if(winner == winningState.TIE || winner == winningState.PLAYER1_WON){
+                res2.victories = 0 + parsed2.victories;
+                res2.games = 1 + parsed2.games;
+            }
+            else if(winner == winningState.PLAYER2_WON){
+                res2.victories = 1 + parsed2.victories;
+                res2.games = 1 + parsed2.games;;
+            }
+        }
+        localStorage.setItem(this.model.players[1].username, JSON.stringify(res2));
+    }
+
     handleQuitCommand(){
         if(this.state == gameState.TURN_PLAYER1 || this.state == gameState.TURN_PLAYER2){
             this.state = gameState.QUIT;
             this.winner(true);
             this.updateSysMessage("You quitted this game :(");
-            //TODO: save results
         }
         else{
             //in the online mode the quit is handled in the fecth request in OnlineMode class
@@ -1580,27 +1639,16 @@ class OnlineMode {
                     // See server response data
                     else if(response.status == 200){
 
+                        //online ranking
                         if(data.ranking.length >= 2){
-                            //shows the 2 top players (divs that stay as placeholders in case of no results)
-                            const username1 = document.getElementById("online-username-1");
-                            const vics1 = document.getElementById("online-vics-1");
-                            const games1 = document.getElementById("online-games-1");
-
-                            username1.innerHTML = data.ranking[0].nick;
-                            vics1.innerHTML = data.ranking[0].victories;
-                            games1.innerHTML = data.ranking[0].games;
-
-                            const username2 = document.getElementById("online-username-2");
-                            const vics2 = document.getElementById("online-vics-2");
-                            const games2 = document.getElementById("online-games-2");
-
-                            username2.innerHTML = data.ranking[1].nick;
-                            vics2.innerHTML = data.ranking[1].victories;
-                            games2.innerHTML = data.ranking[1].games;
-
                             const table = document.getElementById("tbody-online-leaderboard");
 
-                            for(let i = 2; i < 10; i++){
+                            //remove all elements besides first
+                            while (table.childNodes.length > 2) {
+                                table.removeChild(table.lastChild);
+                            }
+
+                            for(let i = 0; i < 10; i++){
                                 const tr = document.createElement("tr");
                                 const th = document.createElement("th");
                                 const td1 = document.createElement("td");
@@ -1616,6 +1664,47 @@ class OnlineMode {
                                 table.appendChild(tr);
                             }
 
+                        }
+
+                        //local ranking
+                        const table = document.getElementById("tbody-local-leaderboard");
+
+                        //remove all elements  besides first
+                        while (table.childNodes.length > 2) {
+                            table.removeChild(table.lastChild);
+                        }
+
+                        const obtainedLocal = localStorage.getItem('Local');
+                        const parsedLocal = JSON.parse(obtainedLocal);
+
+                        const obtainedGuest = localStorage.getItem('Guest');
+                        const parsedGuest = JSON.parse(obtainedGuest);
+
+                        const obtainedPC = localStorage.getItem('Computer');
+                        const parsedPC = JSON.parse(obtainedPC);
+
+                        const storage = [parsedLocal, parsedGuest, parsedPC];
+
+                        for(let i = 0; i < 3; i++){
+
+                            if(storage[i] !== null){
+                                const tr = document.createElement("tr");
+                                const th = document.createElement("th");
+                                const td1 = document.createElement("td");
+                                const td2 = document.createElement("td");
+
+                                if(i == 0) th.innerHTML = 'Local';
+                                if(i == 1) th.innerHTML = 'Guest';
+                                if(i == 2) th.innerHTML = 'Computer';
+
+                                td1.innerHTML = storage[i].victories;
+                                td2.innerHTML = storage[i].games;
+
+                                tr.appendChild(th);
+                                tr.appendChild(td1);
+                                tr.appendChild(td2);
+                                table.appendChild(tr);
+                            }
                         }
                     }
                     console.log(data);
@@ -2052,7 +2141,7 @@ class Firework{
             });
 
             if( this.particles[0].pos.y > 2000){
-                console.log("PASSE");
+                //console.log("PASSE");
                 this.end = true;
             }
 

@@ -29,8 +29,6 @@ class Page{
             this.commandsSection
                         ];
 
-        console.log(this.sections);
-
         this.menuButtons = document.getElementsByClassName("p-menu");
 
         //Responsive selection for tablet size
@@ -198,7 +196,7 @@ class Page{
     }
 
     toggleMenu(){
-        this.toggleVisibility(this.isSectionOpen[3], "mobile-main-turn-off", "s-menu");
+        this.toggleVisibility(this.isSectionOpen[3], "mobile-main-turn-off", "mobile-menu-turn-off");
         this.isSectionOpen[3] = !(this.isSectionOpen[3]);
     }
 
