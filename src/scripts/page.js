@@ -120,6 +120,7 @@ class Page{
         this.listenMobileMenu();
         this.listenMobileMenuButtons();
         this.listenTabletSelection();
+        this.listenResize();
     }
 
     /**
@@ -292,12 +293,14 @@ class Page{
     jsMediaQueries(){
         //mobile
         if(window.matchMedia('(max-width: 850px)').matches) {
+            console.log("ON MOBILE");
             this.hideAll();
             this.gameSection.classList.remove('hidden');
             this.commandsSection.classList.remove('hidden');
         }
         //tablet
         if(window.matchMedia('(max-width: 1200px)').matches) {
+            console.log("ON TABLET");
             this.hideAll();
             this.gameSection.classList.remove('hidden');
             this.commandsSection.classList.remove('hidden');
@@ -305,6 +308,7 @@ class Page{
         }
         //pc (greater than 1200px)
         else{
+            console.log("ON PC");
             this.hideAll();
             this.gameSection.classList.remove('hidden');
             this.commandsSection.classList.remove('hidden');
@@ -312,9 +316,12 @@ class Page{
             this.configsSection.classList.remove('hidden');
         }
     }
+
+    listenResize(){
+        window.addEventListener('resize', this.jsMediaQueries.bind(this));
+    }
 }
 
 const page = new Page();
 page.listenAll();
 //page.loadingScreen();
-//page.jsMediaQueries();
