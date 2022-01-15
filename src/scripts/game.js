@@ -469,7 +469,7 @@ class GameViewer{
             this.fireworks = new FireworksScene("c-game-area-fireworks", 800, 600);
             this.fireworks.start();
 
-            document.getElementById("c-game-area-fireworks").style.display = "block";
+            document.getElementById("c-game-area-fireworks").classList.remove("hidden");
         }
 
         winnerBanner.style.display = "grid";
@@ -533,7 +533,8 @@ class GameViewer{
         const winnerBanner = document.getElementById("d-game-area-winner-banner");
         winnerBanner.style.display = "none";
         if(this.fireworks != null) this.fireworks.stop();
-        document.getElementById("c-game-area-fireworks").style.display = "none";
+        document.getElementById("c-game-area-fireworks").classList.add("hidden");
+
     }
 
     //Listeners
@@ -1203,9 +1204,9 @@ class OnlineMode {
         this.game.gameModel.updatePlayer1(new Player(username));
         this.game.gamePresenter.updatePlayer1Name();
 
-        this.formLogin.style.display = "none";
-        this.formRegister.style.display = "none";
-        this.userTab.style.display = "grid";
+        this.formLogin.classList.add('hidden');
+        this.formRegister.classList.add('hidden');
+        this.userTab.classList.remove('hidden');
 
         const userInfo = document.getElementsByClassName("d-userTab-info");
 
@@ -1217,9 +1218,9 @@ class OnlineMode {
     }
 
     hideUserTab(){
-        this.formLogin.style.display = "block";
-        this.formRegister.style.display = "none";
-        this.userTab.style.display = "none";
+        this.formLogin.classList.remove('hidden');
+        this.formRegister.classList.add('hidden');
+        this.userTab.classList.add('hidden');
 
         const userInfo = document.getElementsByClassName("d-userTab-info");
 
@@ -1228,7 +1229,6 @@ class OnlineMode {
         this.password = '';
 
         document.getElementById("h2-authentication-title").innerHTML = "Authentication";
-        document.getElementById("section-main-commands").style.display = "flex";
         document.getElementById("p-game-area-header-p1-name").innerHTML = "Guest";
     }
 

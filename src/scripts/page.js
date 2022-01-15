@@ -134,12 +134,14 @@ class Page{
         var secundayElement = document.getElementById(secondaryId);
 
         if(isOpen) {
-            primaryElement.style.display = "none";
-            secundayElement.style.display = display2;
+            primaryElement.classList.add("hidden");
+            secundayElement.classList.remove("hidden");
+
         }
         else {
-            primaryElement.style.display = display1; //FIXME:
-            secundayElement.style.display = "none";
+            primaryElement.classList.remove("hidden");
+            secundayElement.classList.add("hidden");
+
         }
     }
 
@@ -157,70 +159,74 @@ class Page{
     toggleChat(){
         if(document.getElementById("d-userTab-info--username").innerHTML == "Username"){
             this.toggleIcon(0, this.chat, "../res/icons/chat_icon.png", "../res/icons/chat_icon_active.png");
-            this.toggleVisibility(this.isSectionOpen[0], "section-main-authentication", "section-main-chat", "block", "block");
+            this.toggleVisibility(this.isSectionOpen[0], "section-main-authentication", "section-main-chat");
             this.toggleSignIn();  //this two lines prevents from having multiple sections open in Authentication area
             this.toggleGoBackPass();
         }
         else{
             this.toggleIcon(4, this.chat, "../res/icons/chat_icon.png", "../res/icons/chat_icon_active.png");
-            this.toggleVisibility(this.isSectionOpen[4], "d-authentication-userTab", "section-main-chat", "grid", "block");
+            this.toggleVisibility(this.isSectionOpen[4], "d-authentication-userTab", "section-main-chat");
         }
     }
 
     toggleRules() {
         this.toggleIcon(1, this.rules, "../res/icons/rules_icon.png", "../res/icons/rules_icon_active.png");
-        this.toggleVisibility(this.isSectionOpen[1], "section-main-game", "section-main-rules", "block", "block");
+        this.toggleVisibility(this.isSectionOpen[1], "section-main-game", "section-main-rules");
     }
 
     toggleScore() {
         this.toggleIcon(2, this.score, "../res/icons/score_icon.png", "../res/icons/score_icon_active.png");
-        this.toggleVisibility(this.isSectionOpen[2], "section-main-configurations", "section-main-score", "block", "block");
+        this.toggleVisibility(this.isSectionOpen[2], "section-main-configurations", "section-main-score");
     }
 
     toggleSignUp(){
-        this.toggleVisibility(true, "form-authentication-login", "form-authentication-signup", "block", "block");
-        document.getElementById("section-main-commands").style.display = "none";
+        this.toggleVisibility(true, "form-authentication-login", "form-authentication-signup");
+        document.getElementById("section-main-commands").classList.add("hidden");
     }
 
     toggleSignIn(){
-        this.toggleVisibility(false, "form-authentication-login", "form-authentication-signup", "block", "block");
-        document.getElementById("section-main-commands").style.display = "flex";
+        this.toggleVisibility(false, "form-authentication-login", "form-authentication-signup");
+        document.getElementById("section-main-commands").classList.remove("hidden");
     }
 
     toggleRecoverPass(){
-        this.toggleVisibility(true, "form-authentication-login", "form-authentication-forgot", "block","block");
+        this.toggleVisibility(true, "form-authentication-login", "form-authentication-forgot");
     }
 
     toggleGoBackPass(){
-        this.toggleVisibility(false, "form-authentication-login", "form-authentication-forgot", "block","block");
+        this.toggleVisibility(false, "form-authentication-login", "form-authentication-forgot");
     }
 
     toggleMenu(){
-        this.toggleVisibility(this.isSectionOpen[3], "d-main", "s-menu", "grid", "grid");
+        this.toggleVisibility(this.isSectionOpen[3], "mobile-main-turn-off", "s-menu");
         this.isSectionOpen[3] = !(this.isSectionOpen[3]);
     }
 
     toggleTabletSelection(){
         switch(this.tabletSelection.value){
             case "Game":
-                this.toggleVisibility(true, "section-main-score", "section-main-game", "block", "block");
-                this.toggleVisibility(true, "section-main-rules", "section-main-game", "block", "block");
-                this.toggleVisibility(true, "section-main-configurations", "section-main-game", "block", "block");
+                this.gameSection.classList.remove("hidden");
+                this.rulesSection.classList.add("hidden");
+                this.scoreSection.classList.add("hidden");
+                this.configsSection.classList.add("hidden");
                 break;
             case "Configurations":
-                this.toggleVisibility(true, "section-main-game", "section-main-configurations", "block", "block");
-                this.toggleVisibility(true, "section-main-rules", "section-main-configurations", "block", "block");
-                this.toggleVisibility(true, "section-main-score", "section-main-configurations", "block", "block");
+                this.gameSection.classList.add("hidden");
+                this.rulesSection.classList.add("hidden");
+                this.scoreSection.classList.add("hidden");
+                this.configsSection.classList.remove("hidden");
                 break;
             case "Leaderboard":
-                this.toggleVisibility(true, "section-main-game", "section-main-score", "block", "block");
-                this.toggleVisibility(true, "section-main-rules", "section-main-score", "block", "block");
-                this.toggleVisibility(true, "section-main-configurations", "section-main-score", "block", "block");
+                this.gameSection.classList.add("hidden");
+                this.rulesSection.classList.add("hidden");
+                this.scoreSection.classList.remove("hidden");
+                this.configsSection.classList.add("hidden");
                 break;
             case "Rules":
-                this.toggleVisibility(true, "section-main-game", "section-main-rules", "block", "block");
-                this.toggleVisibility(true, "section-main-score", "section-main-rules", "block", "block");
-                this.toggleVisibility(true, "section-main-configurations", "section-main-rules", "block", "block");
+                this.gameSection.classList.add("hidden");
+                this.rulesSection.classList.remove("hidden");
+                this.scoreSection.classList.add("hidden");
+                this.configsSection.classList.add("hidden");
                 break;
             default:
                 console.log("Error -> toggleTabletSelection() <- no such value in selection");
@@ -231,40 +237,46 @@ class Page{
         this.p2Icon.src = "../res/default_players_icons/local.png";
         this.p2Name.innerHTML = "Local";
 
-        this.local.style.display = "block";
-        this.online.style.display = "none";
-        this.computer.style.display = "none";
+        this.local.classList.remove("hidden");
+        this.online.classList.add("hidden");
+        this.computer.classList.add("hidden");
     }
 
     displayModeOnline(){
         this.p2Icon.src = "../res/default_players_icons/online.png";
         this.p2Name.innerHTML = "Online";
 
-        this.local.style.display = "none";
-        this.online.style.display = "block";
-        this.computer.style.display = "none";
+        this.local.classList.add("hidden");
+        this.online.classList.remove("hidden");
+        this.computer.classList.add("hidden");
     }
 
     displayModeComputer(){
         this.p2Icon.src = "../res/default_players_icons/computer.png";
         this.p2Name.innerHTML = "Computer";
 
-        this.local.style.display = "none";
-        this.online.style.display = "none";
-        this.computer.style.display = "block";
+        this.local.classList.add("hidden");
+        this.online.classList.add("hidden");
+        this.computer.classList.remove("hidden");
     }
 
     displaySections(index){
         for(let i = 0; i < this.sections.length; i++){
-            this.sections[i].style.display = "none";
+            this.sections[i].classList.add("hidden");
         }
-        this.sections[index].style.display = "block";
+        this.sections[index].classList.remove("hidden");
 
         if(index == 0){
-            this.sections[6].style.display = "flex";
+            this.sections[6].classList.remove("hidden");
         }
 
         this.toggleMenu();
+    }
+
+    hideAll(){
+        for(let i = 0; i < this.sections.length; i++){
+            this.sections[i].classList.add("hidden");
+        }
     }
 
     loadingScreen(){
@@ -278,8 +290,33 @@ class Page{
             document.getElementById("d-game-area-gameplay").style.display = "grid";
             },2000);
     }
+
+    jsMediaQueries(){
+        //mobile
+        if(window.matchMedia('(max-width: 850px)').matches) {
+            this.hideAll();
+            this.gameSection.classList.remove('hidden');
+            this.commandsSection.classList.remove('hidden');
+        }
+        //tablet
+        if(window.matchMedia('(max-width: 1200px)').matches) {
+            this.hideAll();
+            this.gameSection.classList.remove('hidden');
+            this.commandsSection.classList.remove('hidden');
+            this.authSection.classList.remove('hidden');
+        }
+        //pc (greater than 1200px)
+        else{
+            this.hideAll();
+            this.gameSection.classList.remove('hidden');
+            this.commandsSection.classList.remove('hidden');
+            this.authSection.classList.remove('hidden');
+            this.configsSection.classList.remove('hidden');
+        }
+    }
 }
 
 const page = new Page();
 page.listenAll();
-page.loadingScreen();
+//page.loadingScreen();
+//page.jsMediaQueries();

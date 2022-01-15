@@ -1,6 +1,6 @@
 /* || General */
 /* css rules applied to multiple sections */
-.responsive{
+.hidden{
     display: none;
 }
 
@@ -144,7 +144,6 @@ header{
     'commands game game configs'
     'system_messages game game configs'
 	'footer footer footer footer';
-    /* grid-template-rows: 66% 9% 9% 16%;*/
     grid-template-rows:  25.5em 3.5em 3.5em 6.5em;
 	grid-template-columns: 25% 25% 25% 25%;
     min-height: 82.3vh;
@@ -153,7 +152,6 @@ header{
 /* || Authentication */
 #section-main-authentication{
 	grid-area: auth;
-    display: block;
 }
 
 #form-authentication-login{
@@ -240,7 +238,6 @@ header{
 }
 
 #form-authentication-signup{
-    display: none;
     padding-bottom: 1em;
     padding-right: 4em;
     border: solid;
@@ -293,7 +290,6 @@ header{
 }
 
 #form-authentication-forgot{
-    display: none;
     padding-bottom: 1.5em;
     padding-right: 4em;
     border-radius: 1em;
@@ -341,7 +337,6 @@ header{
 }
 
 #d-authentication-userTab{
-    display: none;
     padding-top: 1.5em;
     padding-bottom: 1.5em;
     padding-left: 3em;
@@ -406,7 +401,6 @@ header{
 /* || Game */
 #section-main-game{
     grid-area: game;
-    display: block;
     padding-left: 0em;
 }
 
@@ -720,7 +714,6 @@ header{
 }
 
 #c-game-area-fireworks{
-    display: none;
     grid-area: gamegameplay;
     z-index: 3;
     width: 100%;
@@ -745,7 +738,6 @@ header{
 /* || Configurations */
 #section-main-configurations{
 	grid-area: configs;
-    display: block;
 }
 
 #form-configurations-settings{
@@ -794,14 +786,6 @@ header{
     padding-left: 1.2em;
     font-size: 0.9em;
     font-weight: 400;
-}
-
-#d-settings-mode--local{
-    display: block;
-}
-
-#d-settings-mode--online{
-    display: none;
 }
 
 #d-mode-online-search-bar{
@@ -861,7 +845,6 @@ header{
 }
 
 #d-settings-mode--computer{
-    display: none;
     padding-bottom: 0.05em;
 }
 
@@ -930,8 +913,12 @@ header{
 /* || Commands */
 #section-main-commands{
     grid-area: commands;
-	display: flex;
+}
+
+#d-main-commands{
+    display: flex;
 	justify-content: space-between;
+    height: 100%;
 }
 
 .button-command{
@@ -958,7 +945,6 @@ header{
 /* || Score */
 #section-main-score{
     grid-area: configs;
-    display: none;
 }
 
 .h3-score-table-title{
@@ -974,7 +960,6 @@ header{
 /* || Chat */
 #section-main-chat{
     grid-area: auth;
-    display: none;
 }
 
 #d-chat-messages{
@@ -986,7 +971,6 @@ header{
 }
 
 #d-chat-messages-area{
-    display: block;
     padding: 1em;
 }
 
@@ -1034,7 +1018,6 @@ header{
 /* || Rules */
 #section-main-rules{
     grid-area: game;
-    display: none;
 }
 
 #ul-rules-list{

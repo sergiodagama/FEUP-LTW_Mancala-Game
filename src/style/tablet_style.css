@@ -5,6 +5,10 @@
         display: none;
     }
 
+    #img-header-navbar-rules-icon{
+        display: none;
+    }
+
     /* || Main */
     #d-main{
         display: grid;
@@ -13,7 +17,6 @@
         'commands game'
         'system_messages game'
         'footer footer footer';
-        /* grid-template-rows: 66% 9% 9% 16%;*/
         grid-template-rows:  25.5em 3.5em 3.5em 6.5em;
         grid-template-columns: 35% 65%;
         min-height: 82.3vh;
@@ -38,11 +41,9 @@
 
     #section-main-configurations{
         grid-area: game;
-        display: none;
     }
 
     #section-main-score{
         grid-area: game;
-        display: none;
     }
 }

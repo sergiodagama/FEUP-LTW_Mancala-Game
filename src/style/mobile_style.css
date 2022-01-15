@@ -32,9 +32,8 @@
         display: none;
     }
 
-    /* MENU  TO MOVE UP IN FILE*/
+    /* || Menu */
     #s-menu{
-        display: none;
         justify-content: center;
         align-items: center;
         text-align: center;
@@ -75,27 +74,22 @@
 
     #section-main-authentication{
         grid-area: game;
-        display: none;
     }
 
     #section-main-configurations{
         grid-area: game;
-        display: none;
     }
 
     #section-main-chat{
         grid-area: game;
-        display: none;
     }
 
     #section-main-rules{
         grid-area: game;
-        display: none;
     }
 
     #section-main-score{
         grid-area: game;
-        display: none;
     }
 
     #section-main-commands{
