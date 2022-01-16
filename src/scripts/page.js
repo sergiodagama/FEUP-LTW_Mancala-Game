@@ -279,7 +279,7 @@ class Page{
     }
 
     loadingScreen(){
-        document.getElementById("d-game-area-load-banner").style.display = "grid";
+        document.getElementById("hide-load-banner").style.display = "grid";
         document.getElementById("d-game-area-background").style.display = "none";
         document.getElementById("d-game-area-gameplay").style.display = "none";
 
@@ -295,8 +295,6 @@ class Page{
         if(window.matchMedia('(max-width: 850px)').matches) {
             console.log("ON MOBILE");
             this.hideAll();
-            this.gameSection.classList.remove('hidden');
-            this.commandsSection.classList.remove('hidden');
         }
         //tablet
         if(window.matchMedia('(max-width: 1200px)').matches) {
