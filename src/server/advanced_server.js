@@ -4,28 +4,16 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import jwt from "jsonwebtoken";
 import nodemailer from 'nodemailer';
-import WebSocket, { WebSocketServer } from 'ws';
 
 dotenv.config();
 
 const PORT = 4000
 
-let groupId = 0;
-
 let models = [];
 let activeUsers = new Map();  //has the current active users
 let waitingRoom = [];  //controls the waitingRoom, when user is waiting for other to play
 
-let activeGames = []; //contain 1 if one user as enter the game (of gameId correspondat to the array index), contain 2 if both users has entered
-let gameUsers = [];  //TODO: is not beeing filled
-
-function getTheOtherUserByGameId(username, gameId){
-    //TODO: returns the other user of the same game
-}
-
-function addToGame(username, gameId){
-    //TODO: adds an user to a particular game
-}
+let activeGames = []; //contains 1 if one user as enter the game (of gameId correspondat to the array index), contain 2 if both users has entered
 
 function findIndexByNick(array, username){
     return array.map(user => user.nick).indexOf(username);
@@ -157,21 +145,6 @@ function validateToken(req, res) {
         }
     });
 }
-
-/**
- * WebSocket server
- */
-/*
-const wss = new WebSocketServer({ port: 4001 });
-
-wss.on('connection', (ws) => {
-    ws.on('message', (data) => {
-        console.log('received: %s', data);
-    });
-
-    ws.send('something');
-});
-*/
 
 /**
  * Server
@@ -394,15 +367,13 @@ const server = http.createServer((req, res) => {
                         send(res, 400, {"status": "You already are in the waiting room"});
                     }
                 }
-                else{ //TODO: this part is not working yet
+                else{
                     if(findIndexByNick(waitingRoom, params.invitedUser) == -1){
                         send(res, 400, {"status": "That user is not online"});
                     }
                     else{
                         send(res, 200, {"status": "Invite sent, please wait"});
-
-                        //send invite to the actual user
-                        //update(res, {""}); //FIXME: fix here
+                        //FIXME
                     }
                 }
             });
@@ -412,7 +383,7 @@ const server = http.createServer((req, res) => {
         }
     }
     //Update endpoint
-    else if(endpoint.substring(0, 7) === "/update"){ //TODO: not checking if the user and game are a valid pair
+    else if(endpoint.substring(0, 7) === "/update"){ //FIXME
 
         const params = url.parse(endpoint, true).query;
 
